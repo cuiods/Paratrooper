@@ -13,6 +13,8 @@ hs_err_pid*
 
 target/
 
+application.yml
+
 
 ### STS ###
 .classpath
