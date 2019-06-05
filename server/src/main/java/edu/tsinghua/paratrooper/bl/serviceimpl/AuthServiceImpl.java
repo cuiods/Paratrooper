@@ -11,6 +11,7 @@ import edu.tsinghua.paratrooper.util.jwt.JwtUtil;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -48,6 +49,9 @@ public class AuthServiceImpl implements AuthService {
     @Resource
     private JwtUtil jwtUtil;
 
+    @Value("${paratrooper.tokenHead}")
+    private String tokenHead;
+
     /**
      * Login to system
      *
@@ -76,6 +80,6 @@ public class AuthServiceImpl implements AuthService {
         claims.put("name", userEntity.getName());
         claims.put("userDetails", gson.toJson(userDetails));
         final String token = jwtUtil.generateToken(claims);
-        return new ResultVo<>(ErrorCode.SUCCESS,"",new AuthVo(token, EXPIRES));
+        return new ResultVo<>(ErrorCode.SUCCESS,"",new AuthVo(tokenHead+token, EXPIRES));
     }
 }
