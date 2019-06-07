@@ -24,6 +24,7 @@ public class AuthSecurityService implements UserDetailsService {
     public UserDetails loadUserByUsername(String s) throws UsernameNotFoundException {
         TUserEntity entity = userRepository.findByName(s);
         if (entity == null) throw new UsernameNotFoundException("Cannot find user");
+        System.out.println(entity.getAuthorityEntities().size());
         List<GrantedAuthority> authorities = entity.getAuthorityEntities().stream()
                 .map(authorityEntity -> new SimpleGrantedAuthority(authorityEntity.getName()))
                 .collect(Collectors.toList());

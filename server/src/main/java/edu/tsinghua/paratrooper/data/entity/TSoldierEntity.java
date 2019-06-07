@@ -16,6 +16,17 @@ public class TSoldierEntity extends TUserEntity {
     private int updateStatus;
     private int alive;
 
+    public TSoldierEntity reset() {
+        this.locationX = -1;
+        this.locationY = -1;
+        this.publicKey = "";
+        this.captain = 1;
+        this.groupNum = id;
+        this.updateStatus = 0;
+        this.alive = 0;
+        return this;
+    }
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")

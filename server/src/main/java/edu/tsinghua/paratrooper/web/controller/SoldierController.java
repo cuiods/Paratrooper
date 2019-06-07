@@ -22,19 +22,19 @@ public class SoldierController {
     private SoldierService soldierService;
 
     @PostMapping(value = "/register", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    @ApiOperation(value = "注册公钥接口", response = AuthVo.class, notes = "返回注册的公钥")
+    @ApiOperation(value = "注册公钥接口", response = String.class, notes = "返回注册的公钥")
     public ResultVo<String> registerPublicKey(@RequestBody RegisterJson json) {
         return soldierService.registerPublicKey(json.getPublicKey());
     }
 
     @GetMapping(value = "/keys", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    @ApiOperation(value = "获取所有公钥", response = AuthVo.class, notes = "返回所有公钥")
+    @ApiOperation(value = "获取所有公钥", response = PublicKeyVo.class, responseContainer = "List", notes = "返回所有公钥")
     public ResultVo<List<PublicKeyVo>> getPublicKeys() {
         return soldierService.getPublicKeys();
     }
 
     @PostMapping(value = "/update", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    @ApiOperation(value = "汇报状态并获取消息", response = AuthVo.class, notes = "返回最新消息和队友信息")
+    @ApiOperation(value = "汇报状态并获取消息", response = StatusVo.class, notes = "返回最新消息和队友信息")
     public ResultVo<StatusVo> updateStatus(@RequestBody LocationJson locationJson) {
         return soldierService.updateStatus(locationJson.getX(), locationJson.getY());
     }

@@ -16,6 +16,7 @@ public class SoldierServiceImplTest extends BaseTest {
 
     @Test
     public void initializeSoldierStatus() {
+        soldierService.initializeSoldierStatus();
     }
 
     @Test

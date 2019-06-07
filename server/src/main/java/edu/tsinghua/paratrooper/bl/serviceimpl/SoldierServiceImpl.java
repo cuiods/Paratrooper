@@ -12,6 +12,7 @@ import edu.tsinghua.paratrooper.web.security.AppContext;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -32,8 +33,12 @@ public class SoldierServiceImpl implements SoldierService {
      * Initialize soldier location and box status
      */
     @Override
+    @Transactional
     public void initializeSoldierStatus() {
-
+        msgRepository.deleteAll();
+        List<TSoldierEntity> soldierEntities = Lists.newArrayList(soldierRepository.findAll());
+        soldierRepository.save(soldierEntities.stream().map(TSoldierEntity::reset).collect(Collectors.toList()));
+        boxRepository.deleteAll();
     }
 
     /**
@@ -81,13 +86,19 @@ public class SoldierServiceImpl implements SoldierService {
         entity.setAlive(1);
         entity.setLocationX(x);
         entity.setLocationY(y);
-        soldierRepository.save(entity);
 
         List<MsgVo> msgVos = new ArrayList<>();
         if (entity.getUpdateStatus() != 0) {
             msgVos = msgRepository.findByReceiveIdAndIsRead(currentUserId, 0)
-                    .stream().map(MsgVo::new).collect(Collectors.toList());
+                    .stream().map(entity1 -> {
+                        entity1.setIsRead(1);
+                        msgRepository.save(entity1);
+                        return new MsgVo(entity1);
+                    }).collect(Collectors.toList());
         }
+
+        entity.setUpdateStatus(0);
+        soldierRepository.save(entity);
 
         List<SoldierVo> soldierVos = soldierRepository.findByGroupNum(entity.getGroupNum())
                 .stream().map(SoldierVo::new).collect(Collectors.toList());

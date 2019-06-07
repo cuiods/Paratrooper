@@ -1,6 +1,5 @@
 package edu.tsinghua.paratrooper.bl.serviceimpl;
 
-import com.google.gson.Gson;
 import edu.tsinghua.paratrooper.bl.service.AuthService;
 import edu.tsinghua.paratrooper.bl.vo.AuthVo;
 import edu.tsinghua.paratrooper.bl.vo.ResultVo;
@@ -8,7 +7,6 @@ import edu.tsinghua.paratrooper.data.entity.TUserEntity;
 import edu.tsinghua.paratrooper.data.repository.UserRepository;
 import edu.tsinghua.paratrooper.util.constant.ErrorCode;
 import edu.tsinghua.paratrooper.util.jwt.JwtUtil;
-import org.apache.commons.lang3.RandomStringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -16,14 +14,12 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.concurrent.TimeUnit;
 
 @Service
 public class AuthServiceImpl implements AuthService {
@@ -40,9 +36,6 @@ public class AuthServiceImpl implements AuthService {
 
     @Resource
     private AuthenticationManager authenticationManager;
-
-    @Resource
-    private UserDetailsService userDetailsService;
 
     @Resource
     private JwtUtil jwtUtil;
@@ -70,13 +63,11 @@ public class AuthServiceImpl implements AuthService {
         UsernamePasswordAuthenticationToken upToken = new UsernamePasswordAuthenticationToken(name, password);
         final Authentication authentication = authenticationManager.authenticate(upToken);
         SecurityContextHolder.getContext().setAuthentication(authentication);
-        final User userDetails = (User) userDetailsService.loadUserByUsername(name);
 
         Map<String, Object> claims = new HashMap<>();
-        Gson gson = new Gson();
         claims.put("id", userEntity.getId());
         claims.put("name", userEntity.getName());
-        claims.put("userDetails", gson.toJson(userDetails));
+        claims.put("time", new Date().getTime()+"");
         final String token = jwtUtil.generateToken(claims);
         return new ResultVo<>(ErrorCode.SUCCESS,"",new AuthVo(tokenHead+token, EXPIRES));
     }
