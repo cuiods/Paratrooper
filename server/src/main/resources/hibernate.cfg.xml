@@ -11,5 +11,8 @@
         <property name="hbm2ddl.auto">update</property>
         <mapping class="edu.tsinghua.paratrooper.data.entity.TAuthorityEntity"/>
         <mapping class="edu.tsinghua.paratrooper.data.entity.TUserEntity"/>
+        <mapping class="edu.tsinghua.paratrooper.data.entity.TSoldierEntity"/>
+        <mapping class="edu.tsinghua.paratrooper.data.entity.TMsgEntity"/>
+        <mapping class="edu.tsinghua.paratrooper.data.entity.TBoxEntity"/>
     </session-factory>
 </hibernate-configuration>

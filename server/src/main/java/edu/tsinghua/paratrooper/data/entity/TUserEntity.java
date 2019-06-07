@@ -8,8 +8,9 @@ import java.util.List;
 import java.util.Objects;
 
 @Entity
-@Table(name = "t_user", schema = "paratrooper")
+@Table(name = "t_user")
 @Where(clause="deleted_at is null")
+@Inheritance(strategy = InheritanceType.JOINED)
 public class TUserEntity {
     private int id;
     private String name;

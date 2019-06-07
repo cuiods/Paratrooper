@@ -7,13 +7,14 @@ import javax.persistence.*;
 import java.util.Objects;
 
 @Entity
-@Table(name = "t_authority", schema = "paratrooper")
+@Table(name = "t_authority")
 public class TAuthorityEntity {
     private int id;
     private String name;
     private String note;
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     public int getId() {
         return id;

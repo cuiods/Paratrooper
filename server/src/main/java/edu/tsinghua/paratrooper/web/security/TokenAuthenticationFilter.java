@@ -1,5 +1,6 @@
 package edu.tsinghua.paratrooper.web.security;
 
+import edu.tsinghua.paratrooper.data.repository.UserRepository;
 import edu.tsinghua.paratrooper.util.jwt.JwtUtil;
 import io.jsonwebtoken.Claims;
 import org.springframework.beans.factory.annotation.Value;
@@ -32,6 +33,9 @@ public class TokenAuthenticationFilter extends OncePerRequestFilter {
     @Resource
     private AuthSecurityService authSecurityService;
 
+    @Resource
+    private UserRepository userRepository;
+
     /**
      * Same contract as for {@code doFilter}, but guaranteed to be
      * just invoked once per request within a single request thread.
@@ -49,9 +53,11 @@ public class TokenAuthenticationFilter extends OncePerRequestFilter {
             Claims claims = jwtUtil.getClaimsFromToken(authToken);
             if (claims != null && SecurityContextHolder.getContext().getAuthentication() == null) {
                 String name = claims.get("name", String.class);
+                int id = claims.get("id", Integer.class);
                 //TODO: verify user in token and user from database
                 UserDetails userDetails = authSecurityService.loadUserByUsername(name);
                 if (name != null && userDetails != null) {
+                    new AppContext(id);
                     UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
                             userDetails, null, userDetails.getAuthorities());
                     authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(

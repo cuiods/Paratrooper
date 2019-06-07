@@ -11,6 +11,9 @@ import java.security.Key;
 import java.util.Date;
 import java.util.Map;
 
+/**
+ * Java web token generator
+ */
 @Component
 public class JwtUtil {
 
