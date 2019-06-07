@@ -7,6 +7,6 @@ import java.util.List;
 
 public interface SoldierRepository extends CrudRepository<TSoldierEntity, Integer> {
 
-    List<TSoldierEntity> findByGroupNum(int groupNum);
+    List<TSoldierEntity> findByGroupNumAndIdNot(int groupNum, int id);
 
 }

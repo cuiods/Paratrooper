@@ -100,7 +100,13 @@ public class SoldierServiceImpl implements SoldierService {
         entity.setUpdateStatus(0);
         soldierRepository.save(entity);
 
-        List<SoldierVo> soldierVos = soldierRepository.findByGroupNum(entity.getGroupNum())
+        List<SoldierVo> soldierVos = Lists.newArrayList(soldierRepository.findAll()).stream()
+                .filter(soldierEntity -> soldierEntity.getId()!=entity.getId() && soldierEntity.getAlive()>0)
+                .filter(soldierEntity -> ((Math.pow(soldierEntity.getLocationX()-entity.getLocationX(),2)
+                            + Math.pow(soldierEntity.getLocationX()-entity.getLocationX(),2))<40000)
+                            || soldierEntity.getGroupNum()==entity.getGroupNum())
+                .map(SoldierVo::new).collect(Collectors.toList());
+        List<SoldierVo> groupVos = soldierRepository.findByGroupNumAndIdNot(entity.getGroupNum(), entity.getId())
                 .stream().map(SoldierVo::new).collect(Collectors.toList());
         List<BoxVo> boxVos = Lists.newArrayList(boxRepository.findAll())
                 .stream().map(BoxVo::new).collect(Collectors.toList());
@@ -108,7 +114,8 @@ public class SoldierServiceImpl implements SoldierService {
         StatusVo statusVo = new StatusVo();
         statusVo.setMe(new SoldierVo(entity));
         statusVo.setMessages(msgVos);
-        statusVo.setGroupMembers(soldierVos);
+        statusVo.setGroupMembers(groupVos);
+        statusVo.setInVisionSoldiers(soldierVos);
         statusVo.setBoxes(boxVos);
         return new ResultVo<>(ErrorCode.SUCCESS, "ok", statusVo);
     }

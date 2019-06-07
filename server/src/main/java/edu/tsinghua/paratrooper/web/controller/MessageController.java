@@ -22,7 +22,7 @@ public class MessageController {
     private MsgService msgService;
 
     @PostMapping(value = "/send", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    @ApiOperation(value = "发送消息接口", response = String.class, notes = "返回发送的消息本身")
+    @ApiOperation(value = "发送消息接口", response = MsgVo.class, notes = "返回发送的消息本身")
     public ResultVo<MsgVo> sendMessage(@RequestBody MsgJson msgJson) {
         return msgService.sendMsg(msgJson.getReceiveId(), msgJson.getCode(), msgJson.getMessage());
     }

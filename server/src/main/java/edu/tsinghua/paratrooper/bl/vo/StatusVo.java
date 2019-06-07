@@ -10,4 +10,5 @@ public class StatusVo {
     private List<MsgVo> messages;
     private List<SoldierVo> groupMembers;
     private List<BoxVo> boxes;
+    private List<SoldierVo> inVisionSoldiers;
 }
