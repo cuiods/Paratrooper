@@ -7,4 +7,8 @@ public interface MsgService {
 
     ResultVo<MsgVo> sendMsg(int reveiveId, int code, String message);
 
+    ResultVo<String> confirmAuthentication(int confirmedId);
+
+    ResultVo<String> confirmCaptain(int compareId, int result);
+
 }
