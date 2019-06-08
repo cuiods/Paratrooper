@@ -3,7 +3,9 @@ package edu.tsinghua.paratrooper.bl.serviceimpl;
 import edu.tsinghua.paratrooper.bl.service.AuthService;
 import edu.tsinghua.paratrooper.bl.vo.AuthVo;
 import edu.tsinghua.paratrooper.bl.vo.ResultVo;
+import edu.tsinghua.paratrooper.bl.vo.SoldierVo;
 import edu.tsinghua.paratrooper.data.entity.TUserEntity;
+import edu.tsinghua.paratrooper.data.repository.SoldierRepository;
 import edu.tsinghua.paratrooper.data.repository.UserRepository;
 import edu.tsinghua.paratrooper.util.constant.ErrorCode;
 import edu.tsinghua.paratrooper.util.jwt.JwtUtil;
@@ -33,6 +35,9 @@ public class AuthServiceImpl implements AuthService {
 
     @Resource
     private UserRepository userRepository;
+
+    @Resource
+    private SoldierRepository soldierRepository;
 
     @Resource
     private AuthenticationManager authenticationManager;
@@ -69,6 +74,7 @@ public class AuthServiceImpl implements AuthService {
         claims.put("name", userEntity.getName());
         claims.put("time", new Date().getTime()+"");
         final String token = jwtUtil.generateToken(claims);
-        return new ResultVo<>(ErrorCode.SUCCESS,"",new AuthVo(tokenHead+token, EXPIRES));
+        return new ResultVo<>(ErrorCode.SUCCESS,"",
+                new AuthVo(tokenHead+token, EXPIRES, new SoldierVo(soldierRepository.findOne(userEntity.getId()))));
     }
 }

@@ -13,4 +13,6 @@ public class AuthVo {
 
     private long expiresIn;
 
+    private SoldierVo me;
+
 }
