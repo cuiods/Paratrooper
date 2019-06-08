@@ -39,7 +39,6 @@ public class ServerStarter {
 	HttpServerProvider provider = null;
 	HttpServer httpserver = null;
 	private ClientThread ct;
-	static TransTools transtools = TransTools.getInstance();
 	
 	public static void main(String[] args) throws IOException {
         
@@ -82,7 +81,7 @@ public class ServerStarter {
 	public void startNetwork() {
 		provider  = HttpServerProvider.provider(); 
 	    	try {
-			httpserver = provider.createHttpServer(new InetSocketAddress(Const.SERVER_PORT), 100);  //监听端口19017,能同时接受100个请求  
+			httpserver = provider.createHttpServer(new InetSocketAddress(127), 100);  //监听端口19017,能同时接受100个请求
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -120,14 +119,14 @@ public class ServerStarter {
 		         else {
 		        	        //soldier
 		        	        Soldier test = new Soldier();
-		        	        test.setPoint_x(800);
-		        	        test.setPoint_y(300);
+		        	        test.setLocationX(800);
+		        	        test.setLocationY(300);
 		        	        List<Soldier> lists = new ArrayList<Soldier>();
 		        	        lists.add(test);
 		        	        
 		        	        Soldier test2 = new Soldier();
-		        	        test2.setPoint_x(300);
-		        	        test2.setPoint_y(200);
+		        	        test2.setLocationX(300);
+		        	        test2.setLocationY(200);
 		        	        lists.add(test2);
 		        	        
 		        	        Map<String,Object> map = new HashMap<String,Object>();
@@ -155,8 +154,8 @@ public class ServerStarter {
 		        	        operation.put("timestamp", "operation_timestamp");
 		        	        map.put("operation", operation);
 		        	        
-		        	        Message message = new Message(3,map,"timestamp");
-		        	        response = transtools.objectToJson(message);
+		        	        Message message = new Message(3,map);
+		        	        response = TransTools.objectToJson(message);
 		         }
 		         
 		         System.out.println("reply a message");

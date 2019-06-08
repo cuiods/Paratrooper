@@ -3,48 +3,57 @@ package src.common;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URLDecoder;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.security.SecureRandom;
+import java.security.cert.CertificateException;
+import java.security.cert.X509Certificate;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 
+import javax.net.ssl.*;
 import javax.swing.JFrame;
 
-import com.google.gson.Gson;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
+import Millionare.Millionaire_Tool;
+import RSA_auth.RSA_Tool;
+import com.google.gson.*;
 import com.google.gson.reflect.TypeToken;
 
-import okhttp3.Call;
-import okhttp3.Callback;
-import okhttp3.FormBody;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.RequestBody;
-import okhttp3.Response;
+import okhttp3.*;
 import src.UI.ForestFrame;
 import src.bean.Box;
 import src.bean.Message;
 import src.bean.Soldier;
  
 public class HttpHelper {
- 
-    private static OkHttpClient client =  new OkHttpClient();
-    
-    private static final HttpHelper httpHelper=new HttpHelper();
-    public static HttpHelper getInstance(){
-         return httpHelper;
+
+	private static OkHttpClient client = new OkHttpClient.Builder()
+			//不加以下两行代码,https请求不到自签名的服务器
+			.sslSocketFactory(createSSLSocketFactory())//创建一个证书对象
+			.hostnameVerifier(new TrustAllHostnameVerifier())//校验名称,这个对象就是信任所有的主机,也就是信任所有https的请求
+			.connectTimeout(10, TimeUnit.SECONDS)//连接超时时间
+			.readTimeout(10, TimeUnit.SECONDS)//读取超时时间
+			.writeTimeout(10, TimeUnit.SECONDS)//写入超时时间
+			.retryOnConnectionFailure(false)//连接不上是否重连,false不重连
+			.build();
+
+    public static OkHttpClient getInstance(){
+         return client;
     }
- 
+
+	private static MediaType JSON = MediaType.parse("application/json;charset=utf-8");
+
+    private static String token = "";
+
+    public static void setToken(String token){
+    	token = token;
+	}
+
     /**
      * 同步get请求
      */
     public static void syncGet(String url,String token) throws Exception{
      
         Request request = new Request.Builder().url(url).
-        		     addHeader("Access-User-Token",token).build();
+        		     addHeader("Authorization",token).build();
         Response response = client.newCall(request).execute(); // 返回实体
         
         if (response.isSuccessful()) { // 判断是否成功
@@ -59,21 +68,22 @@ public class HttpHelper {
     /**
      * 同步Post请求
      */
-    public static void syncPost(String url,String token,FormBody formBody) throws Exception{
-     
-        Request request = new Request.Builder()
-        		.url(url)
-        		.addHeader("Access-User-Token",token)
-        		.post(formBody)
-        		.build();
-        Response response = client.newCall(request).execute(); // 返回实体
-        
-        if (response.isSuccessful()) { // 判断是否成功
-            
-            System.out.println(response.body().string()); // 打印数据
-        }else {
-            System.out.println("失败"); // 链接失败
-        }
+    public static Response syncPost(String url,String req,String token) {
+
+		RequestBody requestBody = RequestBody.create(JSON, req);
+		Request request = new Request.Builder()
+				.url(Const.SERVER_IP + url)
+				.post(requestBody)
+				.build();
+
+		Response response = null; // 返回实体
+		try {
+			response = client.newCall(request).execute();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
+        return response;
     }
     
     /**
@@ -81,35 +91,52 @@ public class HttpHelper {
      */
     public static void asyncGet(String url,String token,ForestFrame frame) {
 
+
         Request request = new Request.Builder().url(url).
-        		                 addHeader("Access-User-Token",token).build();
-        client.newCall(request).enqueue(new MyCallback(frame));
+        		                 addHeader("Authorization",token).build();
+        client.newCall(request).enqueue(new MyCallback(frame,token));
     }
     
     /**
      * 异步Post请求,
      */
-    public static void asyncPost(String url,String token,FormBody formBody,ForestFrame frame) {
+    public static void asyncPost(String url,String token,String req,ForestFrame frame) {
 
-        Request request = new Request.Builder().url(url).
-        		                 addHeader("Access-User-Token",token).post(formBody).build();
-        client.newCall(request).enqueue(new MyCallback(frame));
+		RequestBody requestBody = RequestBody.create(JSON, req);
+		Request request = new Request.Builder()
+				.url(Const.SERVER_IP + url)
+				.post(requestBody)
+				.addHeader("Authorization",token)
+				.build();
+        client.newCall(request).enqueue(new MyCallback(frame,token));
     }
     
     
     static class MyCallback implements okhttp3.Callback{ // 回调
         
      public  ForestFrame frame;
-     public  MyCallback(ForestFrame frame) {
-    	       this.frame = frame;
+     public  String token;
+     public  MyCallback(ForestFrame frame,String token) {
+
+     	this.frame = frame;
+     	this.token = token;
      }
     	 public void onResponse(Call call, Response response) throws IOException {
              // 请求成功调用，该回调在子线程
-           
-		         String str = URLDecoder.decode(response.body().string(), "utf-8");  
-		         System.out.println(str);
-		         dealMessage(str,frame);
-              
+
+			 String str = URLDecoder.decode(response.body().string(), "utf-8");
+			 System.out.println("异步消息结果：" + str);
+
+			 JsonObject jsonObject =  new JsonParser().parse(str).getAsJsonObject();
+
+			 if(jsonObject.get("code").getAsInt() == 200) {
+				 if (frame != null) {
+					 if(jsonObject.get("data").getAsJsonObject().has("code")){   //系统的回执消息，无用
+						 return;
+					 }
+					 dealMessage(jsonObject.get("data").getAsJsonObject(), token,frame);
+				 }
+			 }
          }
          
          public void onFailure(Call call, IOException e) {
@@ -118,58 +145,134 @@ public class HttpHelper {
          }
 
     }
-    
+
 	/**
 	 * 根据传来的消息进行处理
-	 * @param messagejson
+	 * @param data
+	 * @param frame
 	 */
-	public static void  dealMessage(String messagejson,ForestFrame frame) {
+	public static void  dealMessage(JsonObject data,String token,ForestFrame frame) {
+
+		refreshMe(data.get("me").getAsJsonObject(),frame);
+		refreshPoint(data.get("inVisionSoldiers").getAsJsonArray(),frame);
+		refreshBox( data.get("boxes").getAsJsonArray(),frame);
+		dealMessage(data.get("messages").getAsJsonArray(),token,frame);
+
+	}
+
+	/**
+	 * 通知页面刷新我的信息
+	 * @param object
+	 * @param frame
+	 */
+	public static void refreshMe(JsonObject object,ForestFrame frame){
+
 		Gson gson = new Gson();
-		
-		JsonObject jsonObject = (JsonObject) new JsonParser().parse(messagejson).getAsJsonObject();
-		int code =  jsonObject.get("code").getAsInt();
-		switch (code) {
-		case  1:
-			break; 
-		case  Const.MESSAGE_PULL_REPLAY :
-			refreshPoint( jsonObject.get("content").getAsJsonObject().get("soldier_lists").getAsJsonArray(),frame);
-			refreshBox( jsonObject.get("content").getAsJsonObject().get("box_lists").getAsJsonArray(),frame);
-			refreshMessage(jsonObject.get("content").getAsJsonObject().get("operation").getAsJsonObject(),frame);
-			break;
+		Soldier m = gson.fromJson(object, Soldier.class);
+		frame.resetMe(m);
+	}
+
+	/**
+	 * 得到每个消息
+	 * @param array
+	 * @param frame
+	 */
+	public static void dealMessage(JsonArray array,String token,ForestFrame  frame) {
+
+		Iterator it = array.iterator();
+		while(it.hasNext()){
+			JsonElement e = (JsonElement)it.next();
+			JsonObject jobject = e.getAsJsonObject();
+			refreshMessage(jobject,token,frame);
 		}
 	}
-	
 	/**
 	 * 通知消息队列
-	 * @param array
+	 * @param object
+	 * @param frame
 	 */
-	public static void refreshMessage(JsonObject object,ForestFrame  frame) {
-		Gson gson = new Gson();
-	     int code = object.get("op_code").getAsInt();
-	     String timestamp = object.get("timestamp").getAsString();
-	     
+	public static void refreshMessage(JsonObject object,String token,ForestFrame  frame) {
+
+	     int code = object.get("code").getAsInt();
+	     Gson g = new Gson();
+		JsonObject data = g.fromJson(object.get("data").getAsString(), JsonObject.class);
+
 	     if(code == Const.MESSAGE_OPERATION_TWO) {   //有人向我发起认证
-	    	      int sodiler_id = object.get("sodiler_id").getAsInt();
-	    	      String pri_key = object.get("pri_key").getAsString();
-	    	      Map<String,Object> map = new HashMap<String,Object>();
-	    	      map.put("sodiler_id", sodiler_id);
-	    	      map.put("pri_key", pri_key);
-	    	      Message message = new Message(code,map,timestamp);
-	    	     frame.addMessageArrive(message);
+
+	     	System.out.println("有人向我发起认证:"+ object);
+			 Map<String,Object> map = new HashMap<String,Object>();
+			 map.put("ciper", data.get("ciper").getAsString());
+			 map.put("text",data.get("text").getAsString());
+			 map.put("from_id",data.get("from_id").getAsInt());
+			 Message message = new Message(code,map);
+			 frame.addMessageArrive(message);
+			 return ;
 	     }
 	     
-	     if(code == Const.MESSAGE_OPERATION_FIVE) {   //我发起的认证 被 认证成功
-	    	 
+	     if(code == Const.MESSAGE_OPERATION_FOUR) {   //回执验证，直接在这里解密了
+
+			 String[] strlist= new String[2];
+			 strlist[0] = data.get("ciper").getAsString();
+			 strlist[1] = data.get("text").getAsString();
+			 if(RSA_Tool.sgnCheck(strlist)) {   //回执验证成功
+			 	 //告诉server
+				 Map<String,Object> req_map = new HashMap<>();
+				 req_map.put("confirmId",data.get("from_id").getAsString());
+				 String req = TransTools.objectToJson(req_map);
+				 System.out.println("回执验证成功，告诉服务器验证成功消息："+req);
+				 System.out.println("看一下token：" + token);
+				 HttpHelper.asyncPost(Const.CONFIRM,token,req,null);
+
+				 //通知消息队列
+				 Map<String,Object> map = new HashMap<String,Object>();
+				 map.put("from_id",data.get("from_id").getAsInt());
+				 Message message = new Message (Const.MESSAGE_OPERATION_FIVE,map);
+				 frame.addMessageArrive(message);
+			 }
+			 return ;
 	     }
-	     
-	     if(code == Const.MESSAGE_OPERATION_SIX) {     //我发起的认证 被 认证失败
-	    	 
-	     }
+	     if(code == Const.MESSAGE_CAPTAIN_ONE){  //4001 我需要重新竞选长官
+
+	     	Soldier other_captain = g.fromJson(object.get("data").getAsString(),Soldier.class);
+
+			 //通知消息队列
+//			 Map<String,Object> map = new HashMap<String,Object>();
+//			 map.put("other_captain_id",other_captain.getId());
+//			 Message message = new Message (Const.MESSAGE_CAPTAIN_ONE,map);
+//			 frame.addMessageArrive(message);
+
+			 //通知我主动发起
+			 frame.chooseCaptain(other_captain);
+			 return ;
+		 }
+
+		 if(code == Const.MESSAGE_CAPTAIN_THREE){  //4003
+
+			 String level_code = data.get("level_code").getAsString();
+			 int from_id = data.get("from_id").getAsInt();
+
+			 //通知页面回复
+			 frame.responseCaptain(level_code,from_id);
+			 return ;
+		 }
+
+		 if(code == Const.MESSAGE_CAPTAIN_FIVE){  //4005
+	     	String num1 = data.get("num1").getAsString();
+	     	String num2 = data.get("num2").getAsString();
+	     	String P = data.get("P").getAsString();
+	     	int from_id = data.get("from_id").getAsInt();
+	     	String[] nums = {num1,num2};
+
+	     	//通知页面比较最终结果
+			 frame.finalResultCaptain(nums,P,from_id);
+			 return;
+		 }
 	}
-	
+
 	/**
 	 * 通知界面刷新其他士兵的点的信息
-	 * @param other_soldiers
+	 * @param array
+	 * @param frame
 	 */
 	public static void refreshPoint(JsonArray array,ForestFrame  frame) {
 		Gson gson = new Gson();
@@ -187,14 +290,53 @@ public class HttpHelper {
 		List<Box> box_list = gson.fromJson(array.toString(),new TypeToken<List<Box>>(){}.getType());
         frame.resetBoxPoint(box_list);
 	}
-    
-    public static void main(String[] args) throws Exception {
- 
-        //post请求
-        FormBody formBody = new FormBody.Builder().add("code","1234").add("name","zp").add("age","25").build();
-        
-        HttpHelper hp = HttpHelper.getInstance();
-        hp.syncGet("http://183.172.51.173:19017/a", "huiewfgerwyuofgyer");
- 
-    }
+
+	private static SSLSocketFactory createSSLSocketFactory() {
+		SSLSocketFactory ssfFactory = null;
+		try {
+			SSLContext sc = SSLContext.getInstance("TLS");
+			sc.init(null, new TrustManager[]{
+					new TrustAllCerts()}, new SecureRandom());
+			ssfFactory = sc.getSocketFactory();
+		} catch (Exception e) {
+
+		} return ssfFactory;
+	}
+
+	private static class TrustAllCerts implements X509TrustManager {
+		@Override
+		public void checkServerTrusted(X509Certificate[] chain, String authType) throws CertificateException {
+
+		}
+		@Override
+		public void checkClientTrusted(X509Certificate[] x509Certificates, String s) throws CertificateException {
+
+		}
+		@Override
+		public X509Certificate[] getAcceptedIssuers() {
+			return new X509Certificate[0];
+		}
+	}
+	//信任所有的服务器,返回true
+	private static class TrustAllHostnameVerifier implements HostnameVerifier {
+		@Override
+		public boolean verify(String hostname, SSLSession session) {
+			return true;
+		}
+	}
+
+	/**
+	 * 测试函数
+	 * @param args
+	 * @throws Exception
+	 */
+	public static void main(String[] args) throws Exception {
+
+		//post请求
+		FormBody formBody = new FormBody.Builder().add("code","1234").add("name","zp").add("age","25").build();
+
+		//HttpHelper hp = HttpHelper.getInstance();
+		// hp.syncGet("http://183.172.51.173:19017/a", "huiewfgerwyuofgyer");
+
+	}
 }

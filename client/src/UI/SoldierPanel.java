@@ -6,31 +6,41 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
+import RSA_auth.RSA_Tool;
+import src.bean.Message;
 import src.bean.Soldier;
 import src.common.Const;
+import src.common.HttpHelper;
+import src.common.TransTools;
 
 import java.awt.Color;
 import java.awt.GridLayout;
 import java.awt.Image;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.util.HashMap;
+import java.util.Map;
 
 public class SoldierPanel extends JPanel{
 
 	private Soldier soldier;
+	private int id;
+	private String token;
 	JLabel name ;
 	JButton level ;  //是否是队长
 	JButton group ;  //组号
-//	JButton verify;
 	JLabel pri_key;
 
-	
-	public SoldierPanel() {
+	public SoldierPanel(int id,String token) {
 		soldier = new Soldier();
+		this.id = id;
+		this.token = token;
 		this.lanch();
 	}
-	public SoldierPanel(Soldier soldier) {
+	public SoldierPanel(Soldier soldier,int id,String token) {
 		this.soldier = soldier;
+		this.id = id;
+		this.token = token;
 		this.lanch();
 	}
 	
@@ -55,11 +65,11 @@ public class SoldierPanel extends JPanel{
 		panel_info_second .setBounds(0, 30, Const.SOLDIER_WIDTH, 30);
 		this.add(panel_info_second);
 		
-		level = new JButton(this.soldier.levelToString());
+		level = new JButton(this.soldier.isCaptain() == 1? "队长" :"士兵");
 		level.setBounds(0, 0, 30, 30);
 		panel_info_second .add(level);
 		
-		group = new JButton(String.valueOf(this.soldier.getGroup()));
+		group = new JButton(String.valueOf(this.soldier.getGroupNum()));
 		group.setBounds(30+10, 0, 30, 30);
 		panel_info_second .add(group);
 		
@@ -86,7 +96,16 @@ public class SoldierPanel extends JPanel{
 	    pri_key.setVisible(false);
 	    this.add(pri_key);
 	}
-	
+
+	/**
+	 * 设置该panel的士兵信息
+	 * @param soldier
+	 */
+	public void setSoldierInfo(Soldier soldier){
+		this.soldier = soldier;
+		name.setText(soldier.getName());
+
+	}
 	/**
 	 * 鼠标移动到士兵的图片时，会显示一系列可执行的操作，如士兵的pri_key
 	 * @author zhangsukun
@@ -112,8 +131,22 @@ public class SoldierPanel extends JPanel{
 		public void mouseClicked(MouseEvent e) {      //鼠标双击进行验证
 			// TODO Auto-generated method stub
 			if(e.getClickCount()==2){
-                System.out.println("发送验证消息");
-          }
+                Map<String,String> message_map = new HashMap();
+				String str_list[] = RSA_Tool.enSgn(Const.CIPER,soldier.getPublicKey());
+				message_map.put("ciper",str_list[0]);
+				message_map.put("text",str_list[1]);
+				message_map.put("from_id",String.valueOf(id));
+
+				String message_map_str = TransTools.objectToJson(message_map);
+				Map<String,Object> req_map = new HashMap<>();
+				req_map.put("code",Const.MESSAGE_OPERATION_TWO);
+				req_map.put("message",message_map_str);
+				req_map.put("receiveId",soldier.getId());
+
+                String req = TransTools.objectToJson(req_map);
+                System.out.print("发起验证消息："+req);
+				HttpHelper.asyncPost(Const.MESG_SEND,token,req,null);
+            }
 			
 		}
 
@@ -128,7 +161,6 @@ public class SoldierPanel extends JPanel{
 			// TODO Auto-generated method stub
 			
 		}
-		
 	}
 	
 	/*
@@ -140,8 +172,8 @@ public class SoldierPanel extends JPanel{
 		JFrame f  = new JFrame();
 		f.setVisible(true);
 		Soldier so = new Soldier();
-		SoldierPanel sop = new SoldierPanel(so);
-		f.add(sop);
+		//SoldierPanel sop = new SoldierPanel(so);
+		//f.add(sop);
 		
 	}
 }

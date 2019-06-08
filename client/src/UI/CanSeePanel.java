@@ -23,11 +23,6 @@ import src.common.Const;
 
 public class CanSeePanel extends JPanel{
 
-//	 private  File file;
-//	 private  BufferedImage originImage;
-//	 private  int width;
-//	 private  int heighth;
-//     BufferedImage nowImage;
 	 private BufferedImage bi ;
      private int point_x;
      private int point_y;
@@ -35,8 +30,8 @@ public class CanSeePanel extends JPanel{
      
 	/**
 	 * 构造函数 
-	 * @param x  我的相对x坐标
-	 * @param y  我的相对y坐标
+	 * @param point_x 我的相对x坐标
+	 * @param point_y  我的相对y坐标
 	 * @throws IOException 
 	 */
 	public CanSeePanel(int point_x,int point_y)  {

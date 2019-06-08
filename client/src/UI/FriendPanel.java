@@ -67,7 +67,7 @@ public class FriendPanel extends JPanel{
 			this.setBackground(Color.GRAY);
 			
 			ImageIcon icon = new ImageIcon(Const.FRIEND_CARD_IMAGE_SOLDIER);   
-			if(soldier.isLeader()) {
+			if(soldier.isCaptain()==1) {
 				icon = new ImageIcon(Const.FRIEND_CARD_IMAGE_LEADER);   
 			}
 			icon.setImage(icon.getImage().getScaledInstance(Const.FRIEND_CARD_IMAGE_SIZE,Const.FRIEND_CARD_IMAGE_SIZE,Image.SCALE_DEFAULT));//80和100为大小 可以自由设置
@@ -76,10 +76,10 @@ public class FriendPanel extends JPanel{
 			
 			name.setText(soldier.getName());
 			name.setBounds(Const.FRIEND_CARD_GEZI*2 + Const.FRIEND_CARD_IMAGE_SIZE,Const.FRIEND_CARD_GEZI , Const.FRIEND_CARD_LABEL_WIDTH, Const.FRIEND_CARD_LABEL_HEIGHT);
-			if(soldier.getPub_key() == null || soldier.getPub_key() == "") {
+			if(soldier.getPublicKey() == null || soldier.getPublicKey() == "") {
 				pub_key.setText("<html>还未验证该士兵</html>");
 			}
-			pub_key.setText("<html>"+soldier.getPub_key()+"44444444</html>");
+			pub_key.setText("<html>"+soldier.getPublicKey()+"44444444</html>");
 			pub_key.setBounds(Const.FRIEND_CARD_GEZI*2 + Const.FRIEND_CARD_IMAGE_SIZE,Const.FRIEND_CARD_GEZI*2 + Const.FRIEND_CARD_LABEL_HEIGHT , Const.FRIEND_CARD_LABEL_WIDTH, Const.FRIEND_CARD_LABEL2_HEIGHT);
 			this.add(image);
 			this.add(name);

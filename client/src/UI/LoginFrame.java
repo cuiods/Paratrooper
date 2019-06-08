@@ -1,5 +1,6 @@
 package src.UI;
 
+import javax.net.ssl.*;
 import javax.swing.JFrame;
 import javax.swing.JButton;
 import java.awt.BorderLayout;
@@ -9,11 +10,14 @@ import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import javax.swing.border.LineBorder;
 
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.Response;
+import RSA_auth.RSA_Tool;
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+import okhttp3.*;
 import src.bean.Box;
 import src.bean.Soldier;
+import src.common.Const;
 import src.common.HttpHelper;
 
 import java.awt.Color;
@@ -22,6 +26,12 @@ import javax.swing.JLabel;
 import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.awt.event.ActionEvent;
+import java.net.URLDecoder;
+import java.security.SecureRandom;
+import java.security.cert.CertificateException;
+import java.security.cert.X509Certificate;
+import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 public class LoginFrame  {
 	private JFrame loginFrame;
@@ -32,9 +42,12 @@ public class LoginFrame  {
 	private Soldier me;
 	private boolean isLogin = true;  //false时不接听服务端的消息
 	private ForestFrame forestFrame;
-	
-	public LoginFrame(Soldier me) {
+	private Map<String,String>  map;
+
+	public LoginFrame(Soldier me,Map<String,String> map) {
+
 		this.me = me;
+		this.map = map;
 		
 		loginFrame = new JFrame();
 		loginFrame.getContentPane().setLayout(new GridLayout(1, 0, 0, 0));
@@ -86,29 +99,46 @@ public class LoginFrame  {
 		btn_login = new JButton("登录");
 		btn_login.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				 
-				OkHttpClient client =  new OkHttpClient();
-				Request request = new Request.Builder().url("http://127.0.0.1:19018/login").
-	        		     addHeader("Access-User-Token","e5cHLWScbto3VfvYTU1llVZgl/WniA4QZZ8epmn8k/o=").build();
-	            Response response;
+
+				JsonObject req_obj = new JsonObject();
+				req_obj.addProperty("name",tf_name.getText());
+				req_obj.addProperty("password",tf_psw.getText());
+				String json = req_obj.toString();
+				System.out.println("登录："+json);
+
+				Response response = HttpHelper.syncPost(Const.LOGIN,json,null);
+
+				String str = null;
 				try {
-					response = client.newCall(request).execute();
-					if (response.isSuccessful()) { // 判断是否成功
-		                 if(response.body().string().equals("ok")){
-		                	      isLogin = true;
-		                	      openChildFrame();  //到时候根据协议再改。。传回来的值
-		                	      loginFrame.dispose();  //隐藏父窗口
-		                 }
-		            }else {
-		                 System.out.println("登录失败"); // 链接失败
-		            }
-					
+					str = URLDecoder.decode(response.body().string(), "utf-8");
 				} catch (IOException e1) {
-					// TODO Auto-generated catch block
 					e1.printStackTrace();
-				} // 返回实体
-	       
-				
+				}
+				JsonObject res_json = (JsonObject) new JsonParser().parse(str).getAsJsonObject();
+
+				int code = res_json.get("code").getAsInt();
+				switch(code){
+					case 200:
+						System.out.print("登录成功");
+						isLogin = true;
+						String token = res_json.get("data").getAsJsonObject().get("accessToken").getAsString();
+						//id
+						int id = res_json.get("data").getAsJsonObject().get("me").getAsJsonObject().get("id").getAsInt();
+						me.setId(id);
+						//name
+						String name = res_json.get("data").getAsJsonObject().get("me").getAsJsonObject().get("name").getAsString();
+						me.setName(name);
+						//captain
+
+						//groupnum
+
+						System.out.println("token:"+token);
+						openChildFrame(token);
+						loginFrame.dispose();  //隐藏父窗口
+						break;
+					default:
+						System.out.print("登录失败");
+				}
 			}
 		});
 		panel_4.add(btn_login);
@@ -118,9 +148,18 @@ public class LoginFrame  {
 		loginFrame.setVisible(true);
 	}
 	
-	public void openChildFrame() {
-		Box box = new Box ();
-		forestFrame = new ForestFrame(me);
+	public void openChildFrame(String token) {
+		map.put("token",token);
+		HttpHelper.setToken(token);
+
+		//将我的士兵信息异步发送给服务端
+		JsonObject req_obj = new JsonObject();
+		req_obj.addProperty("publicKey",map.get("N"));
+		String req = req_obj.toString();
+		System.out.print(req);
+		HttpHelper.asyncPost(Const.REGISTER_N,token,req,null);
+
+		forestFrame = new ForestFrame(me,map);
 	}
 	
 	public ForestFrame getChildFrame() {
@@ -130,4 +169,6 @@ public class LoginFrame  {
 	public boolean isLogin() {
 		return this.isLogin;
 	}
+
+
 }

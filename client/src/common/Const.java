@@ -68,14 +68,16 @@ public class Const{
 		
 	//net
 	//public static final int CLIENT_PORT = 19017;
-	public static final int SERVER_PORT = 19018;
-	public static final String SERVER_IP = "127.0.0.1";
-	
+	//public static final int SERVER_PORT = 19018;
+	public static final String SERVER_IP = "https://39.106.7.201";
+	public static final String LOGIN = "/api/v1/auth";                 //登录
+	public static final String SYNC_POINT = "/api/v1/soldier/update";  //同步我的坐标并拉取消息
+	public static final String REGISTER_N = "/api/v1/soldier/register"; //注册公钥
+	public static final String MESG_SEND = "/api/v1/msg/send";           //发送一系列消息，服务器进行转发操作
+	public static final String CONFIRM = "/api/v1/msg/confirm";         //认证身份完成，向服务端发送认证消息
+	public static final String CAPTAIN = "/api/v1/msg/captain";         //队长竞选结束，告诉服务端结果
+
 	// message code
-	public static final int MESSAGE_LOGIN = 1;
-	public static final int MESSAGE_PULL = 2;
-	public static final int MESSAGE_PULL_REPLAY = 3;
-	
 	public static final int MESSAGE_OPERATION_ONE = 3001;   //我A向服务端发起 对B认证 ，告诉B 我是A
 	public static final int MESSAGE_OPERATION_TWO = 3002;   //其他人向我发起认证
 	public static final int MESSAGE_OPERATION_THREE = 3003;   //我接到其他人发送的认证，并认证成功 发送我的信息给服务端
@@ -83,11 +85,21 @@ public class Const{
 	public static final int MESSAGE_OPERATION_FIVE = 3005;   //我发送给其他人的认证 被那个人认证通过 
 	public static final int MESSAGE_OPERATION_SIX = 3006;   //我发送给其他人的认证 被那个人认证失败
 
-	
+	public static final int MESSAGE_CAPTAIN_ONE = 4001;
+	public static final int MESSAGE_CAPTAIN_TWO = 4002;
+	public static final int MESSAGE_CAPTAIN_THREE = 4003;
+	public static final int MESSAGE_CAPTAIN_FOUR = 4004;
+	public static final int MESSAGE_CAPTAIN_FIVE = 4005;
+	public static final int MESSAGE_CAPTAIN_SIX = 4006;
+
 	//thread 
-	public static final int SLEEP_SECONDS = 10000;
+	public static final int SLEEP_SECONDS = 1000;
 	public static final int MESSAGE_SHOW_SECONDS = 5000;
 
+	//generate rsa
+	public static final int BIT = 512;
+	public static final String CIPER = "975zsk";
+	public static final String CIPER_REPLY ="975zsk_reply";
 	
 	
 }

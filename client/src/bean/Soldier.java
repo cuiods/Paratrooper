@@ -4,91 +4,92 @@ public class Soldier {
 	
 	private int id ;
 	private String name;
-	private int level;
-	private boolean isLeader;
-	private String pub_key;  //public key
-	private String pri_key ; //private key
-	private int code  ;  //携带的密码段
-	private int point_x;
-	private int point_y;
-	private int group ;
-	
+	private int captain;  //军衔
+	private String publicKey;  //public key
+	private int locationX;
+	private int locationY;
+	private int groupNum ;  //组号
+	private int updateStatus ;
+	private int alive;
 
-	private static String[] map = {"士兵","中卫","上校"};
-	
-    public Soldier() {
-    	    this.name = "test";
-		this.point_x = 500;
-		this.point_y = 300;
-		this.isLeader = false;
-	}
-    
-    public int getGroup() {
-		return group;
+	public void setId(int id) {
+		this.id = id;
 	}
 
-	public void setGroup(int group) {
-		this.group = group;
+	public void setName(String name) {
+		this.name = name;
 	}
-	
-	public int getPoint_x() {
-		return point_x;
+
+	public void setCaptain(int captain) {
+		this.captain = captain;
 	}
-	public void setPoint_x(int point_x) {
-		this.point_x = point_x;
+
+	public void setPublicKey(String publicKey) {
+		this.publicKey = publicKey;
 	}
-	public int getPoint_y() {
-		return point_y;
+
+	public void setLocationX(int locationX) {
+		this.locationX = locationX;
 	}
-	public void setPoint_y(int point_y) {
-		this.point_y = point_y;
+
+	public void setLocationY(int locationY) {
+		this.locationY = locationY;
+	}
+
+	public void setGroupNum(int groupNum) {
+		this.groupNum = groupNum;
+	}
+
+	public void setUpdateStatus(int updateStatus) {
+		this.updateStatus = updateStatus;
+	}
+
+	public void setAlive(int alive) {
+		this.alive = alive;
 	}
 
 	public int getId() {
 		return id;
 	}
-	public void setId(int id) {
-		this.id = id;
-	}
+
 	public String getName() {
 		return name;
 	}
-	public void setName(String name) {
-		this.name = name;
+
+	public int isCaptain() {
+		return captain;
 	}
-	public int getLevel() {
-		return level;
+
+	public String getPublicKey() {
+		return publicKey;
 	}
-	public void setLevel(int level) {
-		this.level = level;
+
+	public int getLocationX() {
+		return locationX;
 	}
-	public boolean isLeader() {
-		return this.isLeader;
+
+	public int getLocationY() {
+		return locationY;
 	}
-	public void setLeader(boolean isLeader) {
-		this.isLeader = isLeader;
+
+	public int getGroupNum() {
+		return groupNum;
 	}
-	public String getPub_key() {
-		return pub_key;
+
+	public int getUpdateStatus() {
+		return updateStatus;
 	}
-	public void setPub_key(String pub_key) {
-		this.pub_key = pub_key;
+
+	public int getAlive() {
+		return alive;
 	}
-	public String getPri_key() {
-		return pri_key;
+
+	public Soldier() {
+
+    	    this.name = "test";
+		    this.locationX = 500;
+		    this.locationY = 300;
 	}
-	public void setPri_key(String pri_key) {
-		this.pri_key = pri_key;
-	}
-	public int getCode() {
-		return code;
-	}
-	public void setCode(int code) {
-		this.code = code;
-	}
-	
-	public String levelToString() {
-		return map[level];
-	}
+
 
 }

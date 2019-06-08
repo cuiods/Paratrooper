@@ -2,14 +2,21 @@ package src.UI;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
+import RSA_auth.RSA_Tool;
 import src.bean.Message;
+import src.bean.Soldier;
 import src.common.Const;
+import src.common.HttpHelper;
+import src.common.TransTools;
 
 public class MessagePanel extends JPanel{
 
@@ -18,15 +25,30 @@ public class MessagePanel extends JPanel{
 	private JButton cancel;
 	private Message message;
 	private boolean isReply ;
+	private List<Soldier> soliderList;
+	private Soldier me;
+	private String token;
 	
-	public MessagePanel() {
+	public MessagePanel(List<Soldier> soliderList,Soldier me,String token) {
+		this.token = token;
+		this.me = me;
+		this.soliderList = soliderList;
 		body = new JLabel("您暂无消息");
 		ok = new JButton("确认");
 		cancel = new JButton("取消");
 		isReply = false;
 		lanch();
 	}
-	
+
+	/**
+	 * 刷新士兵列表
+	 * @param soliderList
+	 */
+	public void resetNeedInfo(List<Soldier> soliderList,Soldier me){
+		this.soliderList = soliderList;
+		this.me = me;
+	}
+
 	public void lanch() {
 		this.setLayout(null);
 		this.add(body);
@@ -49,10 +71,20 @@ public class MessagePanel extends JPanel{
 	public void resetMessage(Message message) {
 		this.message = message;
 		int code = message.getCode();
+		String str ="";
 		switch(code) {
-		case Const.MESSAGE_OPERATION_TWO :
-			String str = "<html> 士兵:" + message.getContent().get("sodiler_id") +" 向您发起认证，他的私钥为：" +message.getContent().get("pri_key") +"</html>";
-			body.setText(str);
+		    case Const.MESSAGE_OPERATION_TWO :  //有人向我发起认证
+			    str = "<html> 士兵:"+ message.getData().get("from_id")+"向您发起认证,是否继续" + "</html>";
+			    body.setText(str);
+			    break;
+			case Const.MESSAGE_OPERATION_FIVE : //认证成功
+				str = "<html> 您对士兵:"+ message.getData().get("from_id")+"发起的认证成功！" + "</html>";
+				body.setText(str);
+				break;
+			case Const.MESSAGE_CAPTAIN_ONE:  //竞选队长
+				str = "<html> 您需要与:"+ message.getData().get("other_captain_id")+"竞选队长。"+ "</html>";
+				body.setText(str);
+				break;
 		}
 		System.out.println("到达44");
 	}
@@ -73,10 +105,47 @@ public class MessagePanel extends JPanel{
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			// TODO Auto-generated method stub
+
+			//回复消息
+			switch(message.getCode()){
+				case Const.MESSAGE_OPERATION_TWO:  //有人向我发起验证
+
+					String[] strlist= new String[2];
+					strlist[0] = (String)message.getData().get("ciper");
+					strlist[1] = (String)message.getData().get("text");
+					if(RSA_Tool.sgnCheck(strlist)){
+						System.out.println("验证成功，现在回执消息");
+						String pub_key = "";
+						//找该士兵的公钥
+						for(Soldier soldier :soliderList){
+							if(soldier.getId() == (int)message.getData().get("from_id")){
+								pub_key = soldier.getPublicKey();
+								break;
+							}
+						}
+						Map<String,String> message_map = new HashMap();
+						String str_list[] = RSA_Tool.enSgn(Const.CIPER,pub_key);
+						message_map.put("ciper",str_list[0]);
+						message_map.put("text",str_list[1]);
+						message_map.put("from_id",String.valueOf(me.getId()));
+						String message_map_str = TransTools.objectToJson(message_map);
+
+						Map<String,Object> req_map = new HashMap<>();
+						req_map.put("code",Const.MESSAGE_OPERATION_FOUR);
+						req_map.put("message",message_map_str);
+						req_map.put("receiveId",message.getData().get("from_id"));
+
+						String req = TransTools.objectToJson(req_map);
+						System.out.println("发起回执验证消息："+req);
+						HttpHelper.asyncPost(Const.MESG_SEND,token,req,null);
+
+					}else{
+						System.out.println("验证失败");
+					}
+					break;
+
+			}
 			isReply = true;
-			//回复消息 定一下这个消息里面的结构
-			
-			
 			clearMessage();
 		}
 	}

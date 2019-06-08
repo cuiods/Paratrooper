@@ -23,6 +23,9 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 
+import Millionare.Millionaire_Tool;
+import RSA_auth.RSA_Tool;
+import com.google.gson.JsonObject;
 import com.sun.net.httpserver.HttpServer;
 import com.sun.net.httpserver.spi.HttpServerProvider;
 
@@ -40,9 +43,6 @@ public class ForestFrame extends JFrame{
 
 	private CanSeePanel canseePanel;
 
-	private HttpHelper httphelper = HttpHelper.getInstance();
-	private TransTools transtools = TransTools.getInstance();
-
 	private Soldier me;
 	private List<Soldier> otherSoldiers ;
 	private List<SoldierPanel> jlb_otherSolders;
@@ -58,22 +58,27 @@ public class ForestFrame extends JFrame{
 	
 	private Queue<Message> message_queue ;
 	private MessagePanel messagePanel;
+
+	private JLabel tips ;
 	
 	private PullingThread pt;
 	private MessageThread mt;
-  	
-	public ForestFrame(Soldier me) {
+
+	private Map<String,String> map ;
+	public ForestFrame(Soldier me,Map<String,String> map) {
 		this.me = me;
-		
-		canseePanel = new CanSeePanel(me.getPoint_x(),me.getPoint_y());
+		this.map = map;
+
+		canseePanel = new CanSeePanel(me.getLocationX(),me.getLocationY());
 		forestPanel = new JPanel();
+		tips = new JLabel();  //一些提示操作  你们补充
 		
 		//士兵相关
 		otherSoldiers = new ArrayList<Soldier>();
 		jlb_otherSolders = new ArrayList<SoldierPanel>();
 		for(int i = 0 ; i< others_sum ;i++) {
 			
-			SoldierPanel sp = new SoldierPanel();
+			SoldierPanel sp = new SoldierPanel(me.getId(),map.get("token"));
 			sp.setVisible(false);
 			sp.setOpaque(false);
 			sp.setSize(Const.SOLDIER_WIDTH, 30+30+Const.SOLDIER_HEIGTH+30);
@@ -104,7 +109,7 @@ public class ForestFrame extends JFrame{
 		friendLists = new ArrayList<Soldier>();
 		
 		//消息列表相关
-		messagePanel = new MessagePanel();
+		messagePanel = new MessagePanel(this.otherSoldiers,me,map.get("token"));
 		message_queue  = new LinkedList<Message>();
 		this.lanch();
 		this.startNetwork();
@@ -125,7 +130,7 @@ public class ForestFrame extends JFrame{
 		forestPanel.setBackground(Color.black);
 		forestPanel.setSize(Const.FOREST_WIDTH, Const.FOREST_HEIGTH);
 		
-		canseePanel.setBounds(me.getPoint_x() - Const.PANEL_SIZE/2, me.getPoint_y() - Const.PANEL_SIZE/2, Const.PANEL_SIZE, Const.PANEL_SIZE); 	
+		canseePanel.setBounds(me.getLocationX() - Const.PANEL_SIZE/2, me.getLocationY() - Const.PANEL_SIZE/2, Const.PANEL_SIZE, Const.PANEL_SIZE);
 		canseePanel.addMouseListener(new GainFoucsListener());
 		
 		//消息列表
@@ -162,8 +167,8 @@ public class ForestFrame extends JFrame{
 	 * @param point_y
 	 */
 	public void resetPoint(int point_x ,int point_y) {
-		this.me.setPoint_x(point_x);
-		this.me.setPoint_y(point_y);
+		this.me.setLocationX(point_x);
+		this.me.setLocationY(point_y);
 		canseePanel.setBounds(point_x - Const.PANEL_SIZE/2, point_y - Const.PANEL_SIZE/2, Const.PANEL_SIZE, Const.PANEL_SIZE); 
 		canseePanel.resetPoint(point_x,point_y);
 		resetBoxPoint(this.boxlists);
@@ -179,14 +184,16 @@ public class ForestFrame extends JFrame{
 		int i = 0;
 		for(i = 0 ; i< otherSoldiers.size();i++) {
 			Soldier soldier = otherSoldiers.get(i);
-			jlb_otherSolders.get(i).setBounds(soldier.getPoint_x() - Const.SOLDIER_WIDTH/2, soldier.getPoint_y() - Const.SOLDIER_PANEL_HEIGHT/2, Const.SOLDIER_WIDTH, Const.SOLDIER_PANEL_HEIGHT);
+			jlb_otherSolders.get(i).setBounds(soldier.getLocationX() - Const.SOLDIER_WIDTH/2, soldier.getLocationY() - Const.SOLDIER_PANEL_HEIGHT/2, Const.SOLDIER_WIDTH, Const.SOLDIER_PANEL_HEIGHT);
 			jlb_otherSolders.get(i).setVisible(true);
+			jlb_otherSolders.get(i).setSoldierInfo(soldier);
 		}
 		
 		while(i < this.others_sum) {
 			jlb_otherSolders.get(i).setVisible(false);
 			i++;
 		}
+		messagePanel.resetNeedInfo(otherSoldiers,me);
 	}
 	
 	/**
@@ -199,7 +206,7 @@ public class ForestFrame extends JFrame{
 		for(i = 0 ; i < boxlists.size();i++) {
 			Box box = boxlists.get(i);
 			boxPanelists.get(i).setBounds(box.getPoint_x() - Const.BOX_PANEL_WIDTH/2, box.getPoint_y() - Const.BOX_PANEL_HEIGHT/2, Const.BOX_PANEL_WIDTH, Const.BOX_PANEL_HEIGHT);
-			boxPanelists.get(i).resetBox(box,me.getPoint_x(),me.getPoint_y());
+			boxPanelists.get(i).resetBox(box,me.getLocationX(),me.getLocationY());
 			boxPanelists.get(i);
 		}
 		
@@ -207,6 +214,30 @@ public class ForestFrame extends JFrame{
 			boxPanelists.get(i).setVisible(false);
 			i++;
 		}
+	}
+
+	/**
+	 * 刷新我的一些信息
+	 * @param new_me
+	 */
+	public void resetMe(Soldier new_me){
+
+		//我的队长的切换消息
+		if(new_me.isCaptain() ==1 && me.isCaptain()==0){
+
+			System.out.println("您被选为长官");
+		}else if(new_me.isCaptain() == 0 && me.isCaptain() == 1){
+
+			System.out.println("您已被编入其他小队，不再是长官");
+		}
+
+		//我的队伍切换信息
+		if(new_me.getGroupNum() != me.getGroupNum()){
+			System.out.println("您的小队被重新整编");
+		}
+		me.setId(new_me.getId());
+		me.setCaptain(new_me.isCaptain());
+		me.setGroupNum(new_me.getGroupNum());
 	}
 	
 	
@@ -226,8 +257,8 @@ public class ForestFrame extends JFrame{
 		public void keyPressed(KeyEvent e) {
 			// TODO Auto-generated method stub
 			System.out.println(e.getKeyCode());
-			int point_x = me.getPoint_x();
-			int point_y = me.getPoint_y();
+			int point_x = me.getLocationX();
+			int point_y = me.getLocationY();
 			switch(e.getKeyCode())
 			{
 				case KeyEvent.VK_UP:
@@ -246,13 +277,7 @@ public class ForestFrame extends JFrame{
 			if(judgePoint(point_x,point_y)) {
 		         resetPoint(point_x,point_y);
 		         //发送我的坐标信息给服务端
-					Map<String,Object> map = new HashMap<String,Object>();
-					map.put("soldier_id", "1");
-					map.put("point_x", String.valueOf(me.getPoint_x()));
-					map.put("point_y", String.valueOf(me.getPoint_y()));
-				    Date date = new Date();
-					Message message = new Message(4,map, String.valueOf(date.getTime()));
-					sendMessage(message);
+				  updateMyPointToServer();
 			}
 			
 		}
@@ -270,20 +295,84 @@ public class ForestFrame extends JFrame{
 			// TODO Auto-generated method stub
 		}
 	}
-	
-	
-	
+
 	/**
 	 * 发送消息给服务端，不需要服务端的回执信息
-	 * @param message
 	 */
-	public void sendMessage(Message message) {
-		String param = transtools.objectToJson(message);
-		String url = "http://"+ Const.SERVER_IP + ":" + Const.SERVER_PORT +"/" +param;
-		System.out.println(url);
-		httphelper.asyncGet(url, "token",null);
+	public void updateMyPointToServer() {
+
+		JsonObject req_obj = new JsonObject();
+		req_obj.addProperty("x",me.getLocationX());
+		req_obj.addProperty("y",me.getLocationY());
+		String req = req_obj.toString();
+		HttpHelper.asyncPost(Const.SYNC_POINT,map.get("token"),req,null);
 	}
-	
+
+	/**
+	 * 收到4001 后，主动向发起请求竞选队长
+	 * @param other_captain
+	 */
+	public void chooseCaptain(Soldier other_captain){
+		Map<String,String> message_map = new HashMap();
+		String level_code = Millionaire_Tool.getFirstInfo(me.getId(),other_captain.getPublicKey(),map.get("E"));  //me.getId() 应该是一个军衔
+		message_map.put("level_code",level_code);
+		message_map.put("from_id",String.valueOf(me.getId()));
+		String message_map_str = TransTools.objectToJson(message_map);
+
+		Map<String,Object> req_map = new HashMap<>();
+		req_map.put("code",Const.MESSAGE_CAPTAIN_THREE);
+		req_map.put("message",message_map_str);
+		req_map.put("receiveId",other_captain.getId());
+
+		String req = TransTools.objectToJson(req_map);
+		System.out.println("发起竞选队长消息："+req);
+		HttpHelper.asyncPost(Const.MESG_SEND,map.get("token"),req,this);
+	}
+
+	/**
+	 * 回复竞争队长结果
+	 * @param level_code
+	 * @param from_id
+	 */
+	public void responseCaptain(String level_code,int from_id){
+
+		String[] nums = Millionaire_Tool.getSecondInfo(level_code,me.getId(),map.get("D"),map.get("E")); //me.getId() 应该是一个军衔
+		String P = Millionaire_Tool.getP();
+
+		Map<String,String> message_map = new HashMap();
+		message_map.put("num1",nums[0]);
+		message_map.put("num2",nums[1]);
+		message_map.put("P",P);
+		message_map.put("from_id",String.valueOf(me.getId()));
+		String message_map_str = TransTools.objectToJson(message_map);
+
+		Map<String,Object> req_map = new HashMap<>();
+		req_map.put("code",Const.MESSAGE_CAPTAIN_FIVE);
+		req_map.put("message",message_map_str);
+		req_map.put("receiveId",from_id);
+
+		String req = TransTools.objectToJson(req_map);
+		System.out.println("回复竞选队长消息："+req);
+		HttpHelper.asyncPost(Const.MESG_SEND,map.get("token"),req,this);
+	}
+
+	/**
+	 * 得到队长竞争结果最后的结果
+	 * @param nums
+	 * @param P
+	 */
+	public void finalResultCaptain(String[] nums,String P,int from_id){
+		boolean flag = Millionaire_Tool.getThirdInfo(nums, me.getId(), P);  //me.getId() 应该是一个军衔
+
+		Map<String,Object> req_map = new HashMap<>();
+		req_map.put("compareId",from_id);
+		req_map.put("result",flag ? 1:0);
+
+		String req = TransTools.objectToJson(req_map);
+		System.out.println("告诉服务器竞选队长的最终消息消息："+req);
+		HttpHelper.asyncPost(Const.CAPTAIN,map.get("token"),req,null);
+	}
+
 	/**
 	 * 开启网络监听消息 轮询
 	 */
@@ -300,16 +389,12 @@ public class ForestFrame extends JFrame{
 		@Override
 		public void run() {
 		  while(true) {
-			    Map<String,Object> map = new HashMap<String,Object>();
-				map.put("soldier_id", "1");
-				map.put("point_x", String.valueOf(me.getPoint_x()));
-				map.put("point_y", String.valueOf(me.getPoint_y()));
-			    Date date = new Date();
-			    Message message = new Message(Const.MESSAGE_PULL,map,String.valueOf(date.getTime()));
-			    String url = "http://"+ Const.SERVER_IP + ":" + Const.SERVER_PORT +"/" + transtools.objectToJson(message);
-			    System.out.println(url);
-			    httphelper.asyncGet(url, "token",ForestFrame.this);
-			
+			  JsonObject req_obj = new JsonObject();
+			  req_obj.addProperty("x",me.getLocationX());
+			  req_obj.addProperty("y",me.getLocationY());
+			  String req = req_obj.toString();
+			  HttpHelper.asyncPost(Const.SYNC_POINT,map.get("token"),req,ForestFrame.this);
+
 			try {
 				sleep(Const.SLEEP_SECONDS);
 			} catch (InterruptedException e) {
