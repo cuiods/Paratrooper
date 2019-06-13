@@ -3,18 +3,22 @@ package edu.tsinghua.paratrooper.bl.serviceimpl;
 import com.google.common.collect.Lists;
 import edu.tsinghua.paratrooper.bl.service.SoldierService;
 import edu.tsinghua.paratrooper.bl.vo.*;
+import edu.tsinghua.paratrooper.data.entity.TBoxEntity;
 import edu.tsinghua.paratrooper.data.entity.TSoldierEntity;
+import edu.tsinghua.paratrooper.data.repository.ApplyRepository;
 import edu.tsinghua.paratrooper.data.repository.BoxRepository;
 import edu.tsinghua.paratrooper.data.repository.MsgRepository;
 import edu.tsinghua.paratrooper.data.repository.SoldierRepository;
 import edu.tsinghua.paratrooper.util.constant.ErrorCode;
+import edu.tsinghua.paratrooper.util.lagrange.Lagrange;
+import edu.tsinghua.paratrooper.util.lagrange.MyInteger;
 import edu.tsinghua.paratrooper.web.security.AppContext;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import javax.transaction.Transactional;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -29,16 +33,38 @@ public class SoldierServiceImpl implements SoldierService {
     @Resource
     private BoxRepository boxRepository;
 
+    @Resource
+    private ApplyRepository applyRepository;
+
+    @Resource
+    private Lagrange lagrange;
+
+    @Value("${paratrooper.ui.length}")
+    private int maxLength;
+
+    @Value("${paratrooper.ui.width}")
+    private int maxWidth;
+
     /**
      * Initialize soldier location and box status
      */
     @Override
     @Transactional
     public void initializeSoldierStatus() {
+        Random random = new Random(new Date().getTime());
+        //Initialize msgs and boxes
         msgRepository.deleteAll();
-        List<TSoldierEntity> soldierEntities = Lists.newArrayList(soldierRepository.findAll());
-        soldierRepository.save(soldierEntities.stream().map(TSoldierEntity::reset).collect(Collectors.toList()));
         boxRepository.deleteAll();
+        applyRepository.deleteAll();
+        boxRepository.save(new TBoxEntity(0, random.nextInt(maxLength), random.nextInt(maxWidth),
+                0, lagrange.t, 0, null));
+        //initialize soldiers
+        List<TSoldierEntity> soldierEntities = Lists.newArrayList(soldierRepository.findAll());
+        Map<Integer, MyInteger> keys = lagrange.generate();
+        int[] intVals = new Random().ints(1, 10).distinct().limit(5).toArray();
+        soldierRepository.save(soldierEntities.stream().map(soldierEntity ->
+                soldierEntity.initialize(intVals[soldierEntity.getId()-1], keys.get(soldierEntity.getId()).toString()))
+                .collect(Collectors.toList()));
     }
 
     /**
@@ -103,11 +129,11 @@ public class SoldierServiceImpl implements SoldierService {
         List<SoldierVo> soldierVos = Lists.newArrayList(soldierRepository.findAll()).stream()
                 .filter(soldierEntity -> soldierEntity.getId()!=entity.getId() && soldierEntity.getAlive()>0)
                 .filter(soldierEntity -> ((Math.pow(soldierEntity.getLocationX()-entity.getLocationX(),2)
-                            + Math.pow(soldierEntity.getLocationX()-entity.getLocationX(),2))<40000)
+                            + Math.pow(soldierEntity.getLocationY()-entity.getLocationY(),2))<40000)
                             || soldierEntity.getGroupNum()==entity.getGroupNum())
-                .map(SoldierVo::new).collect(Collectors.toList());
+                .map(soldierEntity -> new SoldierVo(soldierEntity, true)).collect(Collectors.toList());
         List<SoldierVo> groupVos = soldierRepository.findByGroupNumAndIdNot(entity.getGroupNum(), entity.getId())
-                .stream().map(SoldierVo::new).collect(Collectors.toList());
+                .stream().map(soldierEntity -> new SoldierVo(soldierEntity, true)).collect(Collectors.toList());
         List<BoxVo> boxVos = Lists.newArrayList(boxRepository.findAll())
                 .stream().map(BoxVo::new).collect(Collectors.toList());
 

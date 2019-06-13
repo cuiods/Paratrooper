@@ -15,8 +15,14 @@ public class TSoldierEntity extends TUserEntity {
     private int groupNum;
     private int updateStatus;
     private int alive;
+    private String boxKey;
+    private int level;
 
     public TSoldierEntity reset() {
+        return initialize(0, "");
+    }
+
+    public TSoldierEntity initialize(int level, String boxKey) {
         this.locationX = -1;
         this.locationY = -1;
         this.publicKey = "";
@@ -24,6 +30,8 @@ public class TSoldierEntity extends TUserEntity {
         this.groupNum = id;
         this.updateStatus = 0;
         this.alive = 0;
+        this.boxKey = boxKey;
+        this.level = level;
         return this;
     }
 
@@ -106,6 +114,26 @@ public class TSoldierEntity extends TUserEntity {
 
     public void setAlive(int alive) {
         this.alive = alive;
+    }
+
+    @Basic
+    @Column(name = "box_key")
+    public String getBoxKey() {
+        return boxKey;
+    }
+
+    public void setBoxKey(String boxKey) {
+        this.boxKey = boxKey;
+    }
+
+    @Basic
+    @Column(name = "level")
+    public int getLevel() {
+        return level;
+    }
+
+    public void setLevel(int level) {
+        this.level = level;
     }
 
     @Override

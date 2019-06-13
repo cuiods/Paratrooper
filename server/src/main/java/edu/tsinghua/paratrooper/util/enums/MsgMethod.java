@@ -3,7 +3,8 @@ package edu.tsinghua.paratrooper.util.enums;
 public enum MsgMethod {
 
     CONFIRM(4001),
-    CAPTAIN(4006);
+    CAPTAIN(4006),
+    BOXOPEN(5001);
 
     private int code;
 

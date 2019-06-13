@@ -14,5 +14,6 @@
         <mapping class="edu.tsinghua.paratrooper.data.entity.TSoldierEntity"/>
         <mapping class="edu.tsinghua.paratrooper.data.entity.TMsgEntity"/>
         <mapping class="edu.tsinghua.paratrooper.data.entity.TBoxEntity"/>
+        <mapping class="edu.tsinghua.paratrooper.data.entity.TBoxApplyEntity"/>
     </session-factory>
 </hibernate-configuration>

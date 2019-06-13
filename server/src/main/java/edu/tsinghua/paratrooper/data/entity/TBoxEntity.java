@@ -1,16 +1,24 @@
 package edu.tsinghua.paratrooper.data.entity;
 
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
+
 import javax.persistence.*;
+import java.util.List;
 import java.util.Objects;
 
 @Entity
 @Table(name = "t_box")
+@NoArgsConstructor
+@AllArgsConstructor
 public class TBoxEntity {
     private int id;
     private int locationX;
     private int locationY;
     private int apply;
+    private int total;
     private int status;
+    private List<TSoldierEntity> soldierEntities;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -54,6 +62,16 @@ public class TBoxEntity {
     }
 
     @Basic
+    @Column(name = "total")
+    public int getTotal() {
+        return total;
+    }
+
+    public void setTotal(int total) {
+        this.total = total;
+    }
+
+    @Basic
     @Column(name = "status")
     public Integer getStatus() {
         return status;
@@ -78,5 +96,17 @@ public class TBoxEntity {
     @Override
     public int hashCode() {
         return Objects.hash(id, locationX, locationY, apply, status);
+    }
+
+    @ManyToMany(cascade = CascadeType.DETACH, fetch = FetchType.LAZY)
+    @JoinTable(name = "t_box_apply",
+            joinColumns = {@JoinColumn(name = "box_id", referencedColumnName = "id")},
+            inverseJoinColumns = {@JoinColumn(name = "user_id", referencedColumnName = "id")})
+    public List<TSoldierEntity> getSoldierEntities() {
+        return soldierEntities;
+    }
+
+    public void setSoldierEntities(List<TSoldierEntity> soldierEntities) {
+        this.soldierEntities = soldierEntities;
     }
 }

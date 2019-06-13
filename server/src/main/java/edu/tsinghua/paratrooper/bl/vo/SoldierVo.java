@@ -17,9 +17,19 @@ public class SoldierVo {
     private int groupNum;
     private int updateStatus;
     private int alive;
+    private String boxKey;
+    private int level;
 
     public SoldierVo(TSoldierEntity entity) {
+        this(entity, false);
+    }
+
+    public SoldierVo(TSoldierEntity entity, boolean secret) {
         BeanUtils.copyProperties(entity, this,
                 "password","createdAt","deletedAt","authorityEntities");
+        if (secret) {
+            this.setBoxKey("hidden");
+            this.setLevel(-1);
+        }
     }
 }
