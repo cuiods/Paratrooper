@@ -1,34 +1,58 @@
 package src.bean;
 
 public class Box {
+	private int id;
 	private int point_x;
 	private int point_y;
-	private boolean isOpen ;
-	private int haveSodiler;
-	private int value ;   //装备都用钱表示好了emm
-	
+	private int apply ;   //已经有多少人参与开箱
+	private int total;    //总共需要多少人
+	private int status ;   //是否开箱
+
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
+	}
+
 	/**
 	 * 构造方法
 	 */
 	public Box() {
 		this.point_x = 700;
 		this.point_y = 600;
-		this.isOpen = false;
-		this.haveSodiler = 1;
+		this.apply = 0;
+
+		this.total = 5;
+		this.status = 0;
 	}
-	
-	public boolean isOpen() {
-		return isOpen;
+
+
+	public int getApply() {
+		return apply;
 	}
-	public void setOpen(boolean isOpen) {
-		this.isOpen = isOpen;
+
+	public void setApply(int apply) {
+		this.apply = apply;
 	}
-	public int getHaveSodiler() {
-		return haveSodiler;
+
+	public int getTotal() {
+		return total;
 	}
-	public void setHaveSodiler(int haveSodiler) {
-		this.haveSodiler = haveSodiler;
+
+	public void setTotal(int total) {
+		this.total = total;
 	}
+
+	public int getStatus() {
+		return status;
+	}
+
+	public void setStatus(int status) {
+		this.status = status;
+	}
+
 	public int getPoint_x() {
 		return point_x;
 	}

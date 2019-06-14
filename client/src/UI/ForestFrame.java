@@ -53,7 +53,7 @@ public class ForestFrame extends JFrame{
 	private int box_sum = 10;   
 	
 	private JPanel forestPanel;
-	private JPanel friendListPanel;
+	private FriendPanel friendListPanel;
 	private List<Soldier> friendLists ;
 	
 	private Queue<Message> message_queue ;
@@ -89,7 +89,7 @@ public class ForestFrame extends JFrame{
 		boxlists = new ArrayList<Box>();
 		boxPanelists = new ArrayList<BoxPanel>();
 		for(int i = 0 ; i< box_sum; i++) {
-			BoxPanel bp = new BoxPanel();
+			BoxPanel bp = new BoxPanel(map.get("token"),me.getBoxKey());
 			bp.setVisible(false);
 			bp.setOpaque(false);
 			bp.setSize(Const.BOX_PANEL_WIDTH, Const.BOX_PANEL_HEIGHT);
@@ -101,13 +101,12 @@ public class ForestFrame extends JFrame{
 		Soldier so = new Soldier();
 		Soldier so2 = new Soldier();
 		Soldier so3 = new Soldier();
-		List<Soldier> friendLists = new ArrayList<Soldier>();
+		friendLists = new ArrayList<Soldier>();
 		friendLists.add(so);
 		friendLists.add(so2);
 		friendLists.add(so3);
 		friendListPanel = new FriendPanel(friendLists);
-		friendLists = new ArrayList<Soldier>();
-		
+
 		//消息列表相关
 		messagePanel = new MessagePanel(this.otherSoldiers,me,map.get("token"));
 		message_queue  = new LinkedList<Message>();
@@ -239,7 +238,15 @@ public class ForestFrame extends JFrame{
 		me.setCaptain(new_me.isCaptain());
 		me.setGroupNum(new_me.getGroupNum());
 	}
-	
+
+	/**
+	 * 刷新我的队友的列表
+	 */
+	public void resetFriendList(List<Soldier> friendsList){
+
+		this.friendLists = friendsList;
+		this.friendListPanel.resetPerFriend(this.friendLists);
+	}
 	
 	/**
 	 * 键盘移动的监听事件
@@ -314,7 +321,7 @@ public class ForestFrame extends JFrame{
 	 */
 	public void chooseCaptain(Soldier other_captain){
 		Map<String,String> message_map = new HashMap();
-		String level_code = Millionaire_Tool.getFirstInfo(me.getId(),other_captain.getPublicKey(),map.get("E"));  //me.getId() 应该是一个军衔
+		String level_code = Millionaire_Tool.getFirstInfo(me.getLevel(),other_captain.getPublicKey(),map.get("E"));
 		message_map.put("level_code",level_code);
 		message_map.put("from_id",String.valueOf(me.getId()));
 		String message_map_str = TransTools.objectToJson(message_map);
@@ -336,12 +343,20 @@ public class ForestFrame extends JFrame{
 	 */
 	public void responseCaptain(String level_code,int from_id){
 
-		String[] nums = Millionaire_Tool.getSecondInfo(level_code,me.getId(),map.get("D"),map.get("E")); //me.getId() 应该是一个军衔
+		String[] nums = Millionaire_Tool.getSecondInfo(level_code,me.getLevel(),map.get("D"),map.get("E"));
 		String P = Millionaire_Tool.getP();
 
 		Map<String,String> message_map = new HashMap();
-		message_map.put("num1",nums[0]);
-		message_map.put("num2",nums[1]);
+		//message_map.put("num1",nums[0]);
+		//message_map.put("num2",nums[1]);
+
+		String nums_str = "";
+		for(int i = 0 ; i< nums.length;i++){
+			nums_str += String.valueOf(nums[i]);
+			nums_str+=",";
+		}
+		nums_str = nums_str.substring(0,nums_str.length()-1);
+		message_map.put("nums_list",nums_str);
 		message_map.put("P",P);
 		message_map.put("from_id",String.valueOf(me.getId()));
 		String message_map_str = TransTools.objectToJson(message_map);
@@ -362,7 +377,7 @@ public class ForestFrame extends JFrame{
 	 * @param P
 	 */
 	public void finalResultCaptain(String[] nums,String P,int from_id){
-		boolean flag = Millionaire_Tool.getThirdInfo(nums, me.getId(), P);  //me.getId() 应该是一个军衔
+		boolean flag = Millionaire_Tool.getThirdInfo(nums, me.getLevel(), P);
 
 		Map<String,Object> req_map = new HashMap<>();
 		req_map.put("compareId",from_id);
@@ -414,13 +429,10 @@ public class ForestFrame extends JFrame{
 		@Override
 		public void run() {
 			while(true) {
-				System.out.println("到达22");
 			      if(!message_queue.isEmpty()) {
-			    	  System.out.println("到达33");
 			    	       Message message= message_queue.poll();
 			    	       messagePanel.resetMessage(message);
 			    	       messagePanel.setVisible(true);
-			    	       System.out.println("到达55");
 			    	       try {
 			   				sleep(Const.MESSAGE_SHOW_SECONDS);
 			   			} catch (InterruptedException e) {
@@ -448,7 +460,6 @@ public class ForestFrame extends JFrame{
 	 */
 	public void addMessageArrive(Message message) {
 		this.message_queue.add(message);
-		System.out.println("到达11");
 	}
 	/**
 	 * 重新获得鼠标焦点

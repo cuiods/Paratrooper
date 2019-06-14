@@ -8,9 +8,32 @@ public class Soldier {
 	private String publicKey;  //public key
 	private int locationX;
 	private int locationY;
+
 	private int groupNum ;  //组号
 	private int updateStatus ;
 	private int alive;
+	private int level;
+	private String boxKey;
+
+	public String getBoxKey() {
+		return boxKey;
+	}
+
+	public void setBoxKey(String boxKey) {
+		this.boxKey = boxKey;
+	}
+
+	public int getLevel() {
+		return level;
+	}
+
+	public void setLevel(int level) {
+		this.level = level;
+	}
+
+	public int getCaptain() {
+		return captain;
+	}
 
 	public void setId(int id) {
 		this.id = id;

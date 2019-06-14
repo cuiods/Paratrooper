@@ -129,8 +129,19 @@ public class LoginFrame  {
 						String name = res_json.get("data").getAsJsonObject().get("me").getAsJsonObject().get("name").getAsString();
 						me.setName(name);
 						//captain
-
+						int isCaptain = res_json.get("data").getAsJsonObject().get("me").getAsJsonObject().get("captain").getAsInt();
+						me.setCaptain(isCaptain);
 						//groupnum
+						int groupNum = res_json.get("data").getAsJsonObject().get("me").getAsJsonObject().get("groupNum").getAsInt();
+						me.setGroupNum(groupNum);
+						//level
+						int level = res_json.get("data").getAsJsonObject().get("me").getAsJsonObject().get("level").getAsInt();
+						me.setLevel(level);
+						//box_key
+						String boxKey = res_json.get("data").getAsJsonObject().get("me").getAsJsonObject().get("boxKey").getAsString();
+						me.setBoxKey(boxKey);
+
+						//别问我为什么上面不知道把json直接转成一个对象。。因为我喜欢
 
 						System.out.println("token:"+token);
 						openChildFrame(token);

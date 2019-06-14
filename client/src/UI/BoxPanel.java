@@ -3,13 +3,24 @@ package src.UI;
 import java.awt.Image;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.io.IOException;
+import java.net.URLDecoder;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+import okhttp3.Response;
 import src.bean.Box;
+import src.bean.Soldier;
 import src.common.Const;
+import src.common.HttpHelper;
+import src.common.TransTools;
 
 public class BoxPanel extends JPanel{
 
@@ -19,6 +30,8 @@ public class BoxPanel extends JPanel{
 	
 	private int x ;
 	private int y ;
+	private String boxkey ;
+	private String token;
 	
 	public BoxPanel() {
 		jl_box = new JLabel();
@@ -26,10 +39,11 @@ public class BoxPanel extends JPanel{
 		box = new Box();
 		this.lanch();
 	}
-	public BoxPanel(Box box,int x,int y) {
+	public BoxPanel(String token,String boxkey) {
 		jl_box = new JLabel();
 		box_info = new JLabel();
-		this.box = box;
+		this.token = token;
+		this.boxkey = boxkey;
 		this.lanch();
 	}
 	
@@ -45,7 +59,6 @@ public class BoxPanel extends JPanel{
 		jl_box.setBounds(0,Const.BOX_INFO_HEIGHT,Const.BOX_IMAGE_SIZE,Const.BOX_IMAGE_SIZE);
 		//jl_box.addMouseListener(new BoxListener());
 		
-		this.setBounds(box.getPoint_x() - Const.BOX_PANEL_WIDTH/2, box.getPoint_y() - Const.BOX_PANEL_HEIGHT/2, Const.BOX_PANEL_WIDTH, Const.BOX_PANEL_HEIGHT);
 		this.setLayout(null);
 		this.add(jl_box);
 		this.add(box_info);
@@ -62,20 +75,38 @@ public class BoxPanel extends JPanel{
 	 */
 	public void resetBox(Box box,int x ,int y) {
 		this.box = box;
-		if(box.isOpen()) {
+		this.x = x;
+		this.y = y;
+		if(box.getStatus() == 1) {
 			ImageIcon box_icon = new ImageIcon(Const.BOX_OPEN_IMAGE); 
 			box_icon.setImage(box_icon.getImage().getScaledInstance(Const.BOX_IMAGE_SIZE,Const.BOX_IMAGE_SIZE,Image.SCALE_DEFAULT));
 		}else{
 			ImageIcon box_icon = new ImageIcon(Const.BOX_CLOSE_IMAGE); 
 			box_icon.setImage(box_icon.getImage().getScaledInstance(Const.BOX_IMAGE_SIZE,Const.BOX_IMAGE_SIZE,Image.SCALE_DEFAULT));
 		}
-		
-		String info = "<html>"+box.getHaveSodiler()+"/" + Const.NEED_SOLDIER + "(已参与队友/所需)</html>";
+		this.setBounds(box.getPoint_x() - Const.BOX_PANEL_WIDTH/2, box.getPoint_y() - Const.BOX_PANEL_HEIGHT/2, Const.BOX_PANEL_WIDTH, Const.BOX_PANEL_HEIGHT);
+		String info = "<html>"+box.getApply()+"/" + box.getTotal() + "(已参与队友/所需)</html>";
 		box_info.setText(info);
 		IsshowBox(x,y);
 	}
-	
-	
+
+	/**
+	 * 请求开宝箱后重设宝箱信息
+	 * @param box
+	 */
+	public void resetBox(Box box){
+
+		if(box.getStatus() == 1) {
+			ImageIcon box_icon = new ImageIcon(Const.BOX_OPEN_IMAGE);
+			box_icon.setImage(box_icon.getImage().getScaledInstance(Const.BOX_IMAGE_SIZE,Const.BOX_IMAGE_SIZE,Image.SCALE_DEFAULT));
+		}else{
+			ImageIcon box_icon = new ImageIcon(Const.BOX_CLOSE_IMAGE);
+			box_icon.setImage(box_icon.getImage().getScaledInstance(Const.BOX_IMAGE_SIZE,Const.BOX_IMAGE_SIZE,Image.SCALE_DEFAULT));
+		}
+
+		String info = "<html>"+box.getApply()+"/" + box.getTotal() + "(已有/所需)</html>";
+		box_info.setText(info);
+	}
 	/**
 	 * 判断宝箱是否在视野范围内
 	 */
@@ -101,10 +132,10 @@ public class BoxPanel extends JPanel{
 	 * @return
 	 */
 	public boolean judgeCanOpenBox() {
-		if(box.getPoint_x()- Const.BOX_PANEL_WIDTH/2 - Const.DISTANCE < this.x + Const.SOLDIER_WIDTH/2 &&
-				box.getPoint_x()+ Const.BOX_PANEL_WIDTH/2 + Const.DISTANCE > this.x - Const.SOLDIER_WIDTH/2 &&
-				box.getPoint_y() - Const.BOX_PANEL_HEIGHT/2 - Const.DISTANCE < this.y + Const.SOLDIER_HEIGTH/2 &&
-				box.getPoint_y() + Const.BOX_PANEL_HEIGHT/2 + Const.DISTANCE > this.y - Const.SOLDIER_HEIGTH/2) {
+		if((box.getPoint_x()- Const.BOX_PANEL_WIDTH/2 - Const.DISTANCE < this.x + Const.SOLDIER_WIDTH/2) &&
+				(box.getPoint_x()+ Const.BOX_PANEL_WIDTH/2 + Const.DISTANCE > this.x - Const.SOLDIER_WIDTH/2 )&&
+				(box.getPoint_y() - Const.BOX_PANEL_HEIGHT/2 - Const.DISTANCE < this.y + Const.SOLDIER_HEIGTH/2) &&
+				(box.getPoint_y() + Const.BOX_PANEL_HEIGHT/2 + Const.DISTANCE > this.y - Const.SOLDIER_HEIGTH/2)) {
 			return true;
 		}
 		return false;
@@ -122,7 +153,35 @@ public class BoxPanel extends JPanel{
 			// TODO Auto-generated method stub
 			//判断是否接近我，在宝箱附近才可以开
 			if(judgeCanOpenBox()) {
-			    System.out.println("请求开箱子的逻辑");
+			    System.out.println("请求开箱子:");
+				Map<String,Object> req_map = new HashMap<>();
+				req_map.put("boxId",box.getId());
+				req_map.put("key",boxkey);
+				String req = TransTools.objectToJson(req_map);
+				System.out.println("发送请求消息："+req);
+				System.out.println("看一下token：" + token);
+
+				//应该发送同步请求
+				Response response = HttpHelper.syncPost(Const.APPLY,req,token);
+				String str = null;
+				try {
+					str = URLDecoder.decode(response.body().string(), "utf-8");
+				} catch (IOException e1) {
+					e1.printStackTrace();
+				}
+				JsonObject res_json = (JsonObject) new JsonParser().parse(str).getAsJsonObject();
+
+				int code = res_json.get("code").getAsInt();
+				switch(code){
+					case 200:
+						JsonObject object = res_json.get("data").getAsJsonObject();
+						Gson gson = new Gson();
+						box = gson.fromJson(object, Box.class);
+						resetBox(box);
+						break;
+					default:
+						System.out.println( res_json.get("message").getAsString());
+				}
 			    
 			}else {
 				System.out.println("不能开箱");

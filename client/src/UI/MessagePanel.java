@@ -85,8 +85,11 @@ public class MessagePanel extends JPanel{
 				str = "<html> 您需要与:"+ message.getData().get("other_captain_id")+"竞选队长。"+ "</html>";
 				body.setText(str);
 				break;
+			case Const.MESSAGE_BOX_OPEN:
+				str = "<html> 宝箱:"+ message.getData().get("box_id")+"已被您和您的队友开启。"+ "</html>";
+				body.setText(str);
+				break;
 		}
-		System.out.println("到达44");
 	}
 	
 	/**
