@@ -337,6 +337,8 @@ public class ForestFrame extends JFrame{
 	public void responseCaptain(String level_code,int from_id){
 
 		String[] nums = Millionaire_Tool.getSecondInfo(level_code,me.getId(),map.get("D"),map.get("E")); //me.getId() 应该是一个军衔
+		for(String str : nums)
+			System.out.println("responseCaptain : " + str);
 		String P = Millionaire_Tool.getP();
 
 		Map<String,String> message_map = new HashMap();
@@ -362,6 +364,8 @@ public class ForestFrame extends JFrame{
 	 * @param P
 	 */
 	public void finalResultCaptain(String[] nums,String P,int from_id){
+		for(String str : nums)
+			System.out.println("finalResultCaptain : " + str);
 		boolean flag = Millionaire_Tool.getThirdInfo(nums, me.getId(), P);  //me.getId() 应该是一个军衔
 
 		Map<String,Object> req_map = new HashMap<>();

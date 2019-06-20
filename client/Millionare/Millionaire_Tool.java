@@ -74,7 +74,6 @@ public class Millionaire_Tool {
 	 */
 	public static boolean  getThirdInfo(String[] nums_str, int i, String P) {
 		String num = new myNumber(X).mod(new myNumber(P)).toHexadecimal();
-		//System.out.println(num + " " + nums_str[i - low]);
 		return num.compareTo(nums_str[i - low]) != 0;
 	}
 	
