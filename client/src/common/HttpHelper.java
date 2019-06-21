@@ -71,11 +71,20 @@ public class HttpHelper {
     public static Response syncPost(String url,String req,String token) {
 
 		RequestBody requestBody = RequestBody.create(JSON, req);
-		Request request = new Request.Builder()
-				.url(Const.SERVER_IP + url)
-				.post(requestBody)
-				.build();
 
+		Request request = null;
+		if(token != null){
+			request = new Request.Builder()
+					.url(Const.SERVER_IP + url)
+					.post(requestBody)
+					.addHeader("Authorization",token)
+					.build();
+		}else{
+			request = new Request.Builder()
+					.url(Const.SERVER_IP + url)
+					.post(requestBody)
+					.build();
+		}
 		Response response = null; // 返回实体
 		try {
 			response = client.newCall(request).execute();
@@ -156,8 +165,22 @@ public class HttpHelper {
 		refreshMe(data.get("me").getAsJsonObject(),frame);
 		refreshPoint(data.get("inVisionSoldiers").getAsJsonArray(),frame);
 		refreshBox( data.get("boxes").getAsJsonArray(),frame);
+		refreshGroupMembers(data.get("groupMembers").getAsJsonArray(),frame);
 		dealMessage(data.get("messages").getAsJsonArray(),token,frame);
 
+
+	}
+
+	/**
+	 * 通知页面更新我的小队列表
+	 * @param array
+	 * @param frame
+	 */
+	public static void refreshGroupMembers(JsonArray array,ForestFrame frame){
+
+		Gson gson = new Gson();
+		List<Soldier> soldiers_list = gson.fromJson(array.toString(),new TypeToken<List<Soldier>>(){}.getType());
+		frame.resetFriendList(soldiers_list);
 	}
 
 	/**
@@ -257,16 +280,31 @@ public class HttpHelper {
 		 }
 
 		 if(code == Const.MESSAGE_CAPTAIN_FIVE){  //4005
-	     	String num1 = data.get("num1").getAsString();
-	     	String num2 = data.get("num2").getAsString();
-	     	String P = data.get("P").getAsString();
-	     	int from_id = data.get("from_id").getAsInt();
-	     	String[] nums = {num1,num2};
+	     	//String num1 = data.get("num1").getAsString();
+	     	//String num2 = data.get("num2").getAsString();
+			 String str_list = data.get("nums_list").getAsString();
+			 String[] nums= str_list.split(",");
+
+	     	 String P = data.get("P").getAsString();
+	     	 int from_id = data.get("from_id").getAsInt();
 
 	     	//通知页面比较最终结果
 			 frame.finalResultCaptain(nums,P,from_id);
 			 return;
 		 }
+		 if(code == Const.MESSAGE_BOX_OPEN){
+	     	 Gson gson = new Gson();
+	     	 Box box =  gson.fromJson(object, Box.class);
+	     	 //List<Box> box_lists = new ArrayList<Box>();
+	     	 //box_lists.add(box);
+	     	// frame.resetBoxPoint(box_lists);
+
+			 //通知消息队列
+			 Map<String,Object> map = new HashMap<String,Object>();
+			 map.put("box_id",box.getId());
+			 Message message = new Message (Const.MESSAGE_BOX_OPEN,map);
+			 frame.addMessageArrive(message);
+		  }
 	}
 
 	/**

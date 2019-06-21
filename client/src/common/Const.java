@@ -51,8 +51,7 @@ public class Const{
 	public static final int BOX_INFO_HEIGHT = 30;
 	public static final int BOX_PANEL_WIDTH = 80;
 	public static final int BOX_PANEL_HEIGHT = 80+30+30;
-	
-	public static int NEED_SOLDIER = 3;
+
 	public static int DISTANCE = 30 ;// 在宝箱多少范围内可以开箱
 	
 	//client.UI.soldierPanel
@@ -76,6 +75,7 @@ public class Const{
 	public static final String MESG_SEND = "/api/v1/msg/send";           //发送一系列消息，服务器进行转发操作
 	public static final String CONFIRM = "/api/v1/msg/confirm";         //认证身份完成，向服务端发送认证消息
 	public static final String CAPTAIN = "/api/v1/msg/captain";         //队长竞选结束，告诉服务端结果
+	public static final String APPLY = "/api/v1/msg/apply";              //开箱请求
 
 	// message code
 	public static final int MESSAGE_OPERATION_ONE = 3001;   //我A向服务端发起 对B认证 ，告诉B 我是A
@@ -91,6 +91,8 @@ public class Const{
 	public static final int MESSAGE_CAPTAIN_FOUR = 4004;
 	public static final int MESSAGE_CAPTAIN_FIVE = 4005;
 	public static final int MESSAGE_CAPTAIN_SIX = 4006;
+
+	public static final int MESSAGE_BOX_OPEN = 5001;   //宝箱被成功开启
 
 	//thread 
 	public static final int SLEEP_SECONDS = 1000;

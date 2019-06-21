@@ -28,8 +28,9 @@ public class MessagePanel extends JPanel{
 	private List<Soldier> soliderList;
 	private Soldier me;
 	private String token;
+	private LogInformationPanel logInformationPanal;
 	
-	public MessagePanel(List<Soldier> soliderList,Soldier me,String token) {
+	public MessagePanel(List<Soldier> soliderList,Soldier me,String token, LogInformationPanel logInformationPanel) {
 		this.token = token;
 		this.me = me;
 		this.soliderList = soliderList;
@@ -37,6 +38,7 @@ public class MessagePanel extends JPanel{
 		ok = new JButton("确认");
 		cancel = new JButton("取消");
 		isReply = false;
+		this.logInformationPanal = logInformationPanel;
 		lanch();
 	}
 
@@ -62,6 +64,7 @@ public class MessagePanel extends JPanel{
 		this.setSize(Const.MESSAGE_PANEL_WIDTH,Const.MESSAGE_PANEL_HRIGHT);
 		this.setBorder(BorderFactory.createTitledBorder("您有新的消息"));
 		this.setVisible(false);
+		this.logInformationPanal.setVisible(true);
 	}
 	
 	/**
@@ -85,8 +88,11 @@ public class MessagePanel extends JPanel{
 				str = "<html> 您需要与:"+ message.getData().get("other_captain_id")+"竞选队长。"+ "</html>";
 				body.setText(str);
 				break;
+			case Const.MESSAGE_BOX_OPEN:
+				str = "<html> 宝箱:"+ message.getData().get("box_id")+"已被您和您的队友开启。"+ "</html>";
+				body.setText(str);
+				break;
 		}
-		System.out.println("到达44");
 	}
 	
 	/**
@@ -94,6 +100,7 @@ public class MessagePanel extends JPanel{
 	 */
 	public void clearMessage() {
 		this.setVisible(false);
+		this.logInformationPanal.setVisible(true);
 	}
 	
 	/**

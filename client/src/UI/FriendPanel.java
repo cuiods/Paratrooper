@@ -38,7 +38,34 @@ public class FriendPanel extends JPanel{
         this.setPreferredSize(new Dimension(Const.FRIEND_PANEL_WIDTH, Const.FRIEND_PANEL_HEIGHT));
         this.setVisible(true);
 	}
-	
+
+	/**
+	 * 刷新好友卡片
+	 * @param friendList
+	 */
+	public void resetPerFriend(List<Soldier> friendList){
+
+		int start = 5;
+		int i = 0 ;
+		int j = 0 ;
+
+		for (i = 0,j= 0; i < friendList.size() && j < PanelFriendList.size(); i++,j++) {
+			FriendCardPanel temp = PanelFriendList.get(i);
+			temp.setBounds(Const.FRIEND_CARD_GEZI, start + i * (Const.FRIEND_CARD_HEIGTH + Const.FRIEND_CARD_GEZI), Const.FRIEND_CARD_WIDTH, Const.FRIEND_CARD_HEIGTH);
+		    temp.reset_info(friendList.get(i));
+		}
+		while(i < friendList.size()) {// 需要new
+			FriendCardPanel temp = new FriendCardPanel(friendList.get(i));
+			this.add(temp);
+			PanelFriendList.add(temp);
+			temp.setBounds(Const.FRIEND_CARD_GEZI, start + i * (Const.FRIEND_CARD_HEIGTH + Const.FRIEND_CARD_GEZI), Const.FRIEND_CARD_WIDTH, Const.FRIEND_CARD_HEIGTH);
+		    i++;
+		}
+		while(j < PanelFriendList.size()){
+			PanelFriendList.get(j).setVisible(false);
+			j++;
+		}
+	}
 	
 	/**
 	 * 内部类，每个好友列表的卡片
@@ -76,10 +103,10 @@ public class FriendPanel extends JPanel{
 			
 			name.setText(soldier.getName());
 			name.setBounds(Const.FRIEND_CARD_GEZI*2 + Const.FRIEND_CARD_IMAGE_SIZE,Const.FRIEND_CARD_GEZI , Const.FRIEND_CARD_LABEL_WIDTH, Const.FRIEND_CARD_LABEL_HEIGHT);
-			if(soldier.getPublicKey() == null || soldier.getPublicKey() == "") {
-				pub_key.setText("<html>还未验证该士兵</html>");
-			}
-			pub_key.setText("<html>"+soldier.getPublicKey()+"44444444</html>");
+//			if(soldier.getPublicKey() == null || soldier.getPublicKey() == "") {
+//				pub_key.setText("<html>还未验证该士兵</html>");
+//			}
+			pub_key.setText("<html>"+soldier.getPublicKey()+"</html>");
 			pub_key.setBounds(Const.FRIEND_CARD_GEZI*2 + Const.FRIEND_CARD_IMAGE_SIZE,Const.FRIEND_CARD_GEZI*2 + Const.FRIEND_CARD_LABEL_HEIGHT , Const.FRIEND_CARD_LABEL_WIDTH, Const.FRIEND_CARD_LABEL2_HEIGHT);
 			this.add(image);
 			this.add(name);
@@ -87,8 +114,19 @@ public class FriendPanel extends JPanel{
 			this.setBorder(BorderFactory.createRaisedSoftBevelBorder());
 		
 		}
+
+		public void reset_info(Soldier soldier){
+			name.setText(soldier.getName());
+			pub_key.setText("<html>"+soldier.getPublicKey()+"</html>");
+			ImageIcon icon = new ImageIcon(Const.FRIEND_CARD_IMAGE_SOLDIER);
+			if(soldier.isCaptain()==1) {
+				icon = new ImageIcon(Const.FRIEND_CARD_IMAGE_LEADER);
+			}
+			icon.setImage(icon.getImage().getScaledInstance(Const.FRIEND_CARD_IMAGE_SIZE,Const.FRIEND_CARD_IMAGE_SIZE,Image.SCALE_DEFAULT));//80和100为大小 可以自由设置
+			image.setIcon(icon);
+		}
 	}
-	
+
 	/*
 	 * 测试函数
 	 */
