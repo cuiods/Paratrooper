@@ -5,7 +5,6 @@ import edu.tsinghua.paratrooper.bl.vo.ResultVo;
 import edu.tsinghua.paratrooper.util.constant.ErrorCode;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.http.MediaType;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -14,7 +13,6 @@ import javax.annotation.Resource;
 
 @RestController
 @RequestMapping("/api/v1/admin")
-@PreAuthorize("hasRole('ADMIN')")
 public class AdminController {
 
     @Resource
