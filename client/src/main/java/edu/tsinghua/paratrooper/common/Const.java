@@ -41,6 +41,7 @@ public class Const{
 	
 	//background map
 	public static final String BACKGROUND_IMAGE = "/images/background.jpg";
+	public static final String BACKGROUND_COVER_IMAGE = "/images/background-cover.jpg";
 	public static final int BACKGROUND_WIDTH = 1200;
 	public static final int BACKGROUND_HEIGTH = 900;
 	
