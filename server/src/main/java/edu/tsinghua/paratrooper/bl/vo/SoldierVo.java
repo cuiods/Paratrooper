@@ -27,7 +27,7 @@ public class SoldierVo {
     public SoldierVo(TSoldierEntity entity, boolean secret) {
         if (entity == null) return;
         BeanUtils.copyProperties(entity, this,
-                "password","createdAt","deletedAt","authorityEntities");
+                "password","createdAt","deletedAt","authorityEntities","vote");
         if (secret) {
             this.setBoxKey("hidden");
             this.setLevel(-1);

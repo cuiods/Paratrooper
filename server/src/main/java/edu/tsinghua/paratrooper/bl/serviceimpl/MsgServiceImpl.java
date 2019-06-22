@@ -1,13 +1,20 @@
 package edu.tsinghua.paratrooper.bl.serviceimpl;
 
+import com.google.common.collect.Lists;
 import com.google.gson.Gson;
 import edu.tsinghua.paratrooper.bl.service.MsgService;
 import edu.tsinghua.paratrooper.bl.vo.BoxVo;
 import edu.tsinghua.paratrooper.bl.vo.MsgVo;
 import edu.tsinghua.paratrooper.bl.vo.ResultVo;
 import edu.tsinghua.paratrooper.bl.vo.SoldierVo;
-import edu.tsinghua.paratrooper.data.entity.*;
-import edu.tsinghua.paratrooper.data.repository.*;
+import edu.tsinghua.paratrooper.data.entity.TBoxApplyEntity;
+import edu.tsinghua.paratrooper.data.entity.TBoxEntity;
+import edu.tsinghua.paratrooper.data.entity.TMsgEntity;
+import edu.tsinghua.paratrooper.data.entity.TSoldierEntity;
+import edu.tsinghua.paratrooper.data.repository.ApplyRepository;
+import edu.tsinghua.paratrooper.data.repository.BoxRepository;
+import edu.tsinghua.paratrooper.data.repository.MsgRepository;
+import edu.tsinghua.paratrooper.data.repository.SoldierRepository;
 import edu.tsinghua.paratrooper.util.constant.ErrorCode;
 import edu.tsinghua.paratrooper.util.enums.MsgMethod;
 import edu.tsinghua.paratrooper.util.lagrange.Lagrange;
@@ -17,6 +24,7 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import javax.transaction.Transactional;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -72,6 +80,8 @@ public class MsgServiceImpl implements MsgService {
         TSoldierEntity confirmedCap = soldierRepository.findByGroupNumAndCaptain(confirmedEntity.getGroupNum(), 1);
         Gson gson = new Gson();
         sendMsg(currentCap.getId(),MsgMethod.CONFIRM.getCode(),gson.toJson(new SoldierVo(confirmedCap, true)));
+        sendMsg(currentEntity.getId(), MsgMethod.NOTIFY_AUTH.getCode(), gson.toJson(new SoldierVo(confirmedEntity, true)));
+        sendMsg(confirmedEntity.getId(), MsgMethod.NOTIFY_AUTH.getCode(), gson.toJson(new SoldierVo(currentEntity, true)));
         return new ResultVo<>(ErrorCode.SUCCESS,"ok", currentCap.getName());
     }
 
@@ -92,7 +102,16 @@ public class MsgServiceImpl implements MsgService {
         }
 
         if (result == 0) {
-            //TODO 发起电子投票
+            Gson gson = new Gson();
+            List<SoldierVo> candidates = Arrays.asList(new SoldierVo(currentEntity, true),
+                    new SoldierVo(comparedEntity, true));
+            Lists.newArrayList(soldierRepository.findByGroupNum(currentEntity.getGroupNum())).forEach(tSoldierEntity -> {
+                sendMsg(tSoldierEntity.getId(), MsgMethod.VOTE_CAPTAIN.getCode(), gson.toJson(candidates));
+            });
+            Lists.newArrayList(soldierRepository.findByGroupNum(comparedEntity.getGroupNum())).forEach(tSoldierEntity -> {
+                sendMsg(tSoldierEntity.getId(), MsgMethod.VOTE_CAPTAIN.getCode(), gson.toJson(candidates));
+            });
+            return new ResultVo<>(ErrorCode.SUCCESS, "ok", "");
         }
 
         changeCaptain(result, currentEntity, comparedEntity);
@@ -109,13 +128,17 @@ public class MsgServiceImpl implements MsgService {
             return new ResultVo<>(ErrorCode.WRONG_PARAMETER, "Invalid param", "");
         }
         supportEntity.setVote(supportEntity.getVote()+1);
-        soldierRepository.save(supportEntity);
         int total = soldierRepository.findByGroupNum(supportEntity.getGroupNum()).size()
                 +soldierRepository.findByGroupNum(rejectEntity.getGroupNum()).size();
-        if (supportEntity.getVote() >= total/2.0) {
+        int voteNum = supportEntity.getVote();
+        if (voteNum >= total/2.0) {
             changeCaptain(1, supportEntity, rejectEntity);
+            supportEntity.setVote(0);
+            rejectEntity.setVote(0);
+            soldierRepository.save(rejectEntity);
         }
-        return new ResultVo<>(ErrorCode.SUCCESS, "ok", supportEntity.getVote()+"");
+        soldierRepository.save(supportEntity);
+        return new ResultVo<>(ErrorCode.SUCCESS, "ok", voteNum+"");
     }
 
     @Override
@@ -175,7 +198,10 @@ public class MsgServiceImpl implements MsgService {
         notifyCaptain(updateGroup, captain);
     }
 
-    private void notifyCaptain(int group, TUserEntity captain) {
-
+    private void notifyCaptain(int group, TSoldierEntity captain) {
+        Gson gson = new Gson();
+        Lists.newArrayList(soldierRepository.findByGroupNum(group)).forEach(tSoldierEntity -> {
+            sendMsg(tSoldierEntity.getId(), MsgMethod.NOTIFY_CAPTAIN.getCode(), gson.toJson(new SoldierVo(captain, true)));
+        });
     }
 }

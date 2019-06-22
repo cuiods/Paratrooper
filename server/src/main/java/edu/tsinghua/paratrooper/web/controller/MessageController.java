@@ -4,10 +4,7 @@ import edu.tsinghua.paratrooper.bl.service.MsgService;
 import edu.tsinghua.paratrooper.bl.vo.BoxVo;
 import edu.tsinghua.paratrooper.bl.vo.MsgVo;
 import edu.tsinghua.paratrooper.bl.vo.ResultVo;
-import edu.tsinghua.paratrooper.web.json.ApplyBoxJson;
-import edu.tsinghua.paratrooper.web.json.CaptainJson;
-import edu.tsinghua.paratrooper.web.json.IdJson;
-import edu.tsinghua.paratrooper.web.json.MsgJson;
+import edu.tsinghua.paratrooper.web.json.*;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -49,5 +46,12 @@ public class MessageController {
             notes = "如果成功开箱则所有申请者收到消息")
     public ResultVo<BoxVo> applyBox(@RequestBody ApplyBoxJson applyBoxJson) {
         return msgService.applyBox(applyBoxJson.getBoxId(), applyBoxJson.getKey());
+    }
+
+    @PostMapping(value = "/vote", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @ApiOperation(value = "反馈已有的支持票数", response = String.class,
+            notes = "第一个获得大于等于半数票数的将成为队长")
+    public ResultVo<String> voteCaptain(@RequestBody VoteJson voteJson) {
+        return msgService.voteCaptain(voteJson.getSupportId(), voteJson.getRejectId());
     }
 }
