@@ -48,6 +48,11 @@ public class ForestFrame extends JFrame{
 	
 	private Queue<Message> message_queue ;
 	private LogInformationPanel logInformationPanel;
+
+	public LogInformationPanel getLogInformationPanel() {
+		return this.logInformationPanel;
+	}
+
 	private MessagePanel messagePanel;
 
 	private JLabel tips ;
@@ -61,6 +66,7 @@ public class ForestFrame extends JFrame{
 		this.map = map;
 
 		canseePanel = new CanSeePanel(me.getLocationX(),me.getLocationY());
+		logInformationPanel = new LogInformationPanel();
 		forestPanel = new JPanel();
 		tips = new JLabel();  //一些提示操作  你们补充
 		
@@ -69,7 +75,7 @@ public class ForestFrame extends JFrame{
 		jlb_otherSolders = new ArrayList<SoldierPanel>();
 		for(int i = 0 ; i< others_sum ;i++) {
 			
-			SoldierPanel sp = new SoldierPanel(me.getId(),map.get("token"));
+			SoldierPanel sp = new SoldierPanel(me.getId(),map.get("token"),logInformationPanel);
 			sp.setVisible(false);
 			sp.setOpaque(false);
 			sp.setSize(Const.SOLDIER_WIDTH, 30+30+Const.SOLDIER_HEIGTH+30);
@@ -99,7 +105,7 @@ public class ForestFrame extends JFrame{
 		friendListPanel = new FriendPanel(friendLists);
 
 		//消息列表相关
-		logInformationPanel = new LogInformationPanel();
+
 		/**由于MessagePanel类在内部调用了clearMessage设置panel不可见
 		 * 因此必须在MessagePanel里面添加LogInformationPanel成员
  		 */

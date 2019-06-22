@@ -243,6 +243,7 @@ public class HttpHelper {
 				 System.out.println("回执验证成功，告诉服务器验证成功消息："+req);
 				 System.out.println("看一下token：" + token);
 				 HttpHelper.asyncPost(Const.CONFIRM,token,req,null);
+				 //frame.getLogInformationPanel().addInfo("zcm test 验证成功");
 
 				 //通知消息队列
 				 Map<String,Object> map = new HashMap<String,Object>();

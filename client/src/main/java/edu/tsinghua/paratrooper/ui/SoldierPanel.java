@@ -28,12 +28,14 @@ public class SoldierPanel extends JPanel{
 	private JButton level ;  //是否是队长
 	private JButton group ;  //组号
 	private JLabel pri_key;
+	private LogInformationPanel logInformationPanel;
 
-	public SoldierPanel(int id,String token) {
+	public SoldierPanel(int id,String token, LogInformationPanel logInformationPanel) {
 		soldier = new Soldier();
 		this.id = id;
 		this.token = token;
 		this.lanch();
+		this.logInformationPanel = logInformationPanel;
 	}
 	public SoldierPanel(Soldier soldier,int id,String token) {
 		this.soldier = soldier;
@@ -144,6 +146,8 @@ public class SoldierPanel extends JPanel{
                 String req = TransTools.objectToJson(req_map);
                 System.out.print("发起验证消息："+req);
 				HttpHelper.asyncPost(Const.MESG_SEND,token,req,null);
+				System.out.println("**************************************");
+				logInformationPanel.addInfo("向士兵：" + soldier.getId() + "发起验证");
             }
 			
 		}
