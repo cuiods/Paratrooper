@@ -86,7 +86,7 @@ public class ForestFrame extends JFrame{
 		boxlists = new ArrayList<Box>();
 		boxPanelists = new ArrayList<BoxPanel>();
 		for(int i = 0 ; i< box_sum; i++) {
-			BoxPanel bp = new BoxPanel(map.get("token"),me.getBoxKey());
+			BoxPanel bp = new BoxPanel(map.get("token"),me.getBoxKey(), logInformationPanel);
 			bp.setVisible(false);
 			bp.setOpaque(false);
 			bp.setSize(Const.BOX_PANEL_WIDTH, Const.BOX_PANEL_HEIGHT);

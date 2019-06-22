@@ -26,11 +26,13 @@ public class BoxPanel extends JPanel{
 	private JLabel jl_box;   //宝箱的图片 open or close
 	private JLabel box_info;  //宝箱的信息
 	private Box box;
+	private int cur_box_apply;
 	
 	private int x ;
 	private int y ;
 	private String boxkey ;
 	private String token;
+	private LogInformationPanel logInformationPanel;
 	
 	public BoxPanel() {
 		jl_box = new JLabel();
@@ -38,11 +40,13 @@ public class BoxPanel extends JPanel{
 		box = new Box();
 		this.lanch();
 	}
-	public BoxPanel(String token,String boxkey) {
+	public BoxPanel(String token,String boxkey, LogInformationPanel logInformationPanel) {
 		jl_box = new JLabel();
 		box_info = new JLabel();
 		this.token = token;
 		this.boxkey = boxkey;
+		this.logInformationPanel = logInformationPanel;
+		this.cur_box_apply = 0;
 		this.lanch();
 	}
 	
@@ -85,6 +89,11 @@ public class BoxPanel extends JPanel{
 		}
 		this.setBounds(box.getPoint_x() - Const.BOX_PANEL_WIDTH/2, box.getPoint_y() - Const.BOX_PANEL_HEIGHT/2, Const.BOX_PANEL_WIDTH, Const.BOX_PANEL_HEIGHT);
 		String info = "<html>"+box.getApply()+"/" + box.getTotal() + "(已参与队友/所需)</html>";
+		if(box.getApply() > cur_box_apply){
+			logInformationPanel.addInfo(box.getApply()+"/" + box.getTotal() + "(已参与队友/所需)");
+			cur_box_apply = box.getApply();
+		}
+
 		box_info.setText(info);
 		IsshowBox(x,y);
 	}
@@ -177,6 +186,7 @@ public class BoxPanel extends JPanel{
 						Gson gson = new Gson();
 						box = gson.fromJson(object, Box.class);
 						resetBox(box);
+
 						break;
 					default:
 						System.out.println( res_json.get("message").getAsString());
