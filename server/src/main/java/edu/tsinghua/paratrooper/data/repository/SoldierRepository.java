@@ -12,6 +12,8 @@ public interface SoldierRepository extends CrudRepository<TSoldierEntity, Intege
 
     List<TSoldierEntity> findByGroupNumAndIdNot(int groupNum, int id);
 
+    List<TSoldierEntity> findByGroupNum(int groupNum);
+
     TSoldierEntity findByGroupNumAndCaptain(int groupNum, int isCaptain);
 
     @Modifying

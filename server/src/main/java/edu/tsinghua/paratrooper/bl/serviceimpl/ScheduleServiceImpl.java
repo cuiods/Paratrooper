@@ -17,6 +17,9 @@ public class ScheduleServiceImpl implements ScheduleService {
     @Override
     @Scheduled(cron = "0 0/2 * * * ?")
     public void updateSoldierStatus() {
-
+        Lists.newArrayList(soldierRepository.findAll()).forEach(tSoldierEntity -> {
+            tSoldierEntity.setAlive(0);
+            soldierRepository.save(tSoldierEntity);
+        });
     }
 }

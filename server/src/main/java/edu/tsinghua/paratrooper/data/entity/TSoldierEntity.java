@@ -17,6 +17,7 @@ public class TSoldierEntity extends TUserEntity {
     private int alive;
     private String boxKey;
     private int level;
+    private int vote;
 
     public TSoldierEntity reset() {
         return initialize(0, "");
@@ -32,6 +33,7 @@ public class TSoldierEntity extends TUserEntity {
         this.alive = 0;
         this.boxKey = boxKey;
         this.level = level;
+        this.vote = 0;
         return this;
     }
 
@@ -134,6 +136,16 @@ public class TSoldierEntity extends TUserEntity {
 
     public void setLevel(int level) {
         this.level = level;
+    }
+
+    @Basic
+    @Column(name = "vote")
+    public int getVote() {
+        return vote;
+    }
+
+    public void setVote(int vote) {
+        this.vote = vote;
     }
 
     @Override

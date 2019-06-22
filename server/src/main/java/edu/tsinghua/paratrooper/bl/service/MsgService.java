@@ -12,6 +12,8 @@ public interface MsgService {
 
     ResultVo<String> confirmCaptain(int compareId, int result);
 
+    ResultVo<String> voteCaptain(int supportId, int rejectId);
+
     ResultVo<BoxVo> applyBox(int boxId, String key);
 
 }

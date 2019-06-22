@@ -87,27 +87,35 @@ public class MsgServiceImpl implements MsgService {
         if (currentEntity == null || comparedEntity == null) {
             return new ResultVo<>(ErrorCode.USER_CANNOT_FIND, "User cannot find", "id:"+compareId);
         }
-        if (currentEntity.getCaptain()==0 || comparedEntity.getCaptain()==0 || result==0) {
+        if (currentEntity.getCaptain()==0 || comparedEntity.getCaptain()==0) {
             return new ResultVo<>(ErrorCode.NO_AUTHORITY, "Invalid param", "");
         }
 
-        //Change Captain
-        TSoldierEntity modify = comparedEntity;
-        if (result < 0) {
-            modify = currentEntity;
+        if (result == 0) {
+            //TODO 发起电子投票
         }
-        modify.setCaptain(0);
-        Gson gson = new Gson();
-        sendMsg(modify.getId(),MsgMethod.CAPTAIN.getCode(),gson.toJson(new SoldierVo(modify, true)));
 
-        //merge group
-        int originGroup = Math.max(currentEntity.getGroupNum(), comparedEntity.getGroupNum());
-        int updateGroup = Math.min(currentEntity.getGroupNum(), comparedEntity.getGroupNum());
-        soldierRepository.updateGroupNum(originGroup, updateGroup);
-        modify.setGroupNum(updateGroup);
-        soldierRepository.save(modify);
+        changeCaptain(result, currentEntity, comparedEntity);
 
         return new ResultVo<>(ErrorCode.SUCCESS, "ok", "");
+    }
+
+    @Override
+    @Transactional
+    public ResultVo<String> voteCaptain(int supportId, int rejectId) {
+        TSoldierEntity supportEntity = soldierRepository.findOne(supportId);
+        TSoldierEntity rejectEntity = soldierRepository.findOne(rejectId);
+        if (supportEntity == null || rejectEntity == null) {
+            return new ResultVo<>(ErrorCode.WRONG_PARAMETER, "Invalid param", "");
+        }
+        supportEntity.setVote(supportEntity.getVote()+1);
+        soldierRepository.save(supportEntity);
+        int total = soldierRepository.findByGroupNum(supportEntity.getGroupNum()).size()
+                +soldierRepository.findByGroupNum(rejectEntity.getGroupNum()).size();
+        if (supportEntity.getVote() >= total/2.0) {
+            changeCaptain(1, supportEntity, rejectEntity);
+        }
+        return new ResultVo<>(ErrorCode.SUCCESS, "ok", supportEntity.getVote()+"");
     }
 
     @Override
@@ -143,5 +151,31 @@ public class MsgServiceImpl implements MsgService {
         boxRepository.save(entity);
         entity.setSoldierEntities(null);
         return new ResultVo<>(ErrorCode.SUCCESS, "ok", new BoxVo(entity));
+    }
+
+    private void changeCaptain(int result, TSoldierEntity currentEntity, TSoldierEntity comparedEntity) {
+        //Change Captain
+        TSoldierEntity captain = currentEntity;
+        TSoldierEntity modify = comparedEntity;
+        if (result < 0) {
+            modify = currentEntity;
+            captain = comparedEntity;
+        }
+        modify.setCaptain(0);
+        Gson gson = new Gson();
+        sendMsg(modify.getId(),MsgMethod.CAPTAIN.getCode(),gson.toJson(new SoldierVo(modify, true)));
+
+        //merge group
+        int originGroup = Math.max(currentEntity.getGroupNum(), comparedEntity.getGroupNum());
+        int updateGroup = Math.min(currentEntity.getGroupNum(), comparedEntity.getGroupNum());
+        soldierRepository.updateGroupNum(originGroup, updateGroup);
+        modify.setGroupNum(updateGroup);
+        soldierRepository.save(modify);
+
+        notifyCaptain(updateGroup, captain);
+    }
+
+    private void notifyCaptain(int group, TUserEntity captain) {
+
     }
 }
