@@ -103,7 +103,6 @@ public class ForestFrame extends JFrame{
 		/**由于MessagePanel类在内部调用了clearMessage设置panel不可见
 		 * 因此必须在MessagePanel里面添加LogInformationPanel成员
  		 */
-
 		messagePanel = new MessagePanel(this.otherSoldiers,me,map.get("token"),logInformationPanel);
 		message_queue  = new LinkedList<Message>();
 		this.lanch();

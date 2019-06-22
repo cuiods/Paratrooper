@@ -24,7 +24,7 @@ public class MessagePanel extends JPanel{
 	private List<Soldier> soliderList;
 	private Soldier me;
 	private String token;
-	private LogInformationPanel logInformationPanal;
+	private LogInformationPanel logInformationPanel;
 	
 	public MessagePanel(List<Soldier> soliderList,Soldier me,String token, LogInformationPanel logInformationPanel) {
 		this.token = token;
@@ -34,7 +34,7 @@ public class MessagePanel extends JPanel{
 		ok = new JButton("确认");
 		cancel = new JButton("取消");
 		isReply = false;
-		this.logInformationPanal = logInformationPanel;
+		this.logInformationPanel = logInformationPanel;
 		lanch();
 	}
 
@@ -60,7 +60,8 @@ public class MessagePanel extends JPanel{
 		this.setSize(Const.MESSAGE_PANEL_WIDTH,Const.MESSAGE_PANEL_HRIGHT);
 		this.setBorder(BorderFactory.createTitledBorder("您有新的消息"));
 		this.setVisible(false);
-		this.logInformationPanal.setVisible(true);
+		this.logInformationPanel.setVisible(true);
+		System.out.println("logInformationPanal true");
 	}
 	
 	/**
@@ -96,7 +97,7 @@ public class MessagePanel extends JPanel{
 	 */
 	public void clearMessage() {
 		this.setVisible(false);
-		this.logInformationPanal.setVisible(true);
+		this.logInformationPanel.setVisible(true);
 	}
 	
 	/**
