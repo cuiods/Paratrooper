@@ -52,8 +52,6 @@ public class FriendPanel extends JPanel {
 		PanelLabelList = new ArrayList<LabelPanel>();
 
 
-
-
 		LabelPanel friLabelPanel = new LabelPanel("队友");
 		PanelLabelList.add(friLabelPanel);
 		this.add(friLabelPanel);
@@ -138,12 +136,12 @@ public class FriendPanel extends JPanel {
 			image.setIcon(icon);
 			image.setBounds(Const.FRIEND_CARD_GEZI, Const.FRIEND_CARD_GEZI, Const.FRIEND_CARD_IMAGE_SIZE,Const.FRIEND_CARD_IMAGE_SIZE);
 			
-			name.setText(soldier.getName());
+			name.setText("<html>士兵"+soldier.getId()+"</html>");
 			name.setBounds(Const.FRIEND_CARD_GEZI*2 + Const.FRIEND_CARD_IMAGE_SIZE,Const.FRIEND_CARD_GEZI , Const.FRIEND_CARD_LABEL_WIDTH, Const.FRIEND_CARD_LABEL_HEIGHT);
 //			if(soldier.getPublicKey() == null || soldier.getPublicKey() == "") {
 //				pub_key.setText("<html>还未验证该士兵</html>");
 //			}
-			pub_key.setText("<html>"+soldier.getPublicKey()+"</html>");
+			pub_key.setText("<html>"+soldier.getName()+"</html>");
 			pub_key.setBounds(Const.FRIEND_CARD_GEZI*2 + Const.FRIEND_CARD_IMAGE_SIZE,Const.FRIEND_CARD_GEZI*2 + Const.FRIEND_CARD_LABEL_HEIGHT , Const.FRIEND_CARD_LABEL_WIDTH, Const.FRIEND_CARD_LABEL2_HEIGHT);
 			this.add(image);
 			this.add(name);
@@ -153,8 +151,8 @@ public class FriendPanel extends JPanel {
 		}
 
 		public void reset_info(Soldier soldier){
-			name.setText(soldier.getName());
-			pub_key.setText("<html>"+soldier.getPublicKey()+"</html>");
+			name.setText("<html>士兵"+soldier.getId()+"</html>");
+			pub_key.setText("<html>"+soldier.getName()+"</html>");
 			ImageIcon icon = new ImageIcon(this.getClass().getResource(Const.FRIEND_CARD_IMAGE_SOLDIER));
 			if(soldier.isCaptain()==1) {
 				icon = new ImageIcon(this.getClass().getResource(Const.FRIEND_CARD_IMAGE_LEADER));
@@ -198,7 +196,7 @@ public class FriendPanel extends JPanel {
 			image.setIcon(icon);
 			image.setBounds(Const.FRIEND_CARD_GEZI, Const.FRIEND_CARD_GEZI, Const.FRIEND_CARD_IMAGE_SIZE,Const.FRIEND_CARD_IMAGE_SIZE);
 
-			name.setText(soldier.getName());
+			name.setText("<html>士兵"+soldier.getId()+"</html>");
 			name.setBounds(Const.FRIEND_CARD_GEZI*2 + Const.FRIEND_CARD_IMAGE_SIZE,Const.FRIEND_CARD_GEZI , Const.FRIEND_CARD_LABEL_WIDTH, Const.FRIEND_CARD_LABEL_HEIGHT);
 //			if(soldier.getPublicKey() == null || soldier.getPublicKey() == "") {
 //				pub_key.setText("<html>还未验证该士兵</html>");
@@ -223,7 +221,7 @@ public class FriendPanel extends JPanel {
 		}
 
 		public void reset_info(Soldier soldier){
-			name.setText(soldier.getName());
+			name.setText("<html>士兵"+soldier.getId()+"</html>");
 			ImageIcon icon = new ImageIcon(this.getClass().getResource(Const.FRIEND_CARD_IMAGE_SOLDIER));
 			if(soldier.isCaptain()==1) {
 				icon = new ImageIcon(this.getClass().getResource(Const.FRIEND_CARD_IMAGE_LEADER));
@@ -295,20 +293,12 @@ public class FriendPanel extends JPanel {
 
 		}
 
-		public void reset_info(Soldier soldier){
-			name.setText(soldier.getName());
-			ImageIcon icon = new ImageIcon(this.getClass().getResource(Const.FRIEND_CARD_IMAGE_SOLDIER));
-			if(soldier.isCaptain()==1) {
-				icon = new ImageIcon(this.getClass().getResource(Const.FRIEND_CARD_IMAGE_LEADER));
-			}
-			icon.setImage(icon.getImage().getScaledInstance(Const.FRIEND_CARD_IMAGE_SIZE,Const.FRIEND_CARD_IMAGE_SIZE,Image.SCALE_DEFAULT));//80和100为大小 可以自由设置
-			image.setIcon(icon);
-		}
+
 
 		public void reset_info(Box box){
-			name.setText(soldier.getName());
+			name.setText("<html>宝箱"+box.getId()+"</html>");
 			ImageIcon icon = new ImageIcon(this.getClass().getResource(Const.FRIEND_CARD_IMAGE_SOLDIER));
-			if(soldier.isCaptain()==1) {
+			if(box.getStatus()==1) {
 				icon = new ImageIcon(this.getClass().getResource(Const.FRIEND_CARD_IMAGE_LEADER));
 			}
 			icon.setImage(icon.getImage().getScaledInstance(Const.FRIEND_CARD_IMAGE_SIZE,Const.FRIEND_CARD_IMAGE_SIZE,Image.SCALE_DEFAULT));//80和100为大小 可以自由设置
@@ -377,9 +367,6 @@ public class FriendPanel extends JPanel {
 			j++;
 		}
 	}
-
-
-
 
 
 	/**

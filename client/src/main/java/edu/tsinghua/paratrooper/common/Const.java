@@ -22,7 +22,7 @@ public class Const{
 	public static final int FRIEND_PANEL_WIDTH = 180;
 	public static final int FRIEND_PANEL_HEIGHT = 1000;
 	
-	public static final int FRIEND_CARD_WIDTH = 160;
+	public static final int FRIEND_CARD_WIDTH = 170;
 	public static final int FRIEND_CARD_HEIGTH = 80;
 	public static final int FRIEND_CARD_IMAGE_SIZE = 60;
 	public static final int FRIEND_CARD_GEZI = 10;
