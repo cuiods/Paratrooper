@@ -66,34 +66,34 @@ public class FriendPanel extends JPanel {
 			FriendCardPanel temp = new FriendCardPanel(friendList.get(i));
 			this.add(temp);
 			PanelFriendList.add(temp);
-			temp.setBounds(Const.FRIEND_CARD_GEZI,  Const.FRIEND_CARD_TITLE_HEIGHT + start + panelCount * (Const.FRIEND_CARD_HEIGTH + Const.FRIEND_CARD_GEZI), Const.FRIEND_CARD_WIDTH, Const.FRIEND_CARD_HEIGTH);
+			temp.setBounds(Const.FRIEND_CARD_GEZI,  Const.FRIEND_CARD_TITLE_SPACE + Const.FRIEND_CARD_TITLE_HEIGHT + start + panelCount * (Const.FRIEND_CARD_HEIGTH + Const.FRIEND_CARD_GEZI), Const.FRIEND_CARD_WIDTH, Const.FRIEND_CARD_HEIGTH);
 			panelCount++;
 		}
 
 		LabelPanel strangerPanel = new LabelPanel("陌生人");
 		PanelLabelList.add(strangerPanel);
 		this.add(strangerPanel);
-		strangerPanel.setBounds(Const.FRIEND_CARD_GEZI,  Const.FRIEND_CARD_TITLE_HEIGHT + start + panelCount * (Const.FRIEND_CARD_HEIGTH + Const.FRIEND_CARD_GEZI), Const.FRIEND_CARD_WIDTH, Const.FRIEND_CARD_TITLE_HEIGHT);
+		strangerPanel.setBounds(Const.FRIEND_CARD_GEZI,  Const.FRIEND_CARD_TITLE_SPACE + Const.FRIEND_CARD_TITLE_HEIGHT + start + panelCount * (Const.FRIEND_CARD_HEIGTH + Const.FRIEND_CARD_GEZI), Const.FRIEND_CARD_WIDTH, Const.FRIEND_CARD_TITLE_HEIGHT);
 
 
 		for(int i= 0 ; i< strangerList.size();i++) {
 			StrangerCardPanel temp = new StrangerCardPanel(friendList.get(i));
 			this.add(temp);
 			PanelStrangerList.add(temp);
-			temp.setBounds(Const.FRIEND_CARD_GEZI,  2*Const.FRIEND_CARD_TITLE_HEIGHT + start + panelCount * (Const.FRIEND_CARD_HEIGTH + Const.FRIEND_CARD_GEZI), Const.FRIEND_CARD_WIDTH, Const.FRIEND_CARD_HEIGTH);
+			temp.setBounds(Const.FRIEND_CARD_GEZI,  2*Const.FRIEND_CARD_TITLE_SPACE + 2*Const.FRIEND_CARD_TITLE_HEIGHT + start + panelCount * (Const.FRIEND_CARD_HEIGTH + Const.FRIEND_CARD_GEZI), Const.FRIEND_CARD_WIDTH, Const.FRIEND_CARD_HEIGTH);
 			panelCount++;
 		}
 
 		LabelPanel boxPanel = new LabelPanel("宝箱");
 		PanelLabelList.add(boxPanel);
 		this.add(boxPanel);
-		boxPanel.setBounds(Const.FRIEND_CARD_GEZI,  2*Const.FRIEND_CARD_TITLE_HEIGHT + start + panelCount * (Const.FRIEND_CARD_HEIGTH + Const.FRIEND_CARD_GEZI), Const.FRIEND_CARD_WIDTH, Const.FRIEND_CARD_TITLE_HEIGHT);
+		boxPanel.setBounds(Const.FRIEND_CARD_GEZI,  2*Const.FRIEND_CARD_TITLE_SPACE + 2*Const.FRIEND_CARD_TITLE_HEIGHT + start + panelCount * (Const.FRIEND_CARD_HEIGTH + Const.FRIEND_CARD_GEZI), Const.FRIEND_CARD_WIDTH, Const.FRIEND_CARD_TITLE_HEIGHT);
 
 		for(int i= 0 ; i< 1;i++) {
 			BoxCardPanel temp = new BoxCardPanel(friendList.get(i));
 			this.add(temp);
 			PanelBoxList.add(temp);
-			temp.setBounds(Const.FRIEND_CARD_GEZI,  3*Const.FRIEND_CARD_TITLE_HEIGHT + start + panelCount * (Const.FRIEND_CARD_HEIGTH + Const.FRIEND_CARD_GEZI), Const.FRIEND_CARD_WIDTH, Const.FRIEND_CARD_HEIGTH);
+			temp.setBounds(Const.FRIEND_CARD_GEZI,  3*Const.FRIEND_CARD_TITLE_SPACE + 3*Const.FRIEND_CARD_TITLE_HEIGHT + start + panelCount * (Const.FRIEND_CARD_HEIGTH + Const.FRIEND_CARD_GEZI), Const.FRIEND_CARD_WIDTH, Const.FRIEND_CARD_HEIGTH);
 			panelCount++;
 		}
 
@@ -359,15 +359,16 @@ public class FriendPanel extends JPanel {
 
 		for (i = 0,j= 0; i < friendList.size() && j < PanelFriendList.size(); i++,j++) {
 			FriendCardPanel temp = PanelFriendList.get(i);
-			temp.setBounds(Const.FRIEND_CARD_GEZI,  Const.FRIEND_CARD_TITLE_HEIGHT + start + panelCount * (Const.FRIEND_CARD_HEIGTH + Const.FRIEND_CARD_GEZI), Const.FRIEND_CARD_WIDTH, Const.FRIEND_CARD_HEIGTH);
+			temp.setBounds(Const.FRIEND_CARD_GEZI,  Const.FRIEND_CARD_TITLE_SPACE + Const.FRIEND_CARD_TITLE_HEIGHT + start + panelCount * (Const.FRIEND_CARD_HEIGTH + Const.FRIEND_CARD_GEZI), Const.FRIEND_CARD_WIDTH, Const.FRIEND_CARD_HEIGTH);
 			temp.reset_info(friendList.get(i));
+			temp.setVisible(true);
 			panelCount++;
 		}
 		while(i < friendList.size()) {// 需要new
 			FriendCardPanel temp = new FriendCardPanel(friendList.get(i));
 			this.add(temp);
 			PanelFriendList.add(temp);
-			temp.setBounds(Const.FRIEND_CARD_GEZI,  Const.FRIEND_CARD_TITLE_HEIGHT + start + i * (Const.FRIEND_CARD_HEIGTH + Const.FRIEND_CARD_GEZI), Const.FRIEND_CARD_WIDTH, Const.FRIEND_CARD_HEIGTH);
+			temp.setBounds(Const.FRIEND_CARD_GEZI, Const.FRIEND_CARD_TITLE_SPACE + Const.FRIEND_CARD_TITLE_HEIGHT + start + i * (Const.FRIEND_CARD_HEIGTH + Const.FRIEND_CARD_GEZI), Const.FRIEND_CARD_WIDTH, Const.FRIEND_CARD_HEIGTH);
 			i++;
 			panelCount++;
 		}
@@ -392,19 +393,20 @@ public class FriendPanel extends JPanel {
 		int j = 0 ;
 
 		LabelPanel strangerPanel = PanelLabelList.get(1);
-		strangerPanel.setBounds(Const.FRIEND_CARD_GEZI,  Const.FRIEND_CARD_TITLE_HEIGHT + start + panelCount * (Const.FRIEND_CARD_HEIGTH + Const.FRIEND_CARD_GEZI), Const.FRIEND_CARD_WIDTH, Const.FRIEND_CARD_TITLE_HEIGHT);
+		strangerPanel.setBounds(Const.FRIEND_CARD_GEZI,  Const.FRIEND_CARD_TITLE_SPACE + Const.FRIEND_CARD_TITLE_HEIGHT + start + panelCount * (Const.FRIEND_CARD_HEIGTH + Const.FRIEND_CARD_GEZI), Const.FRIEND_CARD_WIDTH, Const.FRIEND_CARD_TITLE_HEIGHT);
 
 		for (i = 0,j= 0; i < strangerList.size() && j < PanelStrangerList.size(); i++,j++) {
 			StrangerCardPanel temp = PanelStrangerList.get(i);
-			temp.setBounds(Const.FRIEND_CARD_GEZI,  2*Const.FRIEND_CARD_TITLE_HEIGHT + start + panelCount * (Const.FRIEND_CARD_HEIGTH + Const.FRIEND_CARD_GEZI), Const.FRIEND_CARD_WIDTH, Const.FRIEND_CARD_HEIGTH);
+			temp.setBounds(Const.FRIEND_CARD_GEZI,  2*Const.FRIEND_CARD_TITLE_SPACE + 2*Const.FRIEND_CARD_TITLE_HEIGHT + start + panelCount * (Const.FRIEND_CARD_HEIGTH + Const.FRIEND_CARD_GEZI), Const.FRIEND_CARD_WIDTH, Const.FRIEND_CARD_HEIGTH);
 			temp.reset_info(strangerList.get(i));
+			temp.setVisible(true);
 			panelCount++;
 		}
 		while(i < strangerList.size()) {// 需要new
 			StrangerCardPanel temp = new StrangerCardPanel(strangerList.get(i));
 			this.add(temp);
 			PanelStrangerList.add(temp);
-			temp.setBounds(Const.FRIEND_CARD_GEZI,  Const.FRIEND_CARD_TITLE_HEIGHT + start + panelCount * (Const.FRIEND_CARD_HEIGTH + Const.FRIEND_CARD_GEZI), Const.FRIEND_CARD_WIDTH, Const.FRIEND_CARD_HEIGTH);
+			temp.setBounds(Const.FRIEND_CARD_GEZI,  2*Const.FRIEND_CARD_TITLE_SPACE + 2*Const.FRIEND_CARD_TITLE_HEIGHT + start + panelCount * (Const.FRIEND_CARD_HEIGTH + Const.FRIEND_CARD_GEZI), Const.FRIEND_CARD_WIDTH, Const.FRIEND_CARD_HEIGTH);
 			i++;
 			panelCount++;
 		}
@@ -425,13 +427,13 @@ public class FriendPanel extends JPanel {
 		int start = 5;
 
 		LabelPanel boxPanel = PanelLabelList.get(2);
-		boxPanel.setBounds(Const.FRIEND_CARD_GEZI,  2*Const.FRIEND_CARD_TITLE_HEIGHT + start + panelCount * (Const.FRIEND_CARD_HEIGTH + Const.FRIEND_CARD_GEZI), Const.FRIEND_CARD_WIDTH, Const.FRIEND_CARD_TITLE_HEIGHT);
+		boxPanel.setBounds(Const.FRIEND_CARD_GEZI,  2*Const.FRIEND_CARD_TITLE_SPACE + 2*Const.FRIEND_CARD_TITLE_HEIGHT + start + panelCount * (Const.FRIEND_CARD_HEIGTH + Const.FRIEND_CARD_GEZI), Const.FRIEND_CARD_WIDTH, Const.FRIEND_CARD_TITLE_HEIGHT);
 
 
 		if (boxList != null) {
 			BoxCardPanel temp = PanelBoxList.get(0);
 			temp.setVisible(true);
-			temp.setBounds(Const.FRIEND_CARD_GEZI,  3*Const.FRIEND_CARD_TITLE_HEIGHT + start + panelCount * (Const.FRIEND_CARD_HEIGTH + Const.FRIEND_CARD_GEZI), Const.FRIEND_CARD_WIDTH, Const.FRIEND_CARD_HEIGTH);
+			temp.setBounds(Const.FRIEND_CARD_GEZI,  3*Const.FRIEND_CARD_TITLE_SPACE + 3*Const.FRIEND_CARD_TITLE_HEIGHT + start + panelCount * (Const.FRIEND_CARD_HEIGTH + Const.FRIEND_CARD_GEZI), Const.FRIEND_CARD_WIDTH, Const.FRIEND_CARD_HEIGTH);
 			temp.reset_info(boxList.get(0));
 		} else {
 			PanelBoxList.get(0).setVisible(false);

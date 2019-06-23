@@ -32,7 +32,8 @@ public class Const{
 	public static final String FRIEND_CARD_IMAGE_SOLDIER = "/images/soldier_head.jpg";
 	public static final String FRIEND_CARD_IMAGE_LEADER = "/images/leader_head.jpg";
 	public static final int FRIEND_CARD_TITLE_HEIGHT = 30;
-	
+	public static final int FRIEND_CARD_TITLE_SPACE = 5;
+
 	//client.ui.MessagePanel
 	public static final int MESSAGE_PANEL_WIDTH = 200;
 	public static final int MESSAGE_PANEL_HRIGHT = 200;
