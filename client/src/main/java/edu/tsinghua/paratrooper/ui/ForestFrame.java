@@ -386,7 +386,8 @@ public class ForestFrame extends JFrame{
 
 		Map<String,Object> req_map = new HashMap<>();
 		req_map.put("compareId",from_id);
-		req_map.put("result",flag ? 1:0);
+		//req_map.put("result",flag ? 1:0);
+        req_map.put("result",0);
 
 		String req = TransTools.objectToJson(req_map);
 		System.out.println("告诉服务器竞选队长的最终消息消息："+req);
@@ -436,10 +437,12 @@ public class ForestFrame extends JFrame{
 			while(true) {
 			      if(!message_queue.isEmpty()) {
 			    	       Message message= message_queue.poll();
-			    	       messagePanel.resetMessage(message);
+			    	       boolean flag = messagePanel.resetMessage(message);
 			    	       logInformationPanel.resetMessage(message);
-			    	       logInformationPanel.setVisible(false);
-			    	       messagePanel.setVisible(true);
+			    	       if(flag){
+                               logInformationPanel.setVisible(false);
+                               messagePanel.setVisible(true);
+                           }
 			    	       try {
 			   				sleep(Const.MESSAGE_SHOW_SECONDS);
 			   			} catch (InterruptedException e) {

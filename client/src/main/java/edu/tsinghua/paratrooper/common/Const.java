@@ -77,6 +77,7 @@ public class Const{
 	public static final String CONFIRM = "/api/v1/msg/confirm";         //认证身份完成，向服务端发送认证消息
 	public static final String CAPTAIN = "/api/v1/msg/captain";         //队长竞选结束，告诉服务端结果
 	public static final String APPLY = "/api/v1/msg/apply";              //开箱请求
+	public static final String VOTE =  "/api/v1/msg/vote";
 
 	// message code
 	public static final int MESSAGE_OPERATION_ONE = 3001;   //我A向服务端发起 对B认证 ，告诉B 我是A
@@ -92,8 +93,12 @@ public class Const{
 	public static final int MESSAGE_CAPTAIN_FOUR = 4004;
 	public static final int MESSAGE_CAPTAIN_FIVE = 4005;
 	public static final int MESSAGE_CAPTAIN_SIX = 4006;
+	public static final int MESSAGE_CHOOSE_CAPTAIN = 4007;
 
 	public static final int MESSAGE_BOX_OPEN = 5001;   //宝箱被成功开启
+
+	public static final int MESSAGE_IDENTIFY_RESULT = 6001;
+	public static final int MESSAGE_CHOOSE_CAPTAIN_RESULT = 6002;
 
 	//thread 
 	public static final int SLEEP_SECONDS = 1000;

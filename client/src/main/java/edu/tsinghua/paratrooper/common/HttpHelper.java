@@ -220,7 +220,7 @@ public class HttpHelper {
 
 	     if(code == Const.MESSAGE_OPERATION_TWO) {   //有人向我发起认证
 
-	     	System.out.println("有人向我发起认证:"+ object);
+	     	 System.out.println("有人向我发起认证:"+ object);
 			 Map<String,Object> map = new HashMap<String,Object>();
 			 map.put("ciper", data.get("ciper").getAsString());
 			 map.put("text",data.get("text").getAsString());
@@ -304,6 +304,36 @@ public class HttpHelper {
 			 Message message = new Message (Const.MESSAGE_BOX_OPEN,map);
 			 frame.addMessageArrive(message);
 		  }
+
+		  if(code == Const.MESSAGE_CHOOSE_CAPTAIN){
+			System.out.println("发起电子投票:"+ object);
+			Map<String,Object> map = new HashMap<String,Object>();
+			map.put("candidate_left_id", data.get("candidate1Id").getAsString());
+			map.put("candidata_left_name", data.get("candidate1Name").getAsString());
+			map.put("candidate_right_id",data.get("candidate2Id").getAsString());
+			map.put("candidata_right_name",data.get("candidate2Name").getAsString());
+			Message message = new Message(code,map);
+			frame.addMessageArrive(message);
+			return ;
+		}
+
+		if(code == Const.MESSAGE_IDENTIFY_RESULT){
+			System.out.println("认证结果:"+ object);
+			Map<String,Object> map = new HashMap<String,Object>();
+			map.put("name", data.get("name").getAsString());
+			Message message = new Message(code,map);
+			frame.addMessageArrive(message);
+			return ;
+		}
+
+		if(code == Const.MESSAGE_CHOOSE_CAPTAIN_RESULT){
+			System.out.println("选队长结果:"+ object);
+			Map<String,Object> map = new HashMap<String,Object>();
+			map.put("name", data.get("name").getAsString());
+			Message message = new Message(code,map);
+			frame.addMessageArrive(message);
+			return ;
+		}
 	}
 
 	/**

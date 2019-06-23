@@ -65,8 +65,8 @@ public class LogInformationPanel extends JPanel {
                 addInfo(str);
                 break;
             case Const.MESSAGE_OPERATION_FIVE : //认证成功
-                str = "认证成功！";
-                addInfo(str);
+                //str = "认证成功！";
+                //addInfo(str);
                 break;
             case Const.MESSAGE_CAPTAIN_ONE:  //竞选队长
                 str = "与:"+ message.getData().get("other_captain_id")+"\n竞选队长。";
@@ -74,6 +74,14 @@ public class LogInformationPanel extends JPanel {
                 break;
             case Const.MESSAGE_BOX_OPEN:
                 str = "宝箱:"+ message.getData().get("box_id")+"\n已被开启。";
+                addInfo(str);
+                break;
+            case Const.MESSAGE_IDENTIFY_RESULT:
+                str = "与" + message.getData().get("name") + "认证成功";
+                addInfo(str);
+                break;
+            case Const.MESSAGE_CHOOSE_CAPTAIN_RESULT:
+                str = "队长是：" + message.getData().get("name");
                 addInfo(str);
                 break;
         }

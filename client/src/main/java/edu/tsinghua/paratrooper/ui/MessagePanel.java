@@ -25,6 +25,10 @@ public class MessagePanel extends JPanel{
 	private Soldier me;
 	private String token;
 	private LogInformationPanel logInformationPanel;
+	private int can_left_id;
+	private int can_right_id;
+	private String can_left_name;
+	private String can_right_name;
 	
 	public MessagePanel(List<Soldier> soliderList,Soldier me,String token, LogInformationPanel logInformationPanel) {
 		this.token = token;
@@ -68,10 +72,12 @@ public class MessagePanel extends JPanel{
 	 * 一条新消息，刷新页面
 	 * @param message
 	 */
-	public void resetMessage(Message message) {
+	public boolean resetMessage(Message message) {
 		this.message = message;
 		int code = message.getCode();
 		String str ="";
+		ok.setText("确认");
+		cancel.setText("取消");
 		switch(code) {
 		    case Const.MESSAGE_OPERATION_TWO :  //有人向我发起认证
 			    str = "<html> 士兵:"+ message.getData().get("from_id")+"向您发起认证,是否继续" + "</html>";
@@ -89,7 +95,25 @@ public class MessagePanel extends JPanel{
 				str = "<html> 宝箱:"+ message.getData().get("box_id")+"已被您和您的队友开启。"+ "</html>";
 				body.setText(str);
 				break;
+			case Const.MESSAGE_CHOOSE_CAPTAIN:
+				for(String key : message.getData().keySet()){
+					System.out.println(key + " : " + message.getData().get(key));
+				}
+				can_left_name = message.getData().get("candidata_left_name").toString();
+				can_right_name = message.getData().get("candidata_right_name").toString();
+				can_left_id = Integer.parseInt(message.getData().get("candidata_left_name").toString());
+				can_right_id = Integer.parseInt(message.getData().get("candidata_right_name").toString());
+				str = "请投票："+ can_left_name +":"+ can_right_name;
+				body.setText(str);
+				ok.setText(can_left_name);
+				cancel.setText(can_right_name);
+
+				logInformationPanel.addInfo(str);
+				break;
+			default:
+				return false;
 		}
+		return true;
 	}
 	
 	/**
@@ -147,7 +171,17 @@ public class MessagePanel extends JPanel{
 						System.out.println("验证失败");
 					}
 					break;
+				case Const.MESSAGE_CHOOSE_CAPTAIN:
+					Map<String,Object> req_map = new HashMap<>();
+					req_map.put("rejectId",can_right_id);
+					req_map.put("supportId",can_left_id);
+					String req = TransTools.objectToJson(req_map);
+					System.out.println("发起回执验证消息："+req);
+					HttpHelper.asyncPost(Const.VOTE,token,req,null);
 
+					String str = "您选择了：" + can_left_name;
+					logInformationPanel.addInfo(str);
+					break;
 			}
 			isReply = true;
 			clearMessage();
@@ -163,6 +197,17 @@ public class MessagePanel extends JPanel{
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			// TODO Auto-generated method stub
+			if(message.getCode() == Const.MESSAGE_CHOOSE_CAPTAIN){
+				Map<String,Object> req_map = new HashMap<>();
+				req_map.put("rejectId",can_left_id);
+				req_map.put("supportId",can_right_id);
+				String req = TransTools.objectToJson(req_map);
+				System.out.println("发起回执验证消息："+req);
+				HttpHelper.asyncPost(Const.VOTE,token,req,null);
+
+				String str = "您选择了：" + can_right_name;
+				logInformationPanel.addInfo(str);
+			}
 			isReply = true;
 			clearMessage();
 		}
