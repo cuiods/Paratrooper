@@ -57,7 +57,6 @@ public class FriendPanel extends JPanel {
 		this.add(friLabelPanel);
 		friLabelPanel.setBounds(Const.FRIEND_CARD_GEZI,  5, Const.FRIEND_CARD_WIDTH, Const.FRIEND_CARD_TITLE_HEIGHT);
 
-
 		int start = 5;
 		int panelCount = 0;
 		for(int i= 0 ; i< friendList.size();i++) {
@@ -72,7 +71,6 @@ public class FriendPanel extends JPanel {
 		PanelLabelList.add(strangerPanel);
 		this.add(strangerPanel);
 		strangerPanel.setBounds(Const.FRIEND_CARD_GEZI,  Const.FRIEND_CARD_TITLE_SPACE + Const.FRIEND_CARD_TITLE_HEIGHT + start + panelCount * (Const.FRIEND_CARD_HEIGTH + Const.FRIEND_CARD_GEZI), Const.FRIEND_CARD_WIDTH, Const.FRIEND_CARD_TITLE_HEIGHT);
-
 
 		for(int i= 0 ; i< strangerList.size();i++) {
 			StrangerCardPanel temp = new StrangerCardPanel(friendList.get(i));
@@ -120,7 +118,6 @@ public class FriendPanel extends JPanel {
 			pub_key = new JLabel();
 			this.soldier = soldier;
 			lanch();
-			
 		}
 		
 		public void lanch() {
@@ -147,15 +144,15 @@ public class FriendPanel extends JPanel {
 			this.add(name);
 			this.add(pub_key);
 			this.setBorder(BorderFactory.createRaisedSoftBevelBorder());
-		
 		}
 
 		public void reset_info(Soldier soldier){
-			name.setText("<html>士兵"+soldier.getId()+"</html>");
+			name.setText("<html>队友"+soldier.getId()+"</html>");
 			pub_key.setText("<html>"+soldier.getName()+"</html>");
 			ImageIcon icon = new ImageIcon(this.getClass().getResource(Const.FRIEND_CARD_IMAGE_SOLDIER));
 			if(soldier.isCaptain()==1) {
 				icon = new ImageIcon(this.getClass().getResource(Const.FRIEND_CARD_IMAGE_LEADER));
+				name.setText("<html>队长"+soldier.getId()+"</html>");
 			}
 			icon.setImage(icon.getImage().getScaledInstance(Const.FRIEND_CARD_IMAGE_SIZE,Const.FRIEND_CARD_IMAGE_SIZE,Image.SCALE_DEFAULT));//80和100为大小 可以自由设置
 			image.setIcon(icon);
@@ -223,15 +220,9 @@ public class FriendPanel extends JPanel {
 		public void reset_info(Soldier soldier){
 			name.setText("<html>士兵"+soldier.getId()+"</html>");
 			ImageIcon icon = new ImageIcon(this.getClass().getResource(Const.FRIEND_CARD_IMAGE_SOLDIER));
-			if(soldier.isCaptain()==1) {
-				icon = new ImageIcon(this.getClass().getResource(Const.FRIEND_CARD_IMAGE_LEADER));
-			}
 			icon.setImage(icon.getImage().getScaledInstance(Const.FRIEND_CARD_IMAGE_SIZE,Const.FRIEND_CARD_IMAGE_SIZE,Image.SCALE_DEFAULT));//80和100为大小 可以自由设置
 			image.setIcon(icon);
 		}
-
-
-
 	}
 
 
@@ -271,9 +262,6 @@ public class FriendPanel extends JPanel {
 
 			name.setText(soldier.getName());
 			name.setBounds(Const.FRIEND_CARD_GEZI*2 + Const.FRIEND_CARD_IMAGE_SIZE,Const.FRIEND_CARD_GEZI , Const.FRIEND_CARD_LABEL_WIDTH, Const.FRIEND_CARD_LABEL_HEIGHT);
-//			if(soldier.getPublicKey() == null || soldier.getPublicKey() == "") {
-//				pub_key.setText("<html>还未验证该士兵</html>");
-//			}
 
 			authenBtn.setLabel("开箱");
 			authenBtn.setBounds(Const.FRIEND_CARD_GEZI*2 + Const.FRIEND_CARD_IMAGE_SIZE,Const.FRIEND_CARD_GEZI*2 + Const.FRIEND_CARD_LABEL_HEIGHT , Const.FRIEND_CARD_LABEL_WIDTH, Const.FRIEND_CARD_LABEL2_HEIGHT);
@@ -284,16 +272,12 @@ public class FriendPanel extends JPanel {
 				}
 			});
 
-
 			this.add(image);
 			this.add(name);
 			this.add(authenBtn);
 
 			this.setBorder(BorderFactory.createRaisedSoftBevelBorder());
-
 		}
-
-
 
 		public void reset_info(Box box){
 			name.setText("<html>宝箱"+box.getId()+"</html>");
@@ -304,9 +288,6 @@ public class FriendPanel extends JPanel {
 			icon.setImage(icon.getImage().getScaledInstance(Const.FRIEND_CARD_IMAGE_SIZE,Const.FRIEND_CARD_IMAGE_SIZE,Image.SCALE_DEFAULT));//80和100为大小 可以自由设置
 			image.setIcon(icon);
 		}
-
-
-
 	}
 
 
@@ -327,7 +308,6 @@ public class FriendPanel extends JPanel {
 		public void lanch() {
 			this.setSize(Const.FRIEND_CARD_WIDTH,Const.FRIEND_CARD_HEIGTH);
 			this.setLayout(null);
-//			this.setBackground(Color.WHITE);
 
 			name.setBounds(Const.FRIEND_CARD_GEZI, Const.FRIEND_CARD_GEZI, Const.FRIEND_CARD_IMAGE_SIZE, 16);
 			this.add(name);
@@ -404,7 +384,6 @@ public class FriendPanel extends JPanel {
 	}
 
 
-
 	/**
 	 * 刷新宝箱卡片
 	 * @param boxList
@@ -416,7 +395,6 @@ public class FriendPanel extends JPanel {
 		LabelPanel boxPanel = PanelLabelList.get(2);
 		boxPanel.setBounds(Const.FRIEND_CARD_GEZI,  2*Const.FRIEND_CARD_TITLE_SPACE + 2*Const.FRIEND_CARD_TITLE_HEIGHT + start + panelCount * (Const.FRIEND_CARD_HEIGTH + Const.FRIEND_CARD_GEZI), Const.FRIEND_CARD_WIDTH, Const.FRIEND_CARD_TITLE_HEIGHT);
 
-
 		if (boxList != null) {
 			BoxCardPanel temp = PanelBoxList.get(0);
 			temp.setVisible(true);
@@ -425,14 +403,10 @@ public class FriendPanel extends JPanel {
 		} else {
 			PanelBoxList.get(0).setVisible(false);
 		}
-
-
-
 	}
 
 
-
-
+	
 	/*
 	 * 测试函数
 	 */

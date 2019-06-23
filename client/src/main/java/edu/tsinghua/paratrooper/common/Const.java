@@ -29,8 +29,8 @@ public class Const{
 	public static final int FRIEND_CARD_LABEL_WIDTH = 70;
 	public static final int FRIEND_CARD_LABEL_HEIGHT = 20;
 	public static final int FRIEND_CARD_LABEL2_HEIGHT = 30;
-	public static final String FRIEND_CARD_IMAGE_SOLDIER = "/images/soldier_head.jpg";
-	public static final String FRIEND_CARD_IMAGE_LEADER = "/images/leader_head.jpg";
+	public static final String FRIEND_CARD_IMAGE_SOLDIER = "/images/soldier_head.png";
+	public static final String FRIEND_CARD_IMAGE_LEADER = "/images/leader_head.png";
 	public static final int FRIEND_CARD_TITLE_HEIGHT = 30;
 	public static final int FRIEND_CARD_TITLE_SPACE = 5;
 
