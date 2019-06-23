@@ -274,8 +274,8 @@ public class ForestFrame extends JFrame{
 	/**
 	 * 刷新我的陌生人的列表
 	 */
-	public void resetStrangerList(List<Soldier> strangerList){
-		this.friendListPanel.resetPerStranger(strangerList);
+	public void resetStrangerList(List<Soldier> strangerList, Soldier soldier){
+		this.friendListPanel.resetPerStranger(strangerList, soldier);
 	}
 
 	/**

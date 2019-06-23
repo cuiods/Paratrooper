@@ -163,7 +163,7 @@ public class HttpHelper {
 		refreshMe(data.get("me").getAsJsonObject(),frame);
 
 		refreshGroupMembers(data.get("groupMembers").getAsJsonArray(),frame);
-		refreshPoint(data.get("inVisionSoldiers").getAsJsonArray(), data.get("groupMembers").getAsJsonArray(), frame);
+		refreshPoint(data.get("inVisionSoldiers").getAsJsonArray(), data.get("groupMembers").getAsJsonArray(), data.get("me").getAsJsonObject(), frame);
 		refreshBox( data.get("boxes").getAsJsonArray(), data.get("me").getAsJsonObject(), frame);
 
 		dealMessage(data.get("messages").getAsJsonArray(),token,frame);
@@ -186,7 +186,7 @@ public class HttpHelper {
 	 * @param array
 	 * @param frame
 	 */
-	public static void refreshPoint(JsonArray array, JsonArray friendArray, ForestFrame  frame) {
+	public static void refreshPoint(JsonArray array, JsonArray friendArray, JsonObject object, ForestFrame frame) {
 		Gson gson = new Gson();
 		List<Soldier> soldiers_list = gson.fromJson(array.toString(),new TypeToken<List<Soldier>>(){}.getType());
 		frame.resetOtherSoldierPoint(soldiers_list);
@@ -210,7 +210,9 @@ public class HttpHelper {
 			}
 		}
 
-		frame.resetStrangerList(stranger_list);
+        Soldier me = gson.fromJson(object, Soldier.class);
+
+		frame.resetStrangerList(stranger_list ,me);
 
 	}
 

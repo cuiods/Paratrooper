@@ -169,14 +169,16 @@ public class FriendPanel extends JPanel {
 
 		private JLabel image;
 		private JLabel name;
+		private JLabel dect;
 		private Soldier soldier;
 		private JButton authenBtn;
 
 		public StrangerCardPanel(Soldier soldier) {
 			image = new JLabel();
 			name = new JLabel();
+			dect = new JLabel();
 			this.soldier = soldier;
-			authenBtn = new JButton();
+			authenBtn = new JButton("验证");
 			lanch();
 		}
 
@@ -195,11 +197,10 @@ public class FriendPanel extends JPanel {
 
 			name.setText("<html>士兵"+soldier.getId()+"</html>");
 			name.setBounds(Const.FRIEND_CARD_GEZI*2 + Const.FRIEND_CARD_IMAGE_SIZE,Const.FRIEND_CARD_GEZI , Const.FRIEND_CARD_LABEL_WIDTH, Const.FRIEND_CARD_LABEL_HEIGHT);
-//			if(soldier.getPublicKey() == null || soldier.getPublicKey() == "") {
-//				pub_key.setText("<html>还未验证该士兵</html>");
-//			}
 
-			authenBtn.setLabel("验证");
+			dect.setText("未验证");
+			dect.setBounds(Const.FRIEND_CARD_GEZI*2 + Const.FRIEND_CARD_IMAGE_SIZE,Const.FRIEND_CARD_GEZI*2 + Const.FRIEND_CARD_LABEL_HEIGHT , Const.FRIEND_CARD_LABEL_WIDTH, Const.FRIEND_CARD_LABEL2_HEIGHT);
+
 			authenBtn.setBounds(Const.FRIEND_CARD_GEZI*2 + Const.FRIEND_CARD_IMAGE_SIZE,Const.FRIEND_CARD_GEZI*2 + Const.FRIEND_CARD_LABEL_HEIGHT , Const.FRIEND_CARD_LABEL_WIDTH, Const.FRIEND_CARD_LABEL2_HEIGHT);
 			authenBtn.addActionListener(new ActionListener() {
 				@Override
@@ -207,21 +208,29 @@ public class FriendPanel extends JPanel {
 					System.out.println("click");
 				}
 			});
-
+			authenBtn.setVisible(false);
 
 			this.add(image);
 			this.add(name);
+			this.add(dect);
 			this.add(authenBtn);
 
 			this.setBorder(BorderFactory.createRaisedSoftBevelBorder());
 
 		}
 
-		public void reset_info(Soldier soldier){
+		public void reset_info(Soldier me, Soldier soldier){
 			name.setText("<html>士兵"+soldier.getId()+"</html>");
 			ImageIcon icon = new ImageIcon(this.getClass().getResource(Const.FRIEND_CARD_IMAGE_SOLDIER));
 			icon.setImage(icon.getImage().getScaledInstance(Const.FRIEND_CARD_IMAGE_SIZE,Const.FRIEND_CARD_IMAGE_SIZE,Image.SCALE_DEFAULT));//80和100为大小 可以自由设置
 			image.setIcon(icon);
+			if (isHalfDistance(me, soldier)){
+				authenBtn.setVisible(true);
+				dect.setVisible(false);
+			} else {
+				authenBtn.setVisible(false);
+				dect.setVisible(true);
+			}
 		}
 	}
 
@@ -235,6 +244,7 @@ public class FriendPanel extends JPanel {
 
 		private JLabel image;
 		private JLabel name;
+		private JLabel dect;
 
 		private Soldier soldier;
 		private JButton authenBtn;
@@ -242,6 +252,7 @@ public class FriendPanel extends JPanel {
 		public BoxCardPanel(Soldier soldier) {
 			image = new JLabel();
 			name = new JLabel();
+			dect = new JLabel();
 			this.soldier = soldier;
 			authenBtn = new JButton();
 			lanch();
@@ -284,6 +295,7 @@ public class FriendPanel extends JPanel {
 			ImageIcon icon = new ImageIcon(this.getClass().getResource(Const.FRIEND_CARD_IMAGE_SOLDIER));
 			if(box.getStatus()==1) {
 				icon = new ImageIcon(this.getClass().getResource(Const.FRIEND_CARD_IMAGE_LEADER));
+
 			}
 			icon.setImage(icon.getImage().getScaledInstance(Const.FRIEND_CARD_IMAGE_SIZE,Const.FRIEND_CARD_IMAGE_SIZE,Image.SCALE_DEFAULT));//80和100为大小 可以自由设置
 			image.setIcon(icon);
@@ -353,7 +365,7 @@ public class FriendPanel extends JPanel {
 	 * 刷新陌生人卡片
 	 * @param strangerList
 	 */
-	public void resetPerStranger(List<Soldier> strangerList){
+	public void resetPerStranger(List<Soldier> strangerList, Soldier me){
 
 		int start = 5;
 		int i = 0 ;
@@ -365,7 +377,7 @@ public class FriendPanel extends JPanel {
 		for (i = 0,j= 0; i < strangerList.size() && j < PanelStrangerList.size(); i++,j++) {
 			StrangerCardPanel temp = PanelStrangerList.get(i);
 			temp.setBounds(Const.FRIEND_CARD_GEZI,  2*Const.FRIEND_CARD_TITLE_SPACE + 2*Const.FRIEND_CARD_TITLE_HEIGHT + start + panelCount * (Const.FRIEND_CARD_HEIGTH + Const.FRIEND_CARD_GEZI), Const.FRIEND_CARD_WIDTH, Const.FRIEND_CARD_HEIGTH);
-			temp.reset_info(strangerList.get(i));
+			temp.reset_info(me, strangerList.get(i));
 			temp.setVisible(true);
 			panelCount++;
 		}
@@ -402,6 +414,19 @@ public class FriendPanel extends JPanel {
 			temp.reset_info(boxList.get(0));
 		} else {
 			PanelBoxList.get(0).setVisible(false);
+		}
+	}
+
+
+	public static boolean isHalfDistance(Soldier me,Soldier soldier) {
+		int x = me.getLocationX();
+		int y = me.getLocationY();
+		int a = Math.abs(x - soldier.getLocationX());
+		int b = Math.abs(y - soldier.getLocationY());
+		if(a *a + b* b < Const.RDDIUS* Const.RDDIUS*0.3) {
+			return true;
+		}else {
+			return false;
 		}
 	}
 
