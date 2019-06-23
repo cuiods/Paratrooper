@@ -6,7 +6,7 @@ import lombok.Data;
 @Data
 @AllArgsConstructor
 public class SoldierDto {
-    private int candicate1Id;
+    private int candidate1Id;
     private String candidate1Name;
 
     private int candidate2Id;

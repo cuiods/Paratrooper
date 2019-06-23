@@ -132,6 +132,9 @@ public class MsgServiceImpl implements MsgService {
             changeCaptain(1, supportEntity, rejectEntity);
             supportEntity.setVote(0);
             rejectEntity.setVote(0);
+            int updateGroup = Math.min(supportEntity.getGroupNum(), rejectEntity.getGroupNum());
+            supportEntity.setGroupNum(updateGroup);
+            rejectEntity.setGroupNum(updateGroup);
             soldierRepository.save(rejectEntity);
         }
         soldierRepository.save(supportEntity);
