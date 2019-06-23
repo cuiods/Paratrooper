@@ -107,7 +107,7 @@ public class ForestFrame extends JFrame{
 		friendLists.add(so);
 		friendLists.add(so2);
 		friendLists.add(so3);
-		friendListPanel = new FriendPanel(friendLists);
+		friendListPanel = new FriendPanel(friendLists, friendLists, boxlists);
 
 		//消息列表相关
 
@@ -270,6 +270,22 @@ public class ForestFrame extends JFrame{
 		this.friendLists = friendsList;
 		this.friendListPanel.resetPerFriend(this.friendLists);
 	}
+
+	/**
+	 * 刷新我的陌生人的列表
+	 */
+	public void resetStrangerList(List<Soldier> strangerList){
+		this.friendListPanel.resetPerStranger(strangerList);
+	}
+
+	/**
+	 * 刷新我的陌生人的列表
+	 */
+	public void resetBoxList(List<Box> boxList){
+		this.friendListPanel.resetPerBox(boxList);
+	}
+
+
 	
 	/**
 	 * 键盘移动的监听事件

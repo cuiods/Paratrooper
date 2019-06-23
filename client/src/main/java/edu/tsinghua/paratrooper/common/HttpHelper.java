@@ -161,9 +161,11 @@ public class HttpHelper {
 	public static void  dealMessage(JsonObject data,String token,ForestFrame frame) {
 
 		refreshMe(data.get("me").getAsJsonObject(),frame);
-		refreshPoint(data.get("inVisionSoldiers").getAsJsonArray(),frame);
-		refreshBox( data.get("boxes").getAsJsonArray(),frame);
+
 		refreshGroupMembers(data.get("groupMembers").getAsJsonArray(),frame);
+		refreshPoint(data.get("inVisionSoldiers").getAsJsonArray(), data.get("groupMembers").getAsJsonArray(), frame);
+		refreshBox( data.get("boxes").getAsJsonArray(), data.get("me").getAsJsonObject(), frame);
+
 		dealMessage(data.get("messages").getAsJsonArray(),token,frame);
 	}
 
@@ -177,6 +179,63 @@ public class HttpHelper {
 		Gson gson = new Gson();
 		List<Soldier> soldiers_list = gson.fromJson(array.toString(),new TypeToken<List<Soldier>>(){}.getType());
 		frame.resetFriendList(soldiers_list);
+	}
+
+	/**
+	 * 通知界面刷新其他士兵的点的信息
+	 * @param array
+	 * @param frame
+	 */
+	public static void refreshPoint(JsonArray array, JsonArray friendArray, ForestFrame  frame) {
+		Gson gson = new Gson();
+		List<Soldier> soldiers_list = gson.fromJson(array.toString(),new TypeToken<List<Soldier>>(){}.getType());
+		frame.resetOtherSoldierPoint(soldiers_list);
+
+		List<Soldier> friend_list = gson.fromJson(friendArray.toString(),new TypeToken<List<Soldier>>(){}.getType());
+
+
+		List<Soldier> stranger_list = new ArrayList<>();
+
+		for (Soldier soldier : soldiers_list) {
+			int soldierID = soldier.getId();
+			boolean isExist = false;
+			for(int j= 0 ; j< friend_list.size();j++) {
+				int friendID = friend_list.get(j).getId();
+				if (soldierID == friendID) {
+					isExist = true;
+				}
+			}
+			if (!isExist){
+				stranger_list.add(soldier);
+			}
+		}
+
+		frame.resetStrangerList(stranger_list);
+
+	}
+
+	/**
+	 * 通知页面刷新宝箱的信息
+	 * @param array
+	 * @param frame
+	 */
+	public static void refreshBox(JsonArray array, JsonObject object,ForestFrame  frame) {
+		Gson gson = new Gson();
+		List<Box> box_list = gson.fromJson(array.toString(),new TypeToken<List<Box>>(){}.getType());
+		frame.resetBoxPoint(box_list);
+
+
+		Soldier me = gson.fromJson(object, Soldier.class);
+		int x = me.getLocationX();
+		int y = me.getLocationY();
+		int a = Math.abs(x - box_list.get(0).getPoint_x());
+		int b = Math.abs(y - box_list.get(0).getPoint_y());
+		if(a *a + b* b < Const.RDDIUS* Const.RDDIUS) {
+			frame.resetBoxList(box_list);
+		}else {
+			frame.resetBoxList(null);
+		}
+
 	}
 
 	/**
@@ -334,27 +393,6 @@ public class HttpHelper {
 		}
 	}
 
-	/**
-	 * 通知界面刷新其他士兵的点的信息
-	 * @param array
-	 * @param frame
-	 */
-	public static void refreshPoint(JsonArray array,ForestFrame  frame) {
-		Gson gson = new Gson();
-		List<Soldier> soldiers_list = gson.fromJson(array.toString(),new TypeToken<List<Soldier>>(){}.getType());
-        frame.resetOtherSoldierPoint(soldiers_list);
-	}
-	
-	/**
-	 * 通知页面刷新宝箱的信息
-	 * @param array
-	 * @param frame
-	 */
-	public static void refreshBox(JsonArray array,ForestFrame  frame) {
-		Gson gson = new Gson();
-		List<Box> box_list = gson.fromJson(array.toString(),new TypeToken<List<Box>>(){}.getType());
-        frame.resetBoxPoint(box_list);
-	}
 
 	private static SSLSocketFactory createSSLSocketFactory() {
 		SSLSocketFactory ssfFactory = null;
