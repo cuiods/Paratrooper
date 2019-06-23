@@ -49,7 +49,7 @@ public class LoginFrame  {
 		loginFrame.setLayout(null);
 		main_panel.setLayout(null);
 		main_panel.setOpaque(false);
-		main_panel.setBounds(100 ,100,Const.LOGIN_PANEL_WIDTH,Const.LOGIN_PANEL_HEIGHT);
+		main_panel.setBounds(350 ,200,Const.LOGIN_PANEL_WIDTH,Const.LOGIN_PANEL_HEIGHT);
 
 		//main_panel 背景图
 		ImageIcon icon_form = new ImageIcon(this.getClass().getResource(Const.LOGIN_PANEL_IMAGE));

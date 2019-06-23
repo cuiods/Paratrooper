@@ -125,7 +125,7 @@ public class ForestFrame extends JFrame{
 	 * 加载frame信息
 	 */
 	public void lanch() {
-		this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);  
+		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		this.setSize(Const.FRAME_WIDTH, Const.FRAME_HRIGHT);
 		this.setLayout(null);
 
