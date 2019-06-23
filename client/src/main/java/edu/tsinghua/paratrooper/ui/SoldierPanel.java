@@ -6,11 +6,7 @@ import edu.tsinghua.paratrooper.common.HttpHelper;
 import edu.tsinghua.paratrooper.common.TransTools;
 import edu.tsinghua.paratrooper.rsa.RSA_Tool;
 
-import javax.swing.ImageIcon;
-import javax.swing.JButton;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
+import javax.swing.*;
 
 import java.awt.Color;
 import java.awt.Image;
@@ -22,24 +18,24 @@ import java.util.Map;
 public class SoldierPanel extends JPanel{
 
 	private Soldier soldier;
-	private int id;
 	private String token;
 	private JLabel name ;
 	private JButton level ;  //是否是队长
 	private JButton group ;  //组号
 	private JLabel pri_key;
 	private LogInformationPanel logInformationPanel;
+	private JLabel panel_image;
+	private Soldier me;
 
-	public SoldierPanel(int id,String token, LogInformationPanel logInformationPanel) {
+	public SoldierPanel(Soldier me,String token, LogInformationPanel logInformationPanel) {
 		soldier = new Soldier();
-		this.id = id;
+		this.me = me;
 		this.token = token;
 		this.lanch();
 		this.logInformationPanel = logInformationPanel;
 	}
 	public SoldierPanel(Soldier soldier,int id,String token) {
 		this.soldier = soldier;
-		this.id = id;
 		this.token = token;
 		this.lanch();
 	}
@@ -47,42 +43,44 @@ public class SoldierPanel extends JPanel{
 	public void lanch() {
         setLayout(null);
 		this.setOpaque(false);
-		this.setSize(Const.SOLDIER_WIDTH , 30+30+Const.SOLDIER_HEIGTH+30);
+		this.setSize(Const.SOLDIER_WIDTH , Const.SOLDIER_PANEL_HEIGHT);
 		this.setVisible(true);
 		JPanel panel_info = new JPanel();
 		panel_info.setLayout(null);
-		panel_info.setBounds(0, 0, Const.SOLDIER_WIDTH, 30);
+		panel_info.setBounds(0, 0, Const.SOLDIER_WIDTH, Const.SOLDIER_NAME_HEIGHT_SIZE);
 		panel_info.setOpaque(false);
 		this.add(panel_info);
 		
 		name = new JLabel(this.soldier.getName());
-		name.setBounds(0, 0, Const.SOLDIER_WIDTH, 30);
+		name.setBounds(0, 0, Const.SOLDIER_WIDTH, Const.SOLDIER_NAME_HEIGHT_SIZE);
+		name.setFont(new java.awt.Font("Dialog", 1, 15));
+		name.setHorizontalAlignment(SwingConstants.CENTER);
 		panel_info.add(name);
 		
-		JPanel panel_info_second = new JPanel();
-		panel_info_second.setOpaque(false);
-		panel_info_second .setLayout(null);
-		panel_info_second .setBounds(0, 30, Const.SOLDIER_WIDTH, 30);
-		this.add(panel_info_second);
+//		JPanel panel_info_second = new JPanel();
+//		panel_info_second.setOpaque(false);
+//		panel_info_second .setLayout(null);
+//		panel_info_second .setBounds(0, 30, Const.SOLDIER_WIDTH, 30);
+//		this.add(panel_info_second);
 		
-		level = new JButton(this.soldier.isCaptain() == 1? "队长" :"士兵");
-		level.setBounds(0, 0, 30, 30);
-		panel_info_second .add(level);
+//		level = new JButton(this.soldier.isCaptain() == 1? "队长" :"士兵");
+//		level.setBounds(0, 0, 30, 30);
+//		panel_info_second .add(level);
 		
-		group = new JButton(String.valueOf(this.soldier.getGroupNum()));
-		group.setBounds(30+10, 0, 30, 30);
-		panel_info_second .add(group);
+//		group = new JButton(String.valueOf(this.soldier.getGroupNum()));
+//		group.setBounds(30+10, 0, 30, 30);
+//		panel_info_second .add(group);
 		
 //		verify = new JButton(String.valueOf("验证"));
 //		verify.setBounds(30+10+30+10, 0, 30, 30);
 //		panel_info_second .add(verify);
 		
-		JLabel panel_image = new JLabel();
+		panel_image = new JLabel();
 		panel_image.setOpaque(false);
-		panel_image.setBounds(0, 60, Const.SOLDIER_WIDTH, Const.SOLDIER_HEIGTH);
+		panel_image.setBounds(Const.SOLDIER_WIDTH/2 -Const.SOLDIER_SIZE/2, Const.SOLDIER_NAME_HEIGHT_SIZE+ Const.SOLDIER_PANEL_GE, Const.SOLDIER_SIZE, Const.SOLDIER_SIZE);
 		
-		ImageIcon icon = new ImageIcon(this.getClass().getResource(Const.SOLDIER_IMAGE));
-		icon.setImage(icon.getImage().getScaledInstance(Const.SOLDIER_WIDTH,Const.SOLDIER_HEIGTH,Image.SCALE_DEFAULT));//80和100为大小 可以自由设置
+		ImageIcon icon = new ImageIcon(this.getClass().getResource(Const.SOLDIER_GROUP_IMAGE));
+		icon.setImage(icon.getImage().getScaledInstance(Const.SOLDIER_WIDTH,Const.SOLDIER_SIZE,Image.SCALE_DEFAULT));//80和100为大小 可以自由设置
 		panel_image.setIcon(icon);
 		this.add(panel_image);
 		
@@ -92,7 +90,7 @@ public class SoldierPanel extends JPanel{
 	    pri_key.setFont(new java.awt.Font("Dialog", 1, 15));
 	    pri_key.setForeground(Color.WHITE);
 	    pri_key.setOpaque(false);
-	    pri_key.setBounds(0, 60+ Const.SOLDIER_HEIGTH, Const.SOLDIER_WIDTH, 30);
+	    pri_key.setBounds(0, Const.SOLDIER_NAME_HEIGHT_SIZE+ Const.SOLDIER_PANEL_GE+ Const.SOLDIER_SIZE +  Const.SOLDIER_PANEL_GE, Const.SOLDIER_SIZE, Const.SOLDIER_NAME_HEIGHT_SIZE);
 	    pri_key.setVisible(false);
 	    this.add(pri_key);
 	}
@@ -104,6 +102,26 @@ public class SoldierPanel extends JPanel{
 	public void setSoldierInfo(Soldier soldier){
 		this.soldier = soldier;
 		name.setText(soldier.getName());
+
+		if(soldier.getGroupNum() == me.getGroupNum()){  //是队友
+
+			if(soldier.isCaptain()== 1) {
+
+				ImageIcon icon = new ImageIcon(this.getClass().getResource(Const.CAPTAIN_IMAGE));
+				icon.setImage(icon.getImage().getScaledInstance(Const.ME_SIZE, Const.ME_SIZE, Image.SCALE_DEFAULT));
+				panel_image.setIcon(icon);
+				name.setText(soldier.getName()+"(队长)");
+			}else {
+				ImageIcon icon = new ImageIcon(this.getClass().getResource(Const.SOLDIER_GROUP_IMAGE));
+				icon.setImage(icon.getImage().getScaledInstance(Const.ME_SIZE, Const.ME_SIZE, Image.SCALE_DEFAULT));
+				panel_image.setIcon(icon);
+				name.setText(soldier.getName()+"(队友)");
+			}
+		}else{
+			ImageIcon icon = new ImageIcon(this.getClass().getResource(Const.SOLDIER_NOT_GROUP_IMAGE));
+			icon.setImage(icon.getImage().getScaledInstance(Const.ME_SIZE, Const.ME_SIZE, Image.SCALE_DEFAULT));
+			panel_image.setIcon(icon);
+		}
 
 	}
 	/**
@@ -135,7 +153,7 @@ public class SoldierPanel extends JPanel{
 				String str_list[] = RSA_Tool.enSgn(Const.CIPER,soldier.getPublicKey());
 				message_map.put("ciper",str_list[0]);
 				message_map.put("text",str_list[1]);
-				message_map.put("from_id",String.valueOf(id));
+				message_map.put("from_id",String.valueOf(me.getId()));
 
 				String message_map_str = TransTools.objectToJson(message_map);
 				Map<String,Object> req_map = new HashMap<>();

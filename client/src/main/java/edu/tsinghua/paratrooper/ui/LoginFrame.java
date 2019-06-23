@@ -1,11 +1,11 @@
 package edu.tsinghua.paratrooper.ui;
 
-import javax.swing.JFrame;
-import javax.swing.JButton;
-import java.awt.GridLayout;
-import javax.swing.JPanel;
-import javax.swing.JTextField;
+import javax.swing.*;
+import java.awt.*;
 import javax.swing.border.LineBorder;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
+import javax.swing.text.BadLocationException;
 
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
@@ -14,10 +14,9 @@ import edu.tsinghua.paratrooper.common.Const;
 import edu.tsinghua.paratrooper.common.HttpHelper;
 import okhttp3.*;
 
-import java.awt.Color;
-import java.awt.FlowLayout;
-import javax.swing.JLabel;
 import java.awt.event.ActionListener;
+import java.awt.event.FocusEvent;
+import java.awt.event.FocusListener;
 import java.io.IOException;
 import java.awt.event.ActionEvent;
 import java.net.URLDecoder;
@@ -26,13 +25,14 @@ import java.util.Map;
 public class LoginFrame  {
 	private JFrame loginFrame;
 	private JTextField tf_name;
-	private JTextField tf_psw;
+	private JPasswordField tf_psw;
 	private JTextField tf_info;
 	public JButton btn_login;
 	private Soldier me;
 	private boolean isLogin = true;  //false时不接听服务端的消息
 	private ForestFrame forestFrame;
 	private Map<String,String>  map;
+	private boolean flag = false;
 
 	public LoginFrame(Soldier me,Map<String,String> map) {
 
@@ -41,58 +41,142 @@ public class LoginFrame  {
 		
 		loginFrame = new JFrame();
 		loginFrame.getContentPane().setLayout(new GridLayout(1, 0, 0, 0));
-		loginFrame.setSize(500,600);
+		loginFrame.setSize(1200,900);
+		loginFrame.setLocationRelativeTo(null);
 		
 		JPanel main_panel = new JPanel();
-		main_panel.setBorder(new LineBorder(new Color(0, 0, 0)));
-		loginFrame.getContentPane().add(main_panel);
-		main_panel.setLayout(new GridLayout(6, 2, 5, 5));
-		
-		JPanel panel = new JPanel();
-		main_panel.add(panel);
-		
-		JPanel panel_1 = new JPanel();
-		main_panel.add(panel_1);
-		
-		tf_info = new JTextField();
-		tf_info.setBackground(Color.LIGHT_GRAY);
-		tf_info.setEditable(false);
-		tf_info.setText("你当前的坐标为：（30，60），ip：126.36.23.45");
-		panel_1.add(tf_info);
-		tf_info.setColumns(25);
-		
-		JPanel panel_2 = new JPanel();
-		main_panel.add(panel_2);
-		panel_2.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
-		
-		JLabel label_name = new JLabel("士兵姓名:");
-		panel_2.add(label_name);
-		
+		loginFrame.add(main_panel);
+		loginFrame.setLayout(null);
+		main_panel.setLayout(null);
+		main_panel.setOpaque(false);
+		main_panel.setBounds(100 ,100,Const.LOGIN_PANEL_WIDTH,Const.LOGIN_PANEL_HEIGHT);
+
+		//main_panel 背景图
+		ImageIcon icon_form = new ImageIcon(this.getClass().getResource(Const.LOGIN_PANEL_IMAGE));
+		icon_form.setImage(icon_form.getImage().getScaledInstance(Const.LOGIN_PANEL_WIDTH,Const.LOGIN_PANEL_HEIGHT, Image.SCALE_DEFAULT));
+
+
+		//tf_info.setFont(new java.awt.Font("Dialog", 1, 15));
+
+		ImageIcon icon_name = new ImageIcon(this.getClass().getResource(Const.FORM_NAME_IMAGE));
+		icon_name.setImage(icon_name.getImage().getScaledInstance(Const.FORM_WIDTH,Const.FORM_HEIGHT, Image.SCALE_DEFAULT));
+
+		ImageIcon icon_psd = new ImageIcon(this.getClass().getResource(Const.FORM_PSD_IMAGE));
+		icon_psd.setImage(icon_psd.getImage().getScaledInstance(Const.FORM_WIDTH,Const.FORM_HEIGHT, Image.SCALE_DEFAULT));//80和100为大小 可以自由设置
+
+		TextBorderUtlis border  = new TextBorderUtlis(new Color(169,169,169),1,true);
+		TextBorderUtlis border_white  = new TextBorderUtlis(new Color(255,255,255),1,true);
+
+		//name
 		tf_name = new JTextField();
-		panel_2.add(tf_name);
-		tf_name.setColumns(10);
-		
-		JPanel panel_3 = new JPanel();
-		main_panel.add(panel_3);
-		panel_3.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
-		
-		JLabel label_psw = new JLabel("New label");
-		panel_3.add(label_psw);
-		
-		tf_psw = new JTextField();
-		panel_3.add(tf_psw);
-		tf_psw.setColumns(10);
-		
-		JPanel panel_4 = new JPanel();
-		main_panel.add(panel_4);
-		
-		btn_login = new JButton("登录");
+		tf_name.setOpaque(false);
+		tf_name.setBorder(null);
+		main_panel.add(tf_name);
+
+		JLabel name_label = new JLabel();
+		name_label.setIcon(icon_name);
+		name_label.setBorder(border);
+		main_panel.add(name_label);
+		tf_name.setBounds(Const.LOGIN_PANEL_WIDTH/2 - Const.FORM_WIDTH/2 + 40,100,Const.FORM_WIDTH-40,Const.FORM_HEIGHT);
+		name_label.setBounds(Const.LOGIN_PANEL_WIDTH/2 - Const.FORM_WIDTH/2 ,100,Const.FORM_WIDTH,Const.FORM_HEIGHT);
+		//String empty_str = "       ";
+		//tf_name.setText(empty_str);
+		tf_name.setFont(new java.awt.Font("Dialog", 1, 15));
+		tf_name.setOpaque(false);
+		tf_name.addFocusListener(new FocusListener() {
+			@Override
+			public void focusLost(FocusEvent e) {
+				//设置文本框不可编辑后设置光标的可用性为false
+				tf_name.setEditable(false);
+				tf_name.getCaret().setVisible(false);
+
+				String s=tf_name.getText();
+				String reg = "^((?!@).)*$ ";
+
+				if(s.length()>= 10){
+					tf_info.setText("输入的姓名长度不超过10个字符，请检查");
+					flag = false;
+					return ;
+				}
+				if(s.matches(reg)){
+					tf_info.setText("输入的姓名不合法，请检查");
+					flag = false;
+					return ;
+				}else{
+					tf_info.setText("");
+					flag = true;
+				}
+
+			}
+			@Override
+			public void focusGained(FocusEvent e) {
+				tf_name.setEditable(true);
+				//设置光标的可用性为true
+				tf_name.getCaret().setVisible(true);
+				//设置光标位置为文本内容最后面
+				tf_name.setCaretPosition(tf_name.getText().length());
+			}
+		});
+
+		//psd
+		tf_psw = new JPasswordField();
+		tf_psw.setOpaque(false);
+		tf_psw.setBorder(null);
+		main_panel.add(tf_psw);
+
+		JLabel label_psw = new JLabel();
+		label_psw.setIcon(icon_psd);
+		label_psw.setBorder(border);
+		main_panel.add(label_psw);
+		label_psw.setBounds(Const.LOGIN_PANEL_WIDTH/2 - Const.FORM_WIDTH/2,170,Const.FORM_WIDTH,Const.FORM_HEIGHT);
+		tf_psw.setBounds(Const.LOGIN_PANEL_WIDTH/2 - Const.FORM_WIDTH/2 + 40 ,170,Const.FORM_WIDTH - 40 ,Const.FORM_HEIGHT);
+
+		tf_psw.addFocusListener(new FocusListener() {
+			@Override
+			public void focusGained(FocusEvent e) {
+
+			}
+
+			@Override
+			public void focusLost(FocusEvent e) {
+
+					String s = String.valueOf(tf_psw.getPassword());
+
+					if (s.length() >= 10 || s.length() <= 5) {
+						tf_info.setText("输入的密码不超过10个字符，不小于5个字符请检查");
+						flag = false;
+						return;
+					}
+
+					flag = true;
+			}
+		});
+
+		//login
+		btn_login = new JButton();
+
+		ImageIcon icon_login = new ImageIcon(this.getClass().getResource(Const.BUTTON_NOT_PRESSED));
+		icon_login.setImage(icon_login.getImage().getScaledInstance(Const.BUTTON_WIDTH,Const.BUTTON_HEIGHT, Image.SCALE_DEFAULT));
+		btn_login.setIcon(icon_login);
 		btn_login.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 
+				//检验输入值
+                String name_str = tf_name.getText();
+                String password = String.valueOf(tf_psw.getPassword());
+                if(name_str.equals("")){
+                	tf_info.setText("姓名不能为空");
+					flag = false;
+				}else if (password.equals("")){
+					tf_info.setText("密码不能为空");
+					flag = false;
+				}else if(flag){
+					tf_info.setText("姓名和密码输入格式错误，请检查");
+				}
+
 				JsonObject req_obj = new JsonObject();
-				req_obj.addProperty("name",tf_name.getText());
-				req_obj.addProperty("password",tf_psw.getText());
+				req_obj.addProperty("name",name_str);
+				req_obj.addProperty("password",password);
 				String json = req_obj.toString();
 				System.out.println("登录："+json);
 
@@ -142,10 +226,31 @@ public class LoginFrame  {
 				}
 			}
 		});
-		panel_4.add(btn_login);
-		
-		JPanel panel_5 = new JPanel();
-		main_panel.add(panel_5);
+		main_panel.add(btn_login);
+		btn_login.setBounds(Const.LOGIN_PANEL_WIDTH/2 - Const.BUTTON_WIDTH/2,230,Const.BUTTON_WIDTH,Const.BUTTON_HEIGHT);
+
+        //tips
+		tf_info = new JTextField();
+		tf_info.setOpaque(false);
+		tf_info.setEditable(false);
+		tf_info.setBounds(20,280,Const.LOGIN_PANEL_WIDTH - 50,30);
+		tf_info.setHorizontalAlignment(SwingConstants.CENTER);
+		tf_info.setBorder(null);
+		tf_info.setFont(new java.awt.Font("Dialog", 1, 15));
+		tf_info.setForeground(new Color(137, 181, 38));
+		main_panel.add(tf_info);
+
+		JLabel background_label = new JLabel(icon_form);
+		main_panel.add(background_label);
+		background_label.setBounds(0,0,Const.LOGIN_PANEL_WIDTH,Const.LOGIN_PANEL_HEIGHT);
+
+		ImageIcon icon_bottom = new ImageIcon(this.getClass().getResource(Const.BACKGROUND_IMAGE_COVER));
+		icon_bottom.setImage(icon_bottom.getImage().getScaledInstance(Const.BACKGROUND_WIDTH,Const.BACKGROUND_HEIGTH, Image.SCALE_DEFAULT));
+
+		JLabel bottom = new JLabel(icon_bottom);
+		bottom.setBounds(0,0,Const.BACKGROUND_WIDTH ,Const.BACKGROUND_HEIGTH);
+		loginFrame.add(bottom);
+
 		loginFrame.setVisible(true);
 	}
 	
@@ -170,6 +275,45 @@ public class LoginFrame  {
 	public boolean isLogin() {
 		return this.isLogin;
 	}
+
+
+
+	/**
+	 * @author zhangsukun
+	 *   边框设置
+	 */
+
+	public class TextBorderUtlis extends LineBorder
+	{
+
+		private static final long serialVersionUID = 1L;
+
+		public TextBorderUtlis(Color color, int thickness, boolean roundedCorners)
+		{
+			super(color, thickness, roundedCorners);
+		}
+
+		public void paintBorder(Component c, Graphics g, int x, int y, int width, int height)
+		{
+
+			RenderingHints rh = new RenderingHints(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+			Color oldColor = g.getColor();
+			Graphics2D g2 = (Graphics2D) g;
+			int i;
+			g2.setRenderingHints(rh);
+			g2.setColor(lineColor);
+			for (i = 0; i < thickness; i++)
+			{
+				if (!roundedCorners){
+					g2.drawRect(x + i, y + i, width - i - i - 1, height - i - i - 1);
+				}else{
+					g2.drawRoundRect(x + i, y + i, width - i - i - 1, height - i - i - 1, 5, 5);}
+			}
+			g2.setColor(oldColor);
+		}
+
+	}
+
 
 
 }

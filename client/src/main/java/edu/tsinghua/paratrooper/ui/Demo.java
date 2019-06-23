@@ -1,80 +1,94 @@
 package edu.tsinghua.paratrooper.ui;
 
-import edu.tsinghua.paratrooper.common.Const;
+import java.awt.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
-import javax.imageio.ImageIO;
+
+
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.FlowLayout;
+import java.awt.Font;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.RenderingHints;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+
+import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
-import java.awt.*;
-import java.awt.geom.Ellipse2D;
-import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
+class Demo {
 
-/**
- * 
- * @author zhangsukun
- *
- */
-public class Demo extends JFrame{
+		public static void main(String[] args) {
+			JFrame frame = new JFrame("����Բ�ǰ�ť����");
+			frame.setBounds(100, 100, 400, 400);
+			JPanel panel = new JPanel(new FlowLayout(FlowLayout.CENTER, 40, 30));
+			panel.setBackground(Color.white);
 
-		
-		public Demo() {
-			JPanel jpanel = new JPanel() {
-				
-				protected void paintComponent(Graphics g) { 
-					super.paintComponent(g); 
-					// 0,0 画在panel左上角    con.RDDIUS, con.RDDIUS panel 大小   100,100, con.RDDIUS,con.RDDIUS 图片的位置
-					 try {
-						BufferedImage img = dealImage();
-						 g.drawImage(img, 
-									0,0,
-									Const.PANEL_SIZE, Const.PANEL_SIZE,null);
-					} catch (IOException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
+
+			MyRoundButton myButton = new MyRoundButton("122", new Color(151, 112,
+					212), new Color(95, 185, 160));
+			panel.add(myButton);
+			frame.add(panel);
+			frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+			frame.setVisible(true);
+			myButton.requestFocus();
+		}
+
+	}
+
+	class MyRoundButton extends JButton {// �Զ���һ���̳�JButton����
+		private Color color, color_initial, color_enter;// ������������Ƴ�ʱ�����ڰ�ť��ɫ�仯��һЩ����
+
+		public MyRoundButton(String s, Color c_initial, Color c_enter) {
+			super(s);
+			color = c_initial;
+			color_initial = c_initial;
+			color_enter = c_enter;
+			setPreferredSize(new Dimension(150, 50));// ���尴ť��С
+			setFont(new Font("Dialog", Font.BOLD, 18));// ���尴ť�ϵ��ı����壬��С
+			setForeground(Color.white);// ���尴ť�ϵ��ı���ɫ
+			setFocusPainted(true);// ȥ�� �����ťʱ���ı��ܱߵ�����
+			setContentAreaFilled(false);// ��ť��������Ϊ͸����ֻ������������ʾ�������Լ��������ɫ
+			addMouseListener(new MouseAdapter() {// ͨ����������������������Ƴ�ʱ����ť��ɫ�ı仯
+				public void mouseEntered(MouseEvent e) {
+					color = color_enter;
 				}
-			};
-			this.setLayout(null);
-			this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);  
-			jpanel.setBounds(0,0,Const.PANEL_SIZE,Const.PANEL_SIZE);
-			this.getContentPane().setBackground(Color.BLACK); 
-			jpanel.setOpaque(false);
-			jpanel.repaint();
-			this.add(jpanel);
-			this.setSize(600, 600);
-			this.setVisible(true);
-		}
-		
-		public BufferedImage dealImage() throws IOException{
-			BufferedImage bi = ImageIO.read(new File("resource/images/background.jpg"));
-			bi.getSubimage(0, 0, 500, 500);//前两个值是坐标位置X、Y，后两个是长和宽
-			
-			
-			BufferedImage resultImg = null;
-			resultImg = new BufferedImage(bi.getWidth(), bi.getHeight(), BufferedImage.TYPE_INT_RGB);
-			Graphics2D g = resultImg.createGraphics();
-			Ellipse2D.Double shape = new Ellipse2D.Double(0, 0, bi.getWidth(), bi.getHeight());
-			// 使用 setRenderingHint 设置抗锯齿
-			g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-			resultImg = g.getDeviceConfiguration().createCompatibleImage(bi.getWidth(), bi.getHeight(),
-					Transparency.TRANSLUCENT);
-			//g.fill(new Rectangle(buffImg2.getWidth(), buffImg2.getHeight()));
-			g = resultImg.createGraphics();
-			// 使用 setRenderingHint 设置抗锯齿
-			g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-			g.setClip(shape);
-			g.drawImage(bi, 0, 0, null);
-			g.dispose();
-			return resultImg;
-		}
-		
 
-    public static void main(String[] args) throws IOException {
-    	
-       	Demo nt = new Demo();
+				public void mouseExited(MouseEvent e) {
+					color = color_initial;
+				}
 
-    }
-}
+				public void mouseReleased(MouseEvent e) {
+					color = color_initial;
+				}
+
+				public void mouseClicked(MouseEvent e) {
+					color = color_enter;
+				}
+
+			});
+		}
+
+		public void paintComponent(Graphics g) {// ������䰴ť����״��Բ�Ǿ��ΰ�ť
+			Graphics2D g2d = (Graphics2D) g;
+			// �������䣬������Բ���ܱߵľ���õ�
+			RenderingHints rh = new RenderingHints(RenderingHints.KEY_ANTIALIASING,
+					RenderingHints.VALUE_ANTIALIAS_ON);
+			g2d.addRenderingHints(rh);
+			// ������䰴ť����ɫ
+			g2d.setColor(color);
+			// �������Բ�Ǿ�������
+			g2d.fillRoundRect(0, 0, getSize().width - 1, getSize().height - 1, 10,
+					10);
+			super.paintComponent(g);
+		}
+
+		public void paintBorder(Graphics g) {// ���ư�ť�߿�Բ�Ǿ��α߿�
+
+		}
+	}
+

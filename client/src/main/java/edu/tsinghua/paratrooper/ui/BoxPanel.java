@@ -54,12 +54,12 @@ public class BoxPanel extends JPanel{
 		
 		box_info.setBounds(0, 0, Const.BOX_PANEL_WIDTH,Const.BOX_INFO_HEIGHT);
 		box_info.setOpaque(false);
-		
+		box_info.setFont(new java.awt.Font("Dialog", 1, 15));
 		ImageIcon box_icon = new ImageIcon(this.getClass().getResource(Const.BOX_OPEN_IMAGE));
 		box_icon.setImage(box_icon.getImage().getScaledInstance(Const.BOX_IMAGE_SIZE,Const.BOX_IMAGE_SIZE,Image.SCALE_DEFAULT));
 		jl_box.setIcon(box_icon);
 		jl_box.setOpaque(false);
-		jl_box.setBounds(0,Const.BOX_INFO_HEIGHT,Const.BOX_IMAGE_SIZE,Const.BOX_IMAGE_SIZE);
+		jl_box.setBounds(Const.BOX_PANEL_WIDTH/2 - Const.BOX_IMAGE_SIZE/2 ,Const.BOX_INFO_HEIGHT+ Const.BOX_INFO_GEZI,Const.BOX_IMAGE_SIZE,Const.BOX_IMAGE_SIZE);
 		//jl_box.addMouseListener(new BoxListener());
 		
 		this.setLayout(null);
@@ -83,12 +83,14 @@ public class BoxPanel extends JPanel{
 		if(box.getStatus() == 1) {
 			ImageIcon box_icon = new ImageIcon(this.getClass().getResource(Const.BOX_OPEN_IMAGE));
 			box_icon.setImage(box_icon.getImage().getScaledInstance(Const.BOX_IMAGE_SIZE,Const.BOX_IMAGE_SIZE,Image.SCALE_DEFAULT));
+			jl_box.setIcon(box_icon);
 		}else{
 			ImageIcon box_icon = new ImageIcon(this.getClass().getResource(Const.BOX_CLOSE_IMAGE));
 			box_icon.setImage(box_icon.getImage().getScaledInstance(Const.BOX_IMAGE_SIZE,Const.BOX_IMAGE_SIZE,Image.SCALE_DEFAULT));
+			jl_box.setIcon(box_icon);
 		}
 		this.setBounds(box.getPoint_x() - Const.BOX_PANEL_WIDTH/2, box.getPoint_y() - Const.BOX_PANEL_HEIGHT/2, Const.BOX_PANEL_WIDTH, Const.BOX_PANEL_HEIGHT);
-		String info = "<html>"+box.getApply()+"/" + box.getTotal() + "(已参与队友/所需)</html>";
+		String info = "<html>"+box.getApply()+"<br>" + box.getTotal() + "(已有/所需)</html>";
 		if(box.getApply() > cur_box_apply){
 			logInformationPanel.addInfo(box.getApply()+"/" + box.getTotal() + "(已参与队友/所需)");
 			cur_box_apply = box.getApply();
@@ -107,12 +109,14 @@ public class BoxPanel extends JPanel{
 		if(box.getStatus() == 1) {
 			ImageIcon box_icon = new ImageIcon(this.getClass().getResource(Const.BOX_OPEN_IMAGE));
 			box_icon.setImage(box_icon.getImage().getScaledInstance(Const.BOX_IMAGE_SIZE,Const.BOX_IMAGE_SIZE,Image.SCALE_DEFAULT));
+			jl_box.setIcon(box_icon);
 		}else{
 			ImageIcon box_icon = new ImageIcon(this.getClass().getResource(Const.BOX_CLOSE_IMAGE));
 			box_icon.setImage(box_icon.getImage().getScaledInstance(Const.BOX_IMAGE_SIZE,Const.BOX_IMAGE_SIZE,Image.SCALE_DEFAULT));
+			jl_box.setIcon(box_icon);
 		}
 
-		String info = "<html>"+box.getApply()+"/" + box.getTotal() + "(已有/所需)</html>";
+		String info = "<html>"+box.getApply()+"<br>" + box.getTotal() + "(已有/所需)</html>";
 		box_info.setText(info);
 	}
 	/**
@@ -140,10 +144,10 @@ public class BoxPanel extends JPanel{
 	 * @return
 	 */
 	public boolean judgeCanOpenBox() {
-		if((box.getPoint_x()- Const.BOX_PANEL_WIDTH/2 - Const.DISTANCE < this.x + Const.SOLDIER_WIDTH/2) &&
-				(box.getPoint_x()+ Const.BOX_PANEL_WIDTH/2 + Const.DISTANCE > this.x - Const.SOLDIER_WIDTH/2 )&&
-				(box.getPoint_y() - Const.BOX_PANEL_HEIGHT/2 - Const.DISTANCE < this.y + Const.SOLDIER_HEIGTH/2) &&
-				(box.getPoint_y() + Const.BOX_PANEL_HEIGHT/2 + Const.DISTANCE > this.y - Const.SOLDIER_HEIGTH/2)) {
+		if((box.getPoint_x()- Const.BOX_PANEL_WIDTH/2 - Const.DISTANCE < this.x + Const.SOLDIER_SIZE/2) &&
+				(box.getPoint_x()+ Const.BOX_PANEL_WIDTH/2 + Const.DISTANCE > this.x - Const.SOLDIER_SIZE/2 )&&
+				(box.getPoint_y() - Const.BOX_PANEL_HEIGHT/2 - Const.DISTANCE < this.y + Const.SOLDIER_SIZE/2) &&
+				(box.getPoint_y() + Const.BOX_PANEL_HEIGHT/2 + Const.DISTANCE > this.y - Const.SOLDIER_SIZE/2)) {
 			return true;
 		}
 		return false;

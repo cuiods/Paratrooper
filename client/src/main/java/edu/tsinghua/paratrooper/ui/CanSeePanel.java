@@ -36,11 +36,11 @@ public class CanSeePanel extends JPanel{
 		this.point_x = point_x;
 		this.point_y = point_y;
 		
-		ImageIcon icon = new ImageIcon(this.getClass().getResource(Const.ME_IMAGE));
-		icon.setImage(icon.getImage().getScaledInstance(Const.SOLDIER_WIDTH,Const.SOLDIER_HEIGTH,Image.SCALE_DEFAULT));//80和100为大小 可以自由设置		
-		JLabel jlb_me = new JLabel();
+		ImageIcon icon = new ImageIcon(this.getClass().getResource(Const.ME_IMAGE_DOWN));
+		icon.setImage(icon.getImage().getScaledInstance(Const.ME_SIZE,Const.ME_SIZE,Image.SCALE_DEFAULT));//80和100为大小 可以自由设置
+		jlb_me = new JLabel();
 		jlb_me.setIcon(icon);
-		jlb_me.setBounds(Const.PANEL_SIZE/2 - Const.SOLDIER_WIDTH/2, Const.PANEL_SIZE/2 - Const.SOLDIER_HEIGTH/2, Const.SOLDIER_WIDTH, Const.SOLDIER_HEIGTH);
+		jlb_me.setBounds(Const.PANEL_SIZE/2 - Const.ME_SIZE/2, Const.PANEL_SIZE/2 - Const.ME_SIZE/2, Const.ME_SIZE, Const.ME_SIZE);
 		this.add(jlb_me);
 		//得到背景信息
 	     try {
@@ -49,19 +49,39 @@ public class CanSeePanel extends JPanel{
 			 // TODO Auto-generated catch block
 			 e.printStackTrace();
 		}
-		 this.setOpaque(false);
-		this.lanch();
+	     this.setOpaque(false);
+		 this.lanch();
 	}
 	
 	/**
 	 * 重新设置移动坐标并重绘图片
 	 * @param point_x
 	 * @param point_y
+     * @param type
 	 */
-	public void resetPoint(int point_x,int point_y) {
+	public void resetPoint(int point_x,int point_y,int type) {
 		this.point_x = point_x;
 		this.point_y = point_y;
-		this.repaint();
+        this.repaint();
+        if(type == 1) {
+            ImageIcon icon = new ImageIcon(this.getClass().getResource(Const.ME_IMAGE_UP));
+            icon.setImage(icon.getImage().getScaledInstance(Const.ME_SIZE, Const.ME_SIZE, Image.SCALE_DEFAULT));
+            jlb_me.setIcon(icon);
+        }else if(type == 2) {
+            ImageIcon icon = new ImageIcon(this.getClass().getResource(Const.ME_IMAGE_DOWN));
+            icon.setImage(icon.getImage().getScaledInstance(Const.ME_SIZE, Const.ME_SIZE, Image.SCALE_DEFAULT));
+            jlb_me.setIcon(icon);
+        }else if( type == 3) {
+            ImageIcon icon = new ImageIcon(this.getClass().getResource(Const.ME_IMAGE_LEFT));
+            icon.setImage(icon.getImage().getScaledInstance(Const.ME_SIZE, Const.ME_SIZE, Image.SCALE_DEFAULT));
+            jlb_me.setIcon(icon);
+        }else{
+            ImageIcon  icon  = new ImageIcon(this.getClass().getResource(Const.ME_IMAGE_RIGHT));
+            icon.setImage(icon.getImage().getScaledInstance(Const.ME_SIZE,Const.ME_SIZE,Image.SCALE_DEFAULT));
+            jlb_me.setIcon(icon);
+        }
+        jlb_me.setBounds(Const.PANEL_SIZE/2 - Const.ME_SIZE/2, Const.PANEL_SIZE/2 - Const.ME_SIZE/2, Const.ME_SIZE, Const.ME_SIZE);
+        jlb_me.setVisible(true);
 	}
 	
 	/**
@@ -132,7 +152,6 @@ public class CanSeePanel extends JPanel{
 		f.add(test);
 		f.setVisible(true);
 		f.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);  
-		
- 
+
 	}
 }

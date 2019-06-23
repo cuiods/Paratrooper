@@ -3,7 +3,21 @@ package edu.tsinghua.paratrooper.common;
 
 public class Const{
 	
-	
+	//login
+	public static final int FORM_WIDTH = 250;
+	public static final int FORM_HEIGHT = 42;
+	public static final String FORM_NAME_IMAGE= "/images/form/name.png";
+	public static final String FORM_PSD_IMAGE= "/images/form/password.png";
+
+	public static final int BUTTON_WIDTH = 165;
+	public static final int BUTTON_HEIGHT = 42;
+	public static final String BUTTON_PRESSED= "/images/form/button1.png";
+	public static final String BUTTON_NOT_PRESSED= "/images/form/button.png";
+
+	public static final int LOGIN_PANEL_WIDTH = 424;
+	public static final int LOGIN_PANEL_HEIGHT = 340;
+	public static final String LOGIN_PANEL_IMAGE= "/images/form/form.png";
+
 	//client.ui.FriendPanel
 	public static final int FRIEND_PANEL_WIDTH = 180;
 	public static final int FRIEND_PANEL_HEIGHT = 1000;
@@ -41,26 +55,37 @@ public class Const{
 	
 	//background map
 	public static final String BACKGROUND_IMAGE = "/images/background.jpg";
-	public static final String BACKGROUND_COVER_IMAGE = "/images/background-cover.jpg";
+    public static final String BACKGROUND_IMAGE_COVER = "/images/background-cover.jpg";
 	public static final int BACKGROUND_WIDTH = 1200;
 	public static final int BACKGROUND_HEIGTH = 900;
 	
 	//box
-	public static final String BOX_OPEN_IMAGE = "/images/box_open.png";
-	public static final String BOX_CLOSE_IMAGE = "/images/box_close.png";
-	public static final int BOX_IMAGE_SIZE = 80;
-	public static final int BOX_INFO_HEIGHT = 30;
-	public static final int BOX_PANEL_WIDTH = 80;
-	public static final int BOX_PANEL_HEIGHT = 80+30+30;
+	public static final String BOX_OPEN_IMAGE = "/images/box2.png";
+	public static final String BOX_CLOSE_IMAGE = "/images/box1.png";
+	public static final int BOX_IMAGE_SIZE = 30;
+	public static final int BOX_INFO_HEIGHT = 40;
+	public static final int BOX_INFO_GEZI = 10;
+	public static final int BOX_PANEL_WIDTH = 100;
+	public static final int BOX_PANEL_HEIGHT = 40 + 10 + 30 ;
 
 	public static int DISTANCE = 30 ;// 在宝箱多少范围内可以开箱
 	
 	//client.ui.soldierPanel
-	public static final String SOLDIER_IMAGE = "/images/soldier.jpg";
-	public final static int SOLDIER_WIDTH = 100;
-	public static final int SOLDIER_HEIGTH = 120;
-	public static final int SOLDIER_PANEL_HEIGHT = 120 +30+30+30;
-	public static final int SOLDIER_PANEL_GE = 30;
+	public static final String SOLDIER_GROUP_IMAGE = "/images/soldier/soldier2.png";
+	public static final String SOLDIER_NOT_GROUP_IMAGE = "/images/soldier/soldier4.png";
+	public static final String CAPTAIN_IMAGE = "/images/captain/captain6.png";
+	public final static int SOLDIER_WIDTH = 150;
+	public final static int SOLDIER_NAME_HEIGHT_SIZE = 20;
+	public static final int SOLDIER_SIZE = 30;
+	public static final int SOLDIER_PANEL_HEIGHT = 30 +30 + 30;
+	public static final int SOLDIER_PANEL_GE = 10;
+
+	//me
+	public static final String ME_IMAGE_UP = "/images/me/soldier1.png";
+	public static final String ME_IMAGE_RIGHT = "/images/me/soldier2.png";
+	public static final String ME_IMAGE_DOWN = "/images/me/soldier3.png";
+	public static final String ME_IMAGE_LEFT = "/images/me/soldier4.png";
+	public static final int ME_SIZE = 30;
 	
 	//client.ui.frame
 	public static final int FRAME_WIDTH = FRIEND_PANEL_WIDTH + FOREST_WIDTH;

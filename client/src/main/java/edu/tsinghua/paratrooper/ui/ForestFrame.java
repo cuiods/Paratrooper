@@ -9,11 +9,13 @@ import edu.tsinghua.paratrooper.common.HttpHelper;
 import edu.tsinghua.paratrooper.common.TransTools;
 import edu.tsinghua.paratrooper.millionare.Millionaire_Tool;
 
-import java.awt.Color;
+import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.awt.image.BufferedImage;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -63,18 +65,25 @@ public class ForestFrame extends JFrame{
 
 		canseePanel = new CanSeePanel(me.getLocationX(),me.getLocationY());
 		logInformationPanel = new LogInformationPanel();
-		forestPanel = new JPanel();
-		tips = new JLabel();  //一些提示操作  你们补充
+		forestPanel = new JPanel() {
+            protected void paintComponent(Graphics g) {
+				super.paintComponent(g);
+				ImageIcon icon = new ImageIcon(Const.BACKGROUND_IMAGE_COVER);
+				g.drawImage(icon.getImage(), 0, 0, Const.BACKGROUND_WIDTH,Const.BACKGROUND_HEIGTH, forestPanel);
+			}
+		};
+       // forestPanel = new JPanel();
+        tips = new JLabel();  //一些提示操作  你们补充
 		
 		//士兵相关
 		otherSoldiers = new ArrayList<Soldier>();
 		jlb_otherSolders = new ArrayList<SoldierPanel>();
 		for(int i = 0 ; i< others_sum ;i++) {
 			
-			SoldierPanel sp = new SoldierPanel(me.getId(),map.get("token"),logInformationPanel);
+			SoldierPanel sp = new SoldierPanel(me,map.get("token"),logInformationPanel);
 			sp.setVisible(false);
 			sp.setOpaque(false);
-			sp.setSize(Const.SOLDIER_WIDTH, 30+30+Const.SOLDIER_HEIGTH+30);
+			sp.setSize(Const.SOLDIER_WIDTH, 30+30+Const.SOLDIER_SIZE+30);
 			jlb_otherSolders.add(sp);
 			this.add(sp);
 		}
@@ -119,11 +128,23 @@ public class ForestFrame extends JFrame{
 		this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);  
 		this.setSize(Const.FRAME_WIDTH, Const.FRAME_HRIGHT);
 		this.setLayout(null);
-		
-		forestPanel.setVisible(true);
+
 		forestPanel.setLayout(null);
-		//forestPanel.setOpaque(false);
-		forestPanel.setBackground(Color.black);
+		forestPanel.setOpaque(false);
+		//forestPanel.repaint();
+		//forestPanel.setBackground(Color.red);
+		ImageIcon icon = new ImageIcon(this.getClass().getResource(Const.BACKGROUND_IMAGE_COVER));
+		icon.setImage(icon.getImage().getScaledInstance(1200,900,Image.SCALE_DEFAULT));
+        JLabel a = new JLabel(icon);
+        forestPanel.add(a);
+        a.setBounds(0,0,1200,900);
+		forestPanel.setVisible(true);
+
+//		JLabel b = new JLabel(icon);
+//		b.setBounds(0,0,1200,900);
+//		this.add(b);
+
+		//Image
 		forestPanel.setSize(Const.FOREST_WIDTH, Const.FOREST_HEIGTH);
 		
 		canseePanel.setBounds(me.getLocationX() - Const.PANEL_SIZE/2, me.getLocationY() - Const.PANEL_SIZE/2, Const.PANEL_SIZE, Const.PANEL_SIZE);
@@ -145,12 +166,12 @@ public class ForestFrame extends JFrame{
 		contentpanel.setLayout(null);
 		
 		JScrollPane  jsp = new JScrollPane();
-		//jsp.add(sop);
 		jsp.setViewportView(friendListPanel);
 		jsp.setBounds(0, 0, 210, 600);
 		jsp.setBorder(BorderFactory.createRaisedSoftBevelBorder());
 		contentpanel.add(jsp);
-		
+
+		//this.add(forestPanel);
 		this.add(canseePanel);  //后加入，使其置于底层
 		this.add(forestPanel);
 		this.requestFocus();
@@ -158,18 +179,20 @@ public class ForestFrame extends JFrame{
 		this.setLayout(null);
 		this.setSize(Const.FOREST_WIDTH + contentpanel.getWidth(), Const.FOREST_HEIGTH);
 		this.setVisible(true);
+
 	}
-	
+
+
 	/**
 	 *  键盘移动重新设置移动坐标并重绘图片
 	 * @param point_x
 	 * @param point_y
 	 */
-	public void resetPoint(int point_x ,int point_y) {
+	public void resetPoint(int point_x ,int point_y,int type) {
 		this.me.setLocationX(point_x);
 		this.me.setLocationY(point_y);
 		canseePanel.setBounds(point_x - Const.PANEL_SIZE/2, point_y - Const.PANEL_SIZE/2, Const.PANEL_SIZE, Const.PANEL_SIZE); 
-		canseePanel.resetPoint(point_x,point_y);
+		canseePanel.resetPoint(point_x,point_y,type);
 		resetBoxPoint(this.boxlists);
 		resetOtherSoldierPoint(this.otherSoldiers);
 	}
@@ -266,23 +289,28 @@ public class ForestFrame extends JFrame{
 			System.out.println(e.getKeyCode());
 			int point_x = me.getLocationX();
 			int point_y = me.getLocationY();
+			int type = 0;
 			switch(e.getKeyCode())
 			{
 				case KeyEvent.VK_UP:
 					point_y-=Const.STEP;
+					type = 1;
 					break;
 				case KeyEvent.VK_DOWN:
 					point_y+=Const.STEP;
+					type = 2;
 					break;
 				case KeyEvent.VK_LEFT:
 					point_x-=Const.STEP;
+					type = 3;
 					break;
 				case KeyEvent.VK_RIGHT:
 					point_x+=Const.STEP;
+					type = 4;
 					break;
 			}
 			if(judgePoint(point_x,point_y)) {
-		         resetPoint(point_x,point_y);
+		         resetPoint(point_x,point_y,type);
 		         //发送我的坐标信息给服务端
 				  updateMyPointToServer();
 			}

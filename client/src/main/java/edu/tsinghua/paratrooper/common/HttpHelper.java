@@ -165,8 +165,6 @@ public class HttpHelper {
 		refreshBox( data.get("boxes").getAsJsonArray(),frame);
 		refreshGroupMembers(data.get("groupMembers").getAsJsonArray(),frame);
 		dealMessage(data.get("messages").getAsJsonArray(),token,frame);
-
-
 	}
 
 	/**
