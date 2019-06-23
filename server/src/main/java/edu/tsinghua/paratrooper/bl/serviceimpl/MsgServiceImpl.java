@@ -3,10 +3,7 @@ package edu.tsinghua.paratrooper.bl.serviceimpl;
 import com.google.common.collect.Lists;
 import com.google.gson.Gson;
 import edu.tsinghua.paratrooper.bl.service.MsgService;
-import edu.tsinghua.paratrooper.bl.vo.BoxVo;
-import edu.tsinghua.paratrooper.bl.vo.MsgVo;
-import edu.tsinghua.paratrooper.bl.vo.ResultVo;
-import edu.tsinghua.paratrooper.bl.vo.SoldierVo;
+import edu.tsinghua.paratrooper.bl.vo.*;
 import edu.tsinghua.paratrooper.data.entity.TBoxApplyEntity;
 import edu.tsinghua.paratrooper.data.entity.TBoxEntity;
 import edu.tsinghua.paratrooper.data.entity.TMsgEntity;
@@ -103,13 +100,13 @@ public class MsgServiceImpl implements MsgService {
 
         if (result == 0) {
             Gson gson = new Gson();
-            List<SoldierVo> candidates = Arrays.asList(new SoldierVo(currentEntity, true),
-                    new SoldierVo(comparedEntity, true));
+            SoldierDto soldierDto = new SoldierDto(currentEntity.getId(), currentEntity.getName(),
+                    comparedEntity.getId(), comparedEntity.getName());
             Lists.newArrayList(soldierRepository.findByGroupNum(currentEntity.getGroupNum())).forEach(tSoldierEntity -> {
-                sendMsg(tSoldierEntity.getId(), MsgMethod.VOTE_CAPTAIN.getCode(), gson.toJson(candidates));
+                sendMsg(tSoldierEntity.getId(), MsgMethod.VOTE_CAPTAIN.getCode(), gson.toJson(soldierDto));
             });
             Lists.newArrayList(soldierRepository.findByGroupNum(comparedEntity.getGroupNum())).forEach(tSoldierEntity -> {
-                sendMsg(tSoldierEntity.getId(), MsgMethod.VOTE_CAPTAIN.getCode(), gson.toJson(candidates));
+                sendMsg(tSoldierEntity.getId(), MsgMethod.VOTE_CAPTAIN.getCode(), gson.toJson(soldierDto));
             });
             return new ResultVo<>(ErrorCode.SUCCESS, "ok", "");
         }
