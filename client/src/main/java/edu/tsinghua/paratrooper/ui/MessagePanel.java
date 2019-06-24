@@ -188,7 +188,7 @@ public class MessagePanel extends JPanel{
 
                         String req = TransTools.objectToJson(req_map);
                         System.out.println("发起回执验证消息："+req);
-                        String str  = "<html>经过验证，士兵"+ sodier_id +"为合法用户，现对其发起回执验证，请等待结果。</html>";
+                        String str  = "<html>经验证，士兵"+ sodier_id +"为合法用户，现对其发起回执验证。</html>";
                         logInformationPanel.addInfo(str);
                         HttpHelper.asyncPost(Const.MESG_SEND,token,req,null);
 

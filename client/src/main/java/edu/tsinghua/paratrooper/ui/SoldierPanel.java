@@ -87,11 +87,12 @@ public class SoldierPanel extends JPanel{
 		
 		panel_image.addMouseListener(new OperationListener());
 		
-	    pri_key = new JLabel("双击该士兵图标进行验证");
+	    pri_key = new JLabel("双击士兵图标验证");
 	    pri_key.setFont(new java.awt.Font("Dialog", 1, 15));
 	    pri_key.setForeground(Color.WHITE);
+		pri_key.setHorizontalAlignment(SwingConstants.CENTER);
 	    pri_key.setOpaque(false);
-	    pri_key.setBounds(0, Const.SOLDIER_NAME_HEIGHT_SIZE+ Const.SOLDIER_PANEL_GE+ Const.SOLDIER_SIZE +  Const.SOLDIER_PANEL_GE, Const.SOLDIER_SIZE, Const.SOLDIER_NAME_HEIGHT_SIZE);
+	    pri_key.setBounds(0, Const.SOLDIER_NAME_HEIGHT_SIZE+ Const.SOLDIER_PANEL_GE+ Const.SOLDIER_SIZE +  Const.SOLDIER_PANEL_GE, Const.SOLDIER_WIDTH, Const.SOLDIER_NAME_HEIGHT_SIZE);
 	    pri_key.setVisible(false);
 	    this.add(pri_key);
 	}

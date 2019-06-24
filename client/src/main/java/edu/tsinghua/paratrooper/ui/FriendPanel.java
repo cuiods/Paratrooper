@@ -182,14 +182,14 @@ public class FriendPanel extends JPanel {
         private JLabel name;
         private JLabel dect;
         private Soldier soldier;
-        private JButton authenBtn;
+        private JLabel authenBtn;
 
         public StrangerCardPanel(Soldier soldier) {
             image = new JLabel();
             name = new JLabel();
             dect = new JLabel();
             this.soldier = soldier;
-            authenBtn = new JButton("验证");
+            authenBtn = new JLabel("验证");
             lanch();
         }
 
@@ -211,21 +211,23 @@ public class FriendPanel extends JPanel {
             name.setBounds(Const.FRIEND_CARD_GEZI*2 + Const.FRIEND_CARD_IMAGE_SIZE,Const.FRIEND_CARD_GEZI , Const.FRIEND_CARD_LABEL_WIDTH, Const.FRIEND_CARD_LABEL_HEIGHT);
 
             dect.setText("不在验证范围内");
+            dect.setOpaque(false);
+            dect.setVisible(true);
             dect.setBounds(Const.FRIEND_CARD_GEZI*2 + Const.FRIEND_CARD_IMAGE_SIZE,Const.FRIEND_CARD_GEZI*2 + Const.FRIEND_CARD_LABEL_HEIGHT , Const.FRIEND_CARD_LABEL_WIDTH, Const.FRIEND_CARD_LABEL2_HEIGHT);
 
-            authenBtn.setBounds(Const.FRIEND_CARD_GEZI*2 + Const.FRIEND_CARD_IMAGE_SIZE,Const.FRIEND_CARD_GEZI*2 + Const.FRIEND_CARD_LABEL_HEIGHT , Const.FRIEND_CARD_LABEL_WIDTH, Const.FRIEND_CARD_LABEL2_HEIGHT);
-            authenBtn.addActionListener(new ActionListener() {
-                @Override
-                public void actionPerformed(ActionEvent actionEvent) {
-                    System.out.println("click");
-                }
-            });
-            authenBtn.setVisible(false);
+            //authenBtn.setBounds(Const.FRIEND_CARD_GEZI*2 + Const.FRIEND_CARD_IMAGE_SIZE,Const.FRIEND_CARD_GEZI*2 + Const.FRIEND_CARD_LABEL_HEIGHT , Const.FRIEND_CARD_LABEL_WIDTH, Const.FRIEND_CARD_LABEL2_HEIGHT);
+//            authenBtn.addActionListener(new ActionListener() {
+//                @Override
+//                public void actionPerformed(ActionEvent actionEvent) {
+//                    System.out.println("click");
+//                }
+//            });
+            //authenBtn.setVisible(false);
 
             this.add(image);
             this.add(name);
             this.add(dect);
-            this.add(authenBtn);
+           // this.add(authenBtn);
 
 
         }
@@ -236,12 +238,12 @@ public class FriendPanel extends JPanel {
             icon.setImage(icon.getImage().getScaledInstance(Const.FRIEND_CARD_IMAGE_SIZE,Const.FRIEND_CARD_IMAGE_SIZE,Image.SCALE_DEFAULT));//80和100为大小 可以自由设置
             image.setIcon(icon);
             if (isHalfDistance(me, soldier)){
-                authenBtn.setVisible(true);
-                dect.setVisible(false);
+                //authenBtn.setVisible(true);
+                dect.setText("双击士兵图标可验证");
                 this.setBorder(border_green);
             } else {
-                authenBtn.setVisible(false);
-                dect.setVisible(true);
+                //authenBtn.setVisible(false);
+                dect.setText("不在验证范围内");
                 this.setBorder(border_gray);
             }
         }
@@ -259,14 +261,14 @@ public class FriendPanel extends JPanel {
         private JLabel dect;
 
         private Soldier soldier;
-        private JButton authenBtn;
+        private JLabel authenBtn;
 
         public BoxCardPanel(Soldier soldier) {
             image = new JLabel();
             name = new JLabel();
             dect = new JLabel();
             this.soldier = soldier;
-            authenBtn = new JButton();
+            authenBtn = new JLabel();
             lanch();
         }
 
@@ -285,14 +287,15 @@ public class FriendPanel extends JPanel {
             name.setText(soldier.getName());
             name.setBounds(Const.FRIEND_CARD_GEZI*3 + Const.FRIEND_CARD_IMAGE_SIZE,Const.FRIEND_CARD_GEZI , Const.FRIEND_CARD_LABEL_WIDTH, Const.FRIEND_CARD_LABEL_HEIGHT);
 
-            authenBtn.setLabel("待开箱");
+           // authenBtn.setLabel("待开箱");
+            authenBtn.setOpaque(false);
             authenBtn.setBounds(Const.FRIEND_CARD_GEZI*2 + Const.FRIEND_CARD_IMAGE_SIZE,Const.FRIEND_CARD_GEZI*2 + Const.FRIEND_CARD_LABEL_HEIGHT , Const.FRIEND_CARD_LABEL_WIDTH, Const.FRIEND_CARD_LABEL2_HEIGHT);
-            authenBtn.addActionListener(new ActionListener() {
-                @Override
-                public void actionPerformed(ActionEvent actionEvent) {
-                    System.out.println("click");
-                }
-            });
+//            authenBtn.addActionListener(new ActionListener() {
+//                @Override
+//                public void actionPerformed(ActionEvent actionEvent) {
+//                    System.out.println("click");
+//                }
+//            });
 
             this.add(image);
             this.add(name);
@@ -304,9 +307,9 @@ public class FriendPanel extends JPanel {
         public void reset_info(Box box){
             name.setText("<html>宝箱"+box.getId()+"</html>");
             if(box.getStatus()==1){
-                authenBtn.setLabel("已开箱");
+                authenBtn.setText("已开箱");
             }else{
-                authenBtn.setLabel("待开箱");
+                authenBtn.setText("待开箱");
             }
 
         }

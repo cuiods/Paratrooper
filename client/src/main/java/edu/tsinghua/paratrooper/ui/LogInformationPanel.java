@@ -28,7 +28,7 @@ public class LogInformationPanel extends JPanel {
         this.removeAll();
         int pos = 0;
         int ext = 0;
-        for(int i = Math.min(information.size() - 1, 5); i > -1; i--, pos++){
+        for(int i = Math.min(information.size() - 1, 5); i > -1; i--, ext++){
             JLabel cur = new JLabel(information.get(i));
             if(information.get(i).indexOf("成功") != -1)
                 cur.setForeground(new Color(137, 181, 38));
@@ -37,16 +37,15 @@ public class LogInformationPanel extends JPanel {
             cur.setFont(font);
             int height = Const.LOG_PER_HEIGHT;
 
-            cur.setLocation(Const.LOG_PANEL_GEZI, Const.LOG_PANEL_GEZI + (pos+ext) * Const.LOG_PER_HEIGHT + 20);
+            cur.setLocation(Const.LOG_PANEL_GEZI, Const.LOG_PANEL_GEZI + ext * 2 * Const.LOG_PER_HEIGHT + 20);
 
-            System.out.println(information.get(i) + "   length:"+information.get(i).length() + " "+pos + " "+ ext);
-            if(information.get(i).length()>14){
-                height+= Const.LOG_PER_HEIGHT;
-                ext= ext+1;
-            }
+            int info_len = (information.get(i).length() - 1) / 14 + 1;
+            System.out.println(information.get(i) + " | info_len : " + info_len + " | pos : " + pos);
+            height = Const.LOG_PER_HEIGHT * info_len;
+            pos += info_len;
             this.add(cur);
             cur.setVisible(true);
-            cur.setSize(Const.LOG_PER_WIRDTH, height);
+            cur.setSize(Const.LOG_PER_WIRDTH, Const.LOG_PER_HEIGHT * 2);
         }
     }
 
