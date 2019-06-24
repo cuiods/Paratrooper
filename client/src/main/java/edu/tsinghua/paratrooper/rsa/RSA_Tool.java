@@ -64,15 +64,10 @@ public class RSA_Tool {
      * @return
      */
     public static String[] enSgn(String text,String pri_key) {   //签名认证
-        // String enHS = encodeRSA(md5.encode(text),pri_key);
-        // String[] val = {enHS, text};
-        String[] val = {encodeRSA(text,pri_key), text};
-        System.out.print("01:");
-        System.out.println(val[0]);
+        String enHS = encodeRSA(md5.encode(text),pri_key);
+        String[] val = {enHS, text};
+        // String[] val = {encodeRSA(text,pri_key), text};
 
-
-        System.out.print("02:");
-        System.out.println(val[1]);
         return val;
     }
 
@@ -85,24 +80,10 @@ public class RSA_Tool {
         if (sgn.length != 2) {
             return  false;
         }
-        // String deHS = decodeRSA(sgn[0],pub_key);
-        // String hs   = md5.encode(sgn[1]);
-
         String deHS = decodeRSA(sgn[0],pub_key);
-        String hs   = sgn[1];
-
-
-        System.out.print("01:");
-        System.out.println(sgn[0]);
-
-
-        System.out.print("02:");
-        System.out.println(sgn[1]);
-
-
-        System.out.print("de:");
-        System.out.println(deHS);
-
+        String hs   = md5.encode(sgn[1]);
+        // String deHS = decodeRSA(sgn[0],pub_key);
+        // String hs   = sgn[1];
 
         if (deHS.equals(hs)) {
             return true;
