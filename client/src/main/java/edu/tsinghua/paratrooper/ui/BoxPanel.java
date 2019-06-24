@@ -8,9 +8,7 @@ import java.net.URLDecoder;
 import java.util.HashMap;
 import java.util.Map;
 
-import javax.swing.ImageIcon;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
+import javax.swing.*;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
@@ -56,6 +54,7 @@ public class BoxPanel extends JPanel{
 		box_info.setOpaque(false);
 		box_info.setFont(new java.awt.Font("Dialog", 1, 15));
 		box_info.setForeground(Color.WHITE);
+		box_info.setHorizontalAlignment(SwingConstants.CENTER);
 		ImageIcon box_icon = new ImageIcon(this.getClass().getResource(Const.BOX_OPEN_IMAGE));
 		box_icon.setImage(box_icon.getImage().getScaledInstance(Const.BOX_IMAGE_SIZE,Const.BOX_IMAGE_SIZE,Image.SCALE_DEFAULT));
 		jl_box.setIcon(box_icon);
@@ -85,14 +84,18 @@ public class BoxPanel extends JPanel{
 			logInformationPanel.addInfo("<html>宝箱信息更新："+box.getApply()+"/" + box.getTotal() + "(已参与/所需)</html>");
 			cur_box_apply = box.getApply();
 		}
-
 		String info = "";
+		if(box.getApply() > cur_box_apply && box.getStatus()== 1) {//宝箱被开启
+			info = "<html>该宝箱已被开启</html>";
+			logInformationPanel.addInfo("<html>该宝箱已被开启</html>");
+		}
+
 		if(box.getStatus() == 1) {
 			ImageIcon box_icon = new ImageIcon(this.getClass().getResource(Const.BOX_OPEN_IMAGE));
 			box_icon.setImage(box_icon.getImage().getScaledInstance(Const.BOX_IMAGE_SIZE,Const.BOX_IMAGE_SIZE,Image.SCALE_DEFAULT));
 			jl_box.setIcon(box_icon);
 			info = "<html>该宝箱已被开启</html>";
-			logInformationPanel.addInfo("<html>该宝箱已被开启</html>");
+
 		}else{
 			ImageIcon box_icon = new ImageIcon(this.getClass().getResource(Const.BOX_CLOSE_IMAGE));
 			box_icon.setImage(box_icon.getImage().getScaledInstance(Const.BOX_IMAGE_SIZE,Const.BOX_IMAGE_SIZE,Image.SCALE_DEFAULT));
