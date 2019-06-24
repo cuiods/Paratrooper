@@ -128,7 +128,7 @@ public class MessagePanel extends JPanel{
                 break;
             case Const.MESSAGE_CHOOSE_CAPTAIN_RESULT :
                  String name = message.getData().get("name").toString();
-                 str = "<html>经过电子投票"+name+"被选为新的队长。</html>";
+                 str = "<html>经过竞选比较"+name+"被选为新的队长。</html>";
                 body.setText(str);
                 ok.setVisible(false);
                 cancel.setVisible(false);
