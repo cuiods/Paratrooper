@@ -83,7 +83,7 @@ public class ForestFrame extends JFrame{
 		jlb_otherSolders = new ArrayList<SoldierPanel>();
 		for(int i = 0 ; i< others_sum ;i++) {
 			
-			SoldierPanel sp = new SoldierPanel(me,map.get("token"),map.get("E"),logInformationPanel);  //私钥是哪个？
+			SoldierPanel sp = new SoldierPanel(me,map.get("token"),map.get("D"),logInformationPanel);  //私钥是哪个？
 			sp.setVisible(false);
 			sp.setOpaque(false);
 			sp.setSize(Const.SOLDIER_WIDTH, 30+30+Const.SOLDIER_SIZE+30);
@@ -172,7 +172,6 @@ public class ForestFrame extends JFrame{
 		jsp.setViewportView(friendListPanel);
 		jsp.setBounds(0, 0, 240, 400);
 		jsp.setBorder(BorderFactory.createRaisedSoftBevelBorder());
-		jsp.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
 		contentpanel.add(jsp);
 
 		//this.add(forestPanel);

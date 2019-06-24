@@ -80,6 +80,7 @@ public class MessagePanel extends JPanel{
 		String str ="";
 		ok.setText("确认");
 		cancel.setText("取消");
+
 		switch(code) {
 		    case Const.MESSAGE_OPERATION_TWO :  //有人向我发起认证
 			    str = "<html> 士兵:"+ message.getData().get("from_id")+"向您发起认证,是否回应" + "</html>";

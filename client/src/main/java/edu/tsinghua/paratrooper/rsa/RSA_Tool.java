@@ -11,7 +11,7 @@ import java.util.Map;
 
 public class RSA_Tool {
 
-    private static RSASignature signature = new RSASignature();;
+    private static RSASignature signature = new RSASignature();
     private static md5 md = new md5();
     private static Map<String,String> map = new HashMap<>();
 
@@ -45,8 +45,8 @@ public class RSA_Tool {
      * @return
      */
     public static String encodeRSA(String text, String pri_key) {   //加密
-        return signature.encryption(text, StringConvert.convert(map.get("E"), 16, 10),
-                StringConvert.convert(pri_key, 16, 10), Const.BIT/2);
+        return signature.encryption(text, StringConvert.convert(pri_key, 16, 10),
+                StringConvert.convert(map.get("N"), 16, 10));
     }
 
     /**
@@ -54,9 +54,9 @@ public class RSA_Tool {
      * @param text
      * @return
      */
-    private static String decodeRSA(String text,String pub_key) {   //解密
-        return signature.decryption(text, StringConvert.convert(pub_key, 16, 10),
-                StringConvert.convert(map.get("P"), 16, 10), StringConvert.convert(map.get("Q"), 16, 10), Const.BIT/2);
+    private static String decodeRSA(String text, String pub_key) {   //解密
+        return signature.encryption(text, StringConvert.convert(pub_key, 16, 10),
+                StringConvert.convert(map.get("N"), 16, 10));
     }
 
     /**
