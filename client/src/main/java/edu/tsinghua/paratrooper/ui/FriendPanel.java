@@ -23,7 +23,7 @@ public class FriendPanel extends JPanel {
 	private List<Box> boxList;
 
 	private int panelCount;
-	
+
 	public FriendPanel(List<Soldier> friendList) {
 		this.friendList = friendList;
 		PanelFriendList = new ArrayList<FriendCardPanel>();
@@ -34,11 +34,11 @@ public class FriendPanel extends JPanel {
 			PanelFriendList.add(temp);
 			temp.setBounds(Const.FRIEND_CARD_GEZI,  start + i * (Const.FRIEND_CARD_HEIGTH + Const.FRIEND_CARD_GEZI), Const.FRIEND_CARD_WIDTH, Const.FRIEND_CARD_HEIGTH);
 		}
-		
+
 		this.setLayout(new BorderLayout(0,0));
-        this.setSize(Const.FRIEND_PANEL_WIDTH, Const.FRIEND_PANEL_HEIGHT);
-        this.setPreferredSize(new Dimension(Const.FRIEND_PANEL_WIDTH, Const.FRIEND_PANEL_HEIGHT));
-        this.setVisible(true);
+		this.setSize(Const.FRIEND_PANEL_WIDTH, Const.FRIEND_PANEL_HEIGHT);
+		this.setPreferredSize(new Dimension(Const.FRIEND_PANEL_WIDTH, Const.FRIEND_PANEL_HEIGHT));
+		this.setVisible(true);
 	}
 
 	public FriendPanel(List<Soldier> friendList, List<Soldier> strangerList, List<Box> boxList) {
@@ -99,19 +99,19 @@ public class FriendPanel extends JPanel {
 		this.setVisible(true);
 	}
 
-	
+
 	/**
 	 * 内部类，每个好友列表的卡片
 	 * @author zhangsukun
 	 *
 	 */
 	class FriendCardPanel extends JPanel{
-		
+
 		private JLabel image;
 		private JLabel name;
 		private JLabel pub_key;
 		private Soldier soldier;
-		
+
 		public FriendCardPanel(Soldier soldier) {
 			image = new JLabel();
 			name = new JLabel();
@@ -119,12 +119,12 @@ public class FriendPanel extends JPanel {
 			this.soldier = soldier;
 			lanch();
 		}
-		
+
 		public void lanch() {
 			this.setSize(Const.FRIEND_CARD_WIDTH,Const.FRIEND_CARD_HEIGTH);
 			this.setLayout(null);
 			this.setBackground(Color.lightGray);
-			
+
 			ImageIcon icon = new ImageIcon(this.getClass().getResource(Const.FRIEND_CARD_IMAGE_SOLDIER));
 			if(soldier.isCaptain()==1) {
 				icon = new ImageIcon(this.getClass().getResource(Const.FRIEND_CARD_IMAGE_LEADER));
@@ -132,7 +132,7 @@ public class FriendPanel extends JPanel {
 			icon.setImage(icon.getImage().getScaledInstance(Const.FRIEND_CARD_IMAGE_SIZE,Const.FRIEND_CARD_IMAGE_SIZE,Image.SCALE_DEFAULT));//80和100为大小 可以自由设置
 			image.setIcon(icon);
 			image.setBounds(Const.FRIEND_CARD_GEZI, Const.FRIEND_CARD_GEZI, Const.FRIEND_CARD_IMAGE_SIZE,Const.FRIEND_CARD_IMAGE_SIZE);
-			
+
 			name.setText("<html>士兵"+soldier.getId()+"</html>");
 			name.setBounds(Const.FRIEND_CARD_GEZI*2 + Const.FRIEND_CARD_IMAGE_SIZE,Const.FRIEND_CARD_GEZI , Const.FRIEND_CARD_LABEL_WIDTH, Const.FRIEND_CARD_LABEL_HEIGHT);
 //			if(soldier.getPublicKey() == null || soldier.getPublicKey() == "") {
@@ -147,12 +147,20 @@ public class FriendPanel extends JPanel {
 		}
 
 		public void reset_info(Soldier soldier){
+
+			if (soldier.getAlive() == 0) {
+				pub_key.setText("离线");
+				this.setBackground(Color.lightGray);
+			} else {
+				pub_key.setText("在线");
+				this.setBackground(Color.white);
+			}
+
 			name.setText("<html>队友"+soldier.getId()+"</html>");
-			pub_key.setText("<html>"+soldier.getName()+"</html>");
 			ImageIcon icon = new ImageIcon(this.getClass().getResource(Const.FRIEND_CARD_IMAGE_SOLDIER));
 			if(soldier.isCaptain()==1) {
-				icon = new ImageIcon(this.getClass().getResource(Const.FRIEND_CARD_IMAGE_LEADER));
 				name.setText("<html>队长"+soldier.getId()+"</html>");
+				icon = new ImageIcon(this.getClass().getResource(Const.FRIEND_CARD_IMAGE_LEADER));
 			}
 			icon.setImage(icon.getImage().getScaledInstance(Const.FRIEND_CARD_IMAGE_SIZE,Const.FRIEND_CARD_IMAGE_SIZE,Image.SCALE_DEFAULT));//80和100为大小 可以自由设置
 			image.setIcon(icon);
@@ -431,13 +439,13 @@ public class FriendPanel extends JPanel {
 	}
 
 
-	
+
 	/*
 	 * 测试函数
 	 */
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
-		
+
 		JFrame f  = new JFrame();
 		f.setSize(600, 800);
 		f.setLayout(null);
@@ -446,7 +454,7 @@ public class FriendPanel extends JPanel {
 		f.add(contentpanel);
 		contentpanel.setBounds(0,0,240,600);
 		contentpanel.setLayout(null);
-		
+
 		Soldier so = new Soldier();
 		Soldier so2 = new Soldier();
 		List<Soldier> lists = new ArrayList<Soldier>();
@@ -456,7 +464,7 @@ public class FriendPanel extends JPanel {
 		Box box1 = new Box();
 		List<Box> boxLists = new ArrayList<>();
 		boxLists.add(box1);
-		
+
 		FriendPanel sop = new FriendPanel(lists, lists, boxLists);
 		JScrollPane  jsp = new JScrollPane();
 		//jsp.add(sop);
@@ -464,8 +472,8 @@ public class FriendPanel extends JPanel {
 		jsp.setBounds(0, 0, 210, 600);
 		jsp.setBorder(BorderFactory.createRaisedSoftBevelBorder());
 		contentpanel.add(jsp);
-		
-		f.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);  
+
+		f.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		f.setVisible(true);
 	}
 }
