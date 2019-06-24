@@ -24,6 +24,7 @@ public class CanSeePanel extends JPanel{
      private int point_x;
      private int point_y;
      private JLabel jlb_me;
+     private JLabel jlb_scan;
      
 	/**
 	 * 构造函数 
@@ -50,7 +51,17 @@ public class CanSeePanel extends JPanel{
 			 e.printStackTrace();
 		}
 	     this.setOpaque(false);
-		 this.lanch();
+
+//		jlb_scan = new JLabel();
+//		jlb_scan.setOpaque(false);
+//		ImageIcon scan_icon = new ImageIcon(this.getClass().getResource(Const.SCAN_IMAGE));
+//		scan_icon.setImage(scan_icon.getImage().getScaledInstance(Const.PANEL_SIZE,Const.PANEL_SIZE,Image.SCALE_DEFAULT));//80和100为大小 可以自由设置
+//		jlb_scan.setBounds(0, 0, Const.PANEL_SIZE, Const.PANEL_SIZE);
+//		jlb_scan.setIcon(scan_icon);
+//		this.add(jlb_scan);
+
+		this.lanch();
+
 	}
 	
 	/**

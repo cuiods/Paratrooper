@@ -285,6 +285,7 @@ public class HttpHelper {
 			 map.put("text",data.get("text").getAsString());
 			 map.put("from_id",data.get("from_id").getAsInt());
 			 Message message = new Message(code,map);
+			 frame.someOneVerfifyToMe(data.get("from_id").getAsInt());   //log
 			 frame.addMessageArrive(message);
 			 return ;
 	     }
@@ -294,22 +295,8 @@ public class HttpHelper {
 			 String[] strlist= new String[2];
 			 strlist[0] = data.get("ciper").getAsString();
 			 strlist[1] = data.get("text").getAsString();
-			 if(RSA_Tool.sgnCheck(strlist)) {   //回执验证成功
-			 	 //告诉server
-				 Map<String,Object> req_map = new HashMap<>();
-				 req_map.put("confirmId",data.get("from_id").getAsString());
-				 String req = TransTools.objectToJson(req_map);
-				 System.out.println("回执验证成功，告诉服务器验证成功消息："+req);
-				 System.out.println("看一下token：" + token);
-				 HttpHelper.asyncPost(Const.CONFIRM,token,req,null);
-				 //frame.getLogInformationPanel().addInfo("zcm test 验证成功");
-
-				 //通知消息队列
-				 Map<String,Object> map = new HashMap<String,Object>();
-				 map.put("from_id",data.get("from_id").getAsInt());
-				 Message message = new Message (Const.MESSAGE_OPERATION_FIVE,map);
-				 frame.addMessageArrive(message);
-			 }
+			 int from_id = data.get("from_id").getAsInt();
+			 frame.verifyBack(strlist,from_id);
 			 return ;
 	     }
 	     if(code == Const.MESSAGE_CAPTAIN_ONE){  //4001 我需要重新竞选长官
@@ -338,8 +325,7 @@ public class HttpHelper {
 		 }
 
 		 if(code == Const.MESSAGE_CAPTAIN_FIVE){  //4005
-	     	//String num1 = data.get("num1").getAsString();
-	     	//String num2 = data.get("num2").getAsString();
+
 			 String str_list = data.get("nums_list").getAsString();
 			 String[] nums= str_list.split(",");
 

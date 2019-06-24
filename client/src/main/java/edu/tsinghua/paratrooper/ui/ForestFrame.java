@@ -8,6 +8,7 @@ import edu.tsinghua.paratrooper.common.Const;
 import edu.tsinghua.paratrooper.common.HttpHelper;
 import edu.tsinghua.paratrooper.common.TransTools;
 import edu.tsinghua.paratrooper.millionare.Millionaire_Tool;
+import edu.tsinghua.paratrooper.rsa.RSA_Tool;
 
 import java.awt.*;
 import java.awt.event.KeyEvent;
@@ -82,7 +83,7 @@ public class ForestFrame extends JFrame{
 		jlb_otherSolders = new ArrayList<SoldierPanel>();
 		for(int i = 0 ; i< others_sum ;i++) {
 			
-			SoldierPanel sp = new SoldierPanel(me,map.get("token"),logInformationPanel);
+			SoldierPanel sp = new SoldierPanel(me,map.get("token"),map.get("E"),logInformationPanel);  //私钥是哪个？
 			sp.setVisible(false);
 			sp.setOpaque(false);
 			sp.setSize(Const.SOLDIER_WIDTH, 30+30+Const.SOLDIER_SIZE+30);
@@ -116,7 +117,7 @@ public class ForestFrame extends JFrame{
 		/**由于MessagePanel类在内部调用了clearMessage设置panel不可见
 		 * 因此必须在MessagePanel里面添加LogInformationPanel成员
  		 */
-		messagePanel = new MessagePanel(this.otherSoldiers,me,map.get("token"),logInformationPanel);
+		messagePanel = new MessagePanel(this.otherSoldiers,me,map.get("token"),map.get("D"),logInformationPanel);
 		message_queue  = new LinkedList<Message>();
 		this.lanch();
 		this.startNetwork();
@@ -153,8 +154,8 @@ public class ForestFrame extends JFrame{
 		canseePanel.addMouseListener(new GainFoucsListener());
 		
 		//消息列表
-		messagePanel.setBounds(Const.FOREST_WIDTH, 600 +10, Const.MESSAGE_PANEL_WIDTH, Const.MESSAGE_PANEL_HRIGHT);
-		logInformationPanel.setBounds(Const.FOREST_WIDTH, 600 +10, Const.MESSAGE_PANEL_WIDTH, Const.MESSAGE_PANEL_HRIGHT);
+		messagePanel.setBounds(Const.FOREST_WIDTH+10, 640, Const.MESSAGE_PANEL_WIDTH, Const.MESSAGE_PANEL_HRIGHT);
+		logInformationPanel.setBounds(Const.FOREST_WIDTH+10, 420, Const.MESSAGE_PANEL_WIDTH, Const.MESSAGE_PANEL_HRIGHT);
 		this.add(messagePanel);
 		this.add(logInformationPanel);
 		messagePanel.setVisible(false);
@@ -164,13 +165,14 @@ public class ForestFrame extends JFrame{
 		JPanel contentpanel = new JPanel();
 		contentpanel.setBorder(BorderFactory.createRaisedSoftBevelBorder());
 		this.add(contentpanel);
-		contentpanel.setBounds(Const.FOREST_WIDTH,0,240,600);
+		contentpanel.setBounds(Const.FOREST_WIDTH,0,240,400);
 		contentpanel.setLayout(null);
 		
 		JScrollPane  jsp = new JScrollPane();
 		jsp.setViewportView(friendListPanel);
-		jsp.setBounds(0, 0, 210, 600);
+		jsp.setBounds(0, 0, 240, 400);
 		jsp.setBorder(BorderFactory.createRaisedSoftBevelBorder());
+		jsp.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
 		contentpanel.add(jsp);
 
 		//this.add(forestPanel);
@@ -330,7 +332,7 @@ public class ForestFrame extends JFrame{
 			if(judgePoint(point_x,point_y)) {
 		         resetPoint(point_x,point_y,type);
 		         //发送我的坐标信息给服务端
-				  updateMyPointToServer();
+				  //updateMyPointToServer();
 			}
 			
 		}
@@ -406,7 +408,7 @@ public class ForestFrame extends JFrame{
 		nums_str = nums_str.substring(0,nums_str.length()-1);
 		message_map.put("nums_list",nums_str);
 		message_map.put("P",P);
-		message_map.put("from_id",String.valueOf(me.getId()));
+		message_map.put("from_id",String.valueOf(me.getLevel()));
 		String message_map_str = TransTools.objectToJson(message_map);
 
 		Map<String,Object> req_map = new HashMap<>();
@@ -557,7 +559,54 @@ public class ForestFrame extends JFrame{
 		}
 		
 	}
-	
+
+	/**
+	 * 有人向我发起认证，写入logpanel
+	 * @param from_id
+	 */
+	public void someOneVerfifyToMe(int from_id){
+		String str = "士兵：" +from_id+"对您发起认证";
+		logInformationPanel.addInfo(str);
+	}
+
+
+	/**
+	 * 回执验证
+	 * @param strlist
+	 */
+	public void verifyBack(String[] strlist,int from_id){
+
+         //找该士兵的公钥
+		String pub_key = "";
+		for(Soldier soldier :otherSoldiers){
+			if(soldier.getId() == from_id){
+				pub_key = soldier.getPublicKey();
+				break;
+			}
+		}
+		String result = "";
+		if(RSA_Tool.sgnCheck(strlist,pub_key)) {   //回执验证成功
+			//告诉server
+			Map<String,Object> req_map = new HashMap<>();
+			req_map.put("confirmId",from_id);
+			String req = TransTools.objectToJson(req_map);
+			System.out.println("回执验证成功，告诉服务器验证成功消息："+req);
+			HttpHelper.asyncPost(Const.CONFIRM,map.get("token"),req,null);
+
+			//通知消息队列
+			Map<String,Object> map = new HashMap<String,Object>();
+			map.put("from_id",from_id);
+			Message message = new Message (Const.MESSAGE_OPERATION_FIVE,map);
+			addMessageArrive(message);
+
+			result ="回执验证成功，士兵"+from_id +"已经是您的队友。";
+
+		}else{          //回执验证失败
+			result ="回执验证失败";
+		}
+		logInformationPanel.addInfo(result);
+	}
+
 	/*
 	 * 测试函数
 	 */

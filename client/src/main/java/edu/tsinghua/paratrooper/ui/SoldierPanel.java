@@ -19,26 +19,26 @@ public class SoldierPanel extends JPanel{
 
 	private Soldier soldier;
 	private String token;
+	private String private_key;
 	private JLabel name ;
-	private JButton level ;  //是否是队长
-	private JButton group ;  //组号
 	private JLabel pri_key;
 	private LogInformationPanel logInformationPanel;
 	private JLabel panel_image;
 	private Soldier me;
 
-	public SoldierPanel(Soldier me,String token, LogInformationPanel logInformationPanel) {
+	public SoldierPanel(Soldier me,String token,String private_key, LogInformationPanel logInformationPanel) {
 		soldier = new Soldier();
 		this.me = me;
+		this.private_key = private_key;
 		this.token = token;
 		this.lanch();
 		this.logInformationPanel = logInformationPanel;
 	}
-	public SoldierPanel(Soldier soldier,int id,String token) {
-		this.soldier = soldier;
-		this.token = token;
-		this.lanch();
-	}
+//	public SoldierPanel(Soldier soldier,int id,String token) {
+//		this.soldier = soldier;
+//		this.token = token;
+//		this.lanch();
+//	}
 	
 	public void lanch() {
         setLayout(null);
@@ -54,6 +54,7 @@ public class SoldierPanel extends JPanel{
 		name = new JLabel(this.soldier.getName());
 		name.setBounds(0, 0, Const.SOLDIER_WIDTH, Const.SOLDIER_NAME_HEIGHT_SIZE);
 		name.setFont(new java.awt.Font("Dialog", 1, 15));
+		name.setForeground(Color.WHITE);
 		name.setHorizontalAlignment(SwingConstants.CENTER);
 		panel_info.add(name);
 		
@@ -150,7 +151,7 @@ public class SoldierPanel extends JPanel{
 			// TODO Auto-generated method stub
 			if(e.getClickCount()==2){
                 Map<String,String> message_map = new HashMap<>();
-				String str_list[] = RSA_Tool.enSgn(Const.CIPER,soldier.getPublicKey());
+				String str_list[] = RSA_Tool.enSgn(Const.CIPER,private_key);  //用我的私钥
 				message_map.put("ciper",str_list[0]);
 				message_map.put("text",str_list[1]);
 				message_map.put("from_id",String.valueOf(me.getId()));

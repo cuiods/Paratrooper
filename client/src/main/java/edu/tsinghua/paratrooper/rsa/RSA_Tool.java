@@ -30,9 +30,9 @@ public class RSA_Tool {
         String D = StringConvert.convert(keys[2],10,16);
         String P = StringConvert.convert(keys[3],10,16);
         String Q = StringConvert.convert(keys[4],10,16);
-        map.put("N",N);
-        map.put("E",E);
-        map.put("D",D);
+        map.put("N",N);    //公钥
+        map.put("E",E);    //是一个常量
+        map.put("D",D);    //私钥
         map.put("P",P);
         map.put("Q",Q);
         return map;
@@ -44,9 +44,9 @@ public class RSA_Tool {
      * @param text
      * @return
      */
-    public static String encodeRSA(String text, String pub_key) {   //加密
+    public static String encodeRSA(String text, String pri_key) {   //加密
         return signature.encryption(text, StringConvert.convert(map.get("E"), 16, 10),
-                StringConvert.convert(pub_key, 16, 10), Const.BIT/2);
+                StringConvert.convert(pri_key, 16, 10), Const.BIT/2);
     }
 
     /**
@@ -54,32 +54,32 @@ public class RSA_Tool {
      * @param text
      * @return
      */
-    private static String decodeRSA(String text) {   //解密
-        return signature.decryption(text, StringConvert.convert(map.get("D"), 16, 10),
+    private static String decodeRSA(String text,String pub_key) {   //解密
+        return signature.decryption(text, StringConvert.convert(pub_key, 16, 10),
                 StringConvert.convert(map.get("P"), 16, 10), StringConvert.convert(map.get("Q"), 16, 10), Const.BIT/2);
     }
 
     /**
-     * 用传来的公钥签名
+     * 用自己的私钥签名
      * @param text
      * @return
      */
-    public static String[] enSgn(String text,String pub_key) {   //签名认证
-        String enHS = encodeRSA(md5.encode(text),pub_key);
+    public static String[] enSgn(String text,String pri_key) {   //签名认证
+        String enHS = encodeRSA(md5.encode(text),pri_key);
         String[] val = {enHS, text};
         return val;
     }
 
     /**
-     * 用自己的私钥进行签名认证
+     * 用对方的公钥进行解密
      * @param sgn
      * @return
      */
-    public static boolean sgnCheck(String[] sgn) {
+    public static boolean sgnCheck(String[] sgn,String pub_key) {
         if (sgn.length != 2) {
             return  false;
         }
-        String deHS = decodeRSA(sgn[0]);
+        String deHS = decodeRSA(sgn[0],pub_key);
         String hs   = md5.encode(sgn[1]);
 
         if (deHS.equals(hs)) {
@@ -97,8 +97,7 @@ public class RSA_Tool {
          RSA_Tool.generateKeys();
 
          String[] str_list = RSA_Tool.enSgn(" LIMING", RSA_Tool.map.get(""));
-         System.out.print(sgnCheck(str_list));
-
+        // System.out.print(sgnCheck(str_list));
 
     }
 }

@@ -1,6 +1,6 @@
 package edu.tsinghua.paratrooper.ui;
 
-import java.awt.Image;
+import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.io.IOException;
@@ -55,6 +55,7 @@ public class BoxPanel extends JPanel{
 		box_info.setBounds(0, 0, Const.BOX_PANEL_WIDTH,Const.BOX_INFO_HEIGHT);
 		box_info.setOpaque(false);
 		box_info.setFont(new java.awt.Font("Dialog", 1, 15));
+		box_info.setForeground(Color.WHITE);
 		ImageIcon box_icon = new ImageIcon(this.getClass().getResource(Const.BOX_OPEN_IMAGE));
 		box_icon.setImage(box_icon.getImage().getScaledInstance(Const.BOX_IMAGE_SIZE,Const.BOX_IMAGE_SIZE,Image.SCALE_DEFAULT));
 		jl_box.setIcon(box_icon);

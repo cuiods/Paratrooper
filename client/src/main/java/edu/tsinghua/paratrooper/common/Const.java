@@ -19,14 +19,14 @@ public class Const{
 	public static final String LOGIN_PANEL_IMAGE= "/images/form/form.png";
 
 	//client.ui.FriendPanel
-	public static final int FRIEND_PANEL_WIDTH = 180;
-	public static final int FRIEND_PANEL_HEIGHT = 1000;
+	public static final int FRIEND_PANEL_WIDTH = 200;
+	public static final int FRIEND_PANEL_HEIGHT = 390;
 	
-	public static final int FRIEND_CARD_WIDTH = 170;
+	public static final int FRIEND_CARD_WIDTH = 200;
 	public static final int FRIEND_CARD_HEIGTH = 80;
 	public static final int FRIEND_CARD_IMAGE_SIZE = 60;
 	public static final int FRIEND_CARD_GEZI = 10;
-	public static final int FRIEND_CARD_LABEL_WIDTH = 70;
+	public static final int FRIEND_CARD_LABEL_WIDTH = 100;
 	public static final int FRIEND_CARD_LABEL_HEIGHT = 20;
 	public static final int FRIEND_CARD_LABEL2_HEIGHT = 30;
 	public static final String FRIEND_CARD_IMAGE_SOLDIER = "/images/soldier_head.png";
@@ -35,10 +35,10 @@ public class Const{
 	public static final int FRIEND_CARD_TITLE_SPACE = 5;
 
 	//client.ui.MessagePanel
-	public static final int MESSAGE_PANEL_WIDTH = 200;
+	public static final int MESSAGE_PANEL_WIDTH = 220;
 	public static final int MESSAGE_PANEL_HRIGHT = 200;
 	public static final int MESSAGE_PANEL_GEZI = 10;
-	public static final int MESSAGE_PANEL_BODY_WIDTH = 180;
+	public static final int MESSAGE_PANEL_BODY_WIDTH = 220;
 	public static final int MESSAGE_PANEL_BODY_HEIGHT = 100;
 	public static final int MESSAGE_PANEL_BUTTON_WIDTH = 80;
 	public static final int MESSAGE_PANEL_BUTTIN_HEIGHT = 50;
@@ -47,7 +47,7 @@ public class Const{
 	// client.ui.CanSeePanel
 	public static final int RDDIUS = 250;
 	public static final int PANEL_SIZE = 500;
-	public static final String ME_IMAGE = "/images/soldier.jpg";
+	public static final String SCAN_IMAGE = "/images/radar1.gif";
 	
 	// client.ui.ForestPanel
 	public static final int FOREST_WIDTH = 1200;
@@ -129,7 +129,7 @@ public class Const{
 
 	//thread 
 	public static final int SLEEP_SECONDS = 1000;
-	public static final int MESSAGE_SHOW_SECONDS = 5000;
+	public static final int MESSAGE_SHOW_SECONDS = 5000000;
 
 	//generate rsa
 	public static final int BIT = 512;

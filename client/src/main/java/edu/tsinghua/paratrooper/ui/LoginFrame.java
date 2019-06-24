@@ -44,13 +44,15 @@ public class LoginFrame  {
 		loginFrame.getContentPane().setLayout(new GridLayout(1, 0, 0, 0));
 		loginFrame.setSize(1200,900);
 		loginFrame.setLocationRelativeTo(null);
-		
+        loginFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        loginFrame.setResizable(false);
+
 		JPanel main_panel = new JPanel();
 		loginFrame.add(main_panel);
 		loginFrame.setLayout(null);
 		main_panel.setLayout(null);
 		main_panel.setOpaque(false);
-		main_panel.setBounds(350 ,200,Const.LOGIN_PANEL_WIDTH,Const.LOGIN_PANEL_HEIGHT);
+		main_panel.setBounds(384 ,250,Const.LOGIN_PANEL_WIDTH,Const.LOGIN_PANEL_HEIGHT);
 
 		//main_panel 背景图
 		ImageIcon icon_form = new ImageIcon(this.getClass().getResource(Const.LOGIN_PANEL_IMAGE));
