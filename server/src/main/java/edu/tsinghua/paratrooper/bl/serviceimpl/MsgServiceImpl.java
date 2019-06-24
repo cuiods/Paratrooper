@@ -196,7 +196,9 @@ public class MsgServiceImpl implements MsgService {
         int updateGroup = Math.min(currentEntity.getGroupNum(), comparedEntity.getGroupNum());
         soldierRepository.updateGroupNum(originGroup, updateGroup);
         modify.setGroupNum(updateGroup);
+        captain.setGroupNum(updateGroup);
         soldierRepository.save(modify);
+        soldierRepository.save(captain);
 
         notifyCaptain(updateGroup, captain);
     }
