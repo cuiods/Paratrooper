@@ -12,6 +12,8 @@ public class ErrorCode {
 
     public static final int USER_CANNOT_FIND = 420;
     public static final int USER_WRONG_PASSWORD = 421;
+    public static final int AUTH_SELF = 422;
+    public static final int VOTE_ALREADY_END = 423;
 
     public static final int BOX_CANNOT_FIND = 430;
     public static final int BOX_REPEAT_APPLY = 431;

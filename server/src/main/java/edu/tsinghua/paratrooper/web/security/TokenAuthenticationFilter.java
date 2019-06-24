@@ -17,6 +17,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.Date;
 
 @Component
 public class TokenAuthenticationFilter extends OncePerRequestFilter {
@@ -33,8 +34,7 @@ public class TokenAuthenticationFilter extends OncePerRequestFilter {
     @Resource
     private AuthSecurityService authSecurityService;
 
-    @Resource
-    private UserRepository userRepository;
+    private static final long EXPIRE_TIME = 86400000;
 
     /**
      * Same contract as for {@code doFilter}, but guaranteed to be
@@ -54,9 +54,9 @@ public class TokenAuthenticationFilter extends OncePerRequestFilter {
             if (claims != null && SecurityContextHolder.getContext().getAuthentication() == null) {
                 String name = claims.get("name", String.class);
                 int id = claims.get("id", Integer.class);
-                //TODO: verify user in token and user from database
+                long time = Long.valueOf(claims.get("time", String.class));
                 UserDetails userDetails = authSecurityService.loadUserByUsername(name);
-                if (name != null && userDetails != null) {
+                if (name != null && userDetails != null && (new Date().getTime()-time)<EXPIRE_TIME) {
                     new AppContext(id);
                     UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
                             userDetails, null, userDetails.getAuthorities());

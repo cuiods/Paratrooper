@@ -61,10 +61,12 @@ public class SoldierServiceImpl implements SoldierService {
         //initialize soldiers
         List<TSoldierEntity> soldierEntities = Lists.newArrayList(soldierRepository.findAll());
         Map<Integer, MyInteger> keys = lagrange.generate();
-        int[] intVals = new Random().ints(1, 10).distinct().limit(5).toArray();
         soldierRepository.save(soldierEntities.stream().map(soldierEntity ->
-                soldierEntity.initialize(intVals[soldierEntity.getId()-1], keys.get(soldierEntity.getId()).toString()))
+                soldierEntity.initialize(6-soldierEntity.getId(), keys.get(soldierEntity.getId()).toString()))
                 .collect(Collectors.toList()));
+        TSoldierEntity same = soldierRepository.findOne(3);
+        same.setLevel(5);
+        soldierRepository.save(same);
     }
 
     /**

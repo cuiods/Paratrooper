@@ -89,6 +89,8 @@ public class MsgServiceImpl implements MsgService {
         int currentUserId = AppContext.getCurrentUserId();
         if (currentUserId == 0)
             return new ResultVo<>(ErrorCode.NO_AUTHORITY, "Please Login First",null);
+        if (currentUserId == compareId)
+            return new ResultVo<>(ErrorCode.AUTH_SELF, "You confirmed yourself", null);
         TSoldierEntity currentEntity = soldierRepository.findOne(currentUserId);
         TSoldierEntity comparedEntity = soldierRepository.findOne(compareId);
         if (currentEntity == null || comparedEntity == null) {
@@ -123,6 +125,9 @@ public class MsgServiceImpl implements MsgService {
         TSoldierEntity rejectEntity = soldierRepository.findOne(rejectId);
         if (supportEntity == null || rejectEntity == null) {
             return new ResultVo<>(ErrorCode.WRONG_PARAMETER, "Invalid param", "");
+        }
+        if (supportEntity.getGroupNum() == rejectEntity.getGroupNum()) {
+            return new ResultVo<>(ErrorCode.VOTE_ALREADY_END, "Vote ended", null);
         }
         supportEntity.setVote(supportEntity.getVote()+1);
         int total = soldierRepository.findByGroupNum(supportEntity.getGroupNum()).size()
