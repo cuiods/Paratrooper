@@ -117,7 +117,7 @@ public class BoxPanel extends JPanel{
 			jl_box.setIcon(box_icon);
 		}
 
-		String info = "<html>"+box.getApply()+"<br>" + box.getTotal() + "(已有/所需)</html>";
+		String info = "<html>"+box.getApply()+"/" + box.getTotal() +"<br>" +"(已有/所需)</html>";
 		box_info.setText(info);
 	}
 	/**
@@ -190,15 +190,16 @@ public class BoxPanel extends JPanel{
 						JsonObject object = res_json.get("data").getAsJsonObject();
 						Gson gson = new Gson();
 						box = gson.fromJson(object, Box.class);
+						logInformationPanel.addInfo("<html>申请开箱成功，当前参与开箱人数："+box.getApply()+"共需" + box.getTotal() + "</html>");
 						resetBox(box);
-
 						break;
-					default:
+					default:   //其他开箱失败信息
 						System.out.println( res_json.get("message").getAsString());
+						logInformationPanel.addInfo(res_json.get("message").getAsString());
 				}
 			    
 			}else {
-				System.out.println("不能开箱");
+				logInformationPanel.addInfo("不在开箱范围内");
 			}
 			//todo
 		}

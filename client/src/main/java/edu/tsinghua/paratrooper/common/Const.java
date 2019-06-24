@@ -20,7 +20,7 @@ public class Const{
 
 	//client.ui.FriendPanel
 	public static final int FRIEND_PANEL_WIDTH = 200;
-	public static final int FRIEND_PANEL_HEIGHT = 390;
+	public static final int FRIEND_PANEL_HEIGHT = 600;
 	
 	public static final int FRIEND_CARD_WIDTH = 200;
 	public static final int FRIEND_CARD_HEIGTH = 80;
@@ -34,14 +34,20 @@ public class Const{
 	public static final int FRIEND_CARD_TITLE_HEIGHT = 30;
 	public static final int FRIEND_CARD_TITLE_SPACE = 5;
 
+	public static final String FRIEND_TITLE_FRIEND = "/images/form/team.png";
+	public static final String FRIEND_TITLE_DTRANGER = "/images/form/stranger.png";
+	public static final String FRIEND_TITLE_BOX = "/images/form/box.png";
+
+
 	//client.ui.MessagePanel
 	public static final int MESSAGE_PANEL_WIDTH = 220;
-	public static final int MESSAGE_PANEL_HRIGHT = 200;
+	public static final int MESSAGE_PANEL_HRIGHT = 180;
 	public static final int MESSAGE_PANEL_GEZI = 10;
-	public static final int MESSAGE_PANEL_BODY_WIDTH = 220;
+	public static final int MESSAGE_PANEL_BODY_WIDTH = 180;
 	public static final int MESSAGE_PANEL_BODY_HEIGHT = 100;
 	public static final int MESSAGE_PANEL_BUTTON_WIDTH = 80;
-	public static final int MESSAGE_PANEL_BUTTIN_HEIGHT = 50;
+	public static final int MESSAGE_PANEL_BUTTIN_HEIGHT = 40;
+	public static final String MESSAGE_IMAGE = "/images/form/message.png";
 		
 	
 	// client.ui.CanSeePanel
@@ -60,6 +66,13 @@ public class Const{
     public static final String BACKGROUND_IMAGE_COVER = "/images/background-cover.jpg";
 	public static final int BACKGROUND_WIDTH = 1200;
 	public static final int BACKGROUND_HEIGTH = 900;
+
+	//loginfo
+	public static final int LOG_PANEL_WIDTH = FRIEND_PANEL_WIDTH + 40;
+	public static final int LOG_PANEL_HEIGHT = FOREST_HEIGTH - 400;
+	public static final int LOG_PER_WIRDTH = FRIEND_PANEL_WIDTH + 20;
+	public static final int LOG_PER_HEIGHT = 20;
+	public static final int LOG_PANEL_GEZI  =10;
 	
 	//box
 	public static final String BOX_OPEN_IMAGE = "/images/box2.png";
@@ -92,7 +105,7 @@ public class Const{
 	//client.ui.frame
 	public static final int FRAME_WIDTH = FRIEND_PANEL_WIDTH + FOREST_WIDTH;
 	public static final int FRAME_HRIGHT = FOREST_HEIGTH;
-		
+
 	//net
 	//public static final int CLIENT_PORT = 19017;
 	//public static final int SERVER_PORT = 19018;
@@ -129,7 +142,7 @@ public class Const{
 
 	//thread 
 	public static final int SLEEP_SECONDS = 1000;
-	public static final int MESSAGE_SHOW_SECONDS = 5000000;
+	public static final int MESSAGE_SHOW_SECONDS = 5000;
 
 	//generate rsa
 	public static final int BIT = 512;

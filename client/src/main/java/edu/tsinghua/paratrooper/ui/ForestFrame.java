@@ -172,6 +172,7 @@ public class ForestFrame extends JFrame{
 		jsp.setViewportView(friendListPanel);
 		jsp.setBounds(0, 0, 240, 400);
 		jsp.setBorder(BorderFactory.createRaisedSoftBevelBorder());
+		jsp.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
 		contentpanel.add(jsp);
 
 		//this.add(forestPanel);
@@ -486,9 +487,9 @@ public class ForestFrame extends JFrame{
 			      if(!message_queue.isEmpty()) {
 			    	       Message message= message_queue.poll();
 			    	       boolean flag = messagePanel.resetMessage(message);
-			    	       logInformationPanel.resetMessage(message);
+			    	       //logInformationPanel.resetMessage(message);
 			    	       if(flag){
-                               logInformationPanel.setVisible(false);
+                               //logInformationPanel.setVisible(false);
                                messagePanel.setVisible(true);
                            }
 			    	       try {

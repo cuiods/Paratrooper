@@ -3,6 +3,7 @@ package edu.tsinghua.paratrooper.ui;
 import edu.tsinghua.paratrooper.bean.Box;
 import edu.tsinghua.paratrooper.bean.Soldier;
 import edu.tsinghua.paratrooper.common.Const;
+import sun.jvm.hotspot.debugger.win32.coff.COFFLineNumber;
 
 import javax.swing.*;
 import java.awt.*;
@@ -22,6 +23,8 @@ public class FriendPanel extends JPanel {
     private List<Soldier> strangerList;
     private List<Box> boxList;
 
+    TextBorderUtlis border_gray = new TextBorderUtlis(new Color(169,169,169),2,true);
+    TextBorderUtlis border_green  = new TextBorderUtlis(new Color(137, 181, 38),2,true);
     private int panelCount;
 
     public FriendPanel(List<Soldier> friendList) {
@@ -36,6 +39,7 @@ public class FriendPanel extends JPanel {
         }
 
         this.setLayout(new BorderLayout(0,0));
+        this.setBackground(Color.white);
         this.setSize(Const.FRIEND_PANEL_WIDTH, Const.FRIEND_PANEL_HEIGHT);
         this.setPreferredSize(new Dimension(Const.FRIEND_PANEL_WIDTH, Const.FRIEND_PANEL_HEIGHT));
         this.setVisible(true);
@@ -81,6 +85,7 @@ public class FriendPanel extends JPanel {
         }
 
         LabelPanel boxPanel = new LabelPanel("宝箱");
+        boxPanel.setOpaque(false);
         PanelLabelList.add(boxPanel);
         this.add(boxPanel);
         boxPanel.setBounds(Const.FRIEND_CARD_GEZI,  2*Const.FRIEND_CARD_TITLE_SPACE + 2*Const.FRIEND_CARD_TITLE_HEIGHT + start + panelCount * (Const.FRIEND_CARD_HEIGTH + Const.FRIEND_CARD_GEZI), Const.FRIEND_CARD_WIDTH, Const.FRIEND_CARD_TITLE_HEIGHT);
@@ -94,6 +99,7 @@ public class FriendPanel extends JPanel {
         }
 
         this.setLayout(new BorderLayout(0,0));
+        this.setBackground(Color.white);
         this.setSize(Const.FRIEND_PANEL_WIDTH, Const.FRIEND_PANEL_HEIGHT);
         this.setPreferredSize(new Dimension(Const.FRIEND_PANEL_WIDTH, Const.FRIEND_PANEL_HEIGHT));
         this.setVisible(true);
@@ -123,7 +129,8 @@ public class FriendPanel extends JPanel {
         public void lanch() {
             this.setSize(Const.FRIEND_CARD_WIDTH,Const.FRIEND_CARD_HEIGTH);
             this.setLayout(null);
-            this.setBackground(Color.lightGray);
+            this.setBackground(Color.white);
+            this.setBorder(border_gray);
 
             ImageIcon icon = new ImageIcon(this.getClass().getResource(Const.FRIEND_CARD_IMAGE_SOLDIER));
             if(soldier.isCaptain()==1) {
@@ -135,15 +142,13 @@ public class FriendPanel extends JPanel {
 
             name.setText("<html>士兵"+soldier.getId()+"</html>");
             name.setBounds(Const.FRIEND_CARD_GEZI*2 + Const.FRIEND_CARD_IMAGE_SIZE,Const.FRIEND_CARD_GEZI , Const.FRIEND_CARD_LABEL_WIDTH, Const.FRIEND_CARD_LABEL_HEIGHT);
-//			if(soldier.getPublicKey() == null || soldier.getPublicKey() == "") {
-//				pub_key.setText("<html>还未验证该士兵</html>");
-//			}
+
+
             pub_key.setText("<html>"+soldier.getName()+"</html>");
             pub_key.setBounds(Const.FRIEND_CARD_GEZI*2 + Const.FRIEND_CARD_IMAGE_SIZE,Const.FRIEND_CARD_GEZI*2 + Const.FRIEND_CARD_LABEL_HEIGHT , Const.FRIEND_CARD_LABEL_WIDTH, Const.FRIEND_CARD_LABEL2_HEIGHT);
             this.add(image);
             this.add(name);
             this.add(pub_key);
-            this.setBorder(BorderFactory.createRaisedSoftBevelBorder());
         }
 
         public void reset_info(Soldier soldier){
@@ -193,7 +198,8 @@ public class FriendPanel extends JPanel {
         public void lanch() {
             this.setSize(Const.FRIEND_CARD_WIDTH,Const.FRIEND_CARD_HEIGTH);
             this.setLayout(null);
-            this.setBackground(Color.GRAY);
+            this.setBackground(Color.white);
+            this.setBorder(border_gray);
 
             ImageIcon icon = new ImageIcon(this.getClass().getResource(Const.FRIEND_CARD_IMAGE_SOLDIER));
             if(soldier.isCaptain()==1) {
@@ -206,7 +212,7 @@ public class FriendPanel extends JPanel {
             name.setText("<html>士兵"+soldier.getId()+"</html>");
             name.setBounds(Const.FRIEND_CARD_GEZI*2 + Const.FRIEND_CARD_IMAGE_SIZE,Const.FRIEND_CARD_GEZI , Const.FRIEND_CARD_LABEL_WIDTH, Const.FRIEND_CARD_LABEL_HEIGHT);
 
-            dect.setText("未验证");
+            dect.setText("走近该士兵可进行验证");
             dect.setBounds(Const.FRIEND_CARD_GEZI*2 + Const.FRIEND_CARD_IMAGE_SIZE,Const.FRIEND_CARD_GEZI*2 + Const.FRIEND_CARD_LABEL_HEIGHT , Const.FRIEND_CARD_LABEL_WIDTH, Const.FRIEND_CARD_LABEL2_HEIGHT);
 
             authenBtn.setBounds(Const.FRIEND_CARD_GEZI*2 + Const.FRIEND_CARD_IMAGE_SIZE,Const.FRIEND_CARD_GEZI*2 + Const.FRIEND_CARD_LABEL_HEIGHT , Const.FRIEND_CARD_LABEL_WIDTH, Const.FRIEND_CARD_LABEL2_HEIGHT);
@@ -223,7 +229,6 @@ public class FriendPanel extends JPanel {
             this.add(dect);
             this.add(authenBtn);
 
-            this.setBorder(BorderFactory.createRaisedSoftBevelBorder());
 
         }
 
@@ -235,9 +240,11 @@ public class FriendPanel extends JPanel {
             if (isHalfDistance(me, soldier)){
                 authenBtn.setVisible(true);
                 dect.setVisible(false);
+                this.setBorder(border_green);
             } else {
                 authenBtn.setVisible(false);
                 dect.setVisible(true);
+                this.setBorder(border_gray);
             }
         }
     }
@@ -269,7 +276,9 @@ public class FriendPanel extends JPanel {
         public void lanch() {
             this.setSize(Const.FRIEND_CARD_WIDTH,Const.FRIEND_CARD_HEIGTH);
             this.setLayout(null);
-            this.setBackground(Color.YELLOW);
+            this.setBackground(Color.white);
+            TextBorderUtlis border  = new TextBorderUtlis(new Color(169,169,169),2,true);
+            this.setBorder(border);
 
             ImageIcon icon = new ImageIcon(this.getClass().getResource(Const.FRIEND_CARD_IMAGE_SOLDIER));
             if(soldier.isCaptain()==1) {
@@ -295,7 +304,7 @@ public class FriendPanel extends JPanel {
             this.add(name);
             this.add(authenBtn);
 
-            this.setBorder(BorderFactory.createRaisedSoftBevelBorder());
+            //this.setBorder(BorderFactory.createRaisedSoftBevelBorder());
         }
 
         public void reset_info(Box box){
@@ -319,9 +328,10 @@ public class FriendPanel extends JPanel {
     class LabelPanel extends JPanel{
 
         private JLabel name;
-
+        private String title;
         public LabelPanel(String title) {
-            name = new JLabel(title);
+            name = new JLabel();
+            this.title = title;
             lanch();
         }
 
@@ -329,9 +339,23 @@ public class FriendPanel extends JPanel {
             this.setSize(Const.FRIEND_CARD_WIDTH,Const.FRIEND_CARD_HEIGTH);
             this.setLayout(null);
 
-            name.setBounds(Const.FRIEND_CARD_GEZI, Const.FRIEND_CARD_GEZI, Const.FRIEND_CARD_IMAGE_SIZE, 16);
+            name.setBounds(0, 0, Const.FRIEND_CARD_WIDTH, Const.FRIEND_CARD_TITLE_HEIGHT);
             this.add(name);
-            this.setBorder(BorderFactory.createRaisedSoftBevelBorder());
+
+            if(title.equals("宝箱")){
+                ImageIcon icon = new ImageIcon(this.getClass().getResource(Const.FRIEND_TITLE_BOX));
+                icon.setImage(icon.getImage().getScaledInstance(Const.FRIEND_CARD_WIDTH,Const.FRIEND_CARD_TITLE_HEIGHT,Image.SCALE_DEFAULT));//80和100为大小 可以自由设置
+                name.setIcon(icon);
+            }else if(title.equals("队友")){
+                ImageIcon icon = new ImageIcon(this.getClass().getResource(Const.FRIEND_TITLE_FRIEND));
+                icon.setImage(icon.getImage().getScaledInstance(Const.FRIEND_CARD_WIDTH,Const.FRIEND_CARD_TITLE_HEIGHT,Image.SCALE_DEFAULT));//80和100为大小 可以自由设置
+                name.setIcon(icon);
+            }else if(title.equals("陌生人")){
+                ImageIcon icon = new ImageIcon(this.getClass().getResource(Const.FRIEND_TITLE_DTRANGER));
+                icon.setImage(icon.getImage().getScaledInstance(Const.FRIEND_CARD_WIDTH,Const.FRIEND_CARD_TITLE_HEIGHT,Image.SCALE_DEFAULT));//80和100为大小 可以自由设置
+                name.setIcon(icon);
+            }
+            this.setBorder(null);
         }
     }
 

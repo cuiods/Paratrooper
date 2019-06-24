@@ -6,6 +6,7 @@ import edu.tsinghua.paratrooper.bean.Message;
 import edu.tsinghua.paratrooper.common.Const;
 
 import javax.swing.*;
+import javax.swing.border.TitledBorder;
 import java.awt.*;
 import java.util.*;
 import java.util.List;
@@ -35,21 +36,22 @@ public class LogInformationPanel extends JPanel {
             else if(information.get(i).indexOf("失败") != -1)
                 cur.setForeground(Color.RED);
             cur.setFont(font);
-            cur.setSize(Const.MESSAGE_PANEL_BODY_WIDTH, 0);
+            //cur.setSize(Const.LOG_PER_WIRDTH, 0);
             this.add(cur);
             cur.setVisible(true);
-            cur.setBounds(Const.MESSAGE_PANEL_GEZI, Const.MESSAGE_PANEL_GEZI + pos * 16 + 20,
-                    Const.MESSAGE_PANEL_BODY_WIDTH, 16);
+            cur.setBounds(Const.LOG_PANEL_GEZI, Const.LOG_PANEL_GEZI + pos * Const.LOG_PER_HEIGHT + 20,
+                    Const.LOG_PER_WIRDTH, Const.LOG_PER_HEIGHT);
         }
     }
 
     public void lanch(){
         this.setLayout(null);
+        this.setBackground(Color.white);
         //informationArea.setBounds(Const.MESSAGE_PANEL_GEZI, Const.MESSAGE_PANEL_GEZI + 10,
         //        Const.MESSAGE_PANEL_BODY_WIDTH, Const.MESSAGE_PANEL_BODY_HEIGHT * 2 - 301);
         this.setSize(Const.MESSAGE_PANEL_WIDTH,Const.MESSAGE_PANEL_HRIGHT);
-        this.setBorder(BorderFactory.createTitledBorder("当前信息"));
-        this.setVisible(false);
+        this.setBorder(BorderFactory.createTitledBorder(BorderFactory.createLineBorder(Color.LIGHT_GRAY,2),"信息日志", TitledBorder.CENTER,TitledBorder.TOP,new java.awt.Font("宋体",0,16)));
+        this.setVisible(true);
     }
 
     /**

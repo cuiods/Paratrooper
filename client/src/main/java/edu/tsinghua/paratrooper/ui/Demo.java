@@ -19,6 +19,7 @@ import java.awt.event.MouseEvent;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+import javax.swing.border.LineBorder;
 
 class Demo {
 
@@ -40,20 +41,20 @@ class Demo {
 
 	}
 
-	class MyRoundButton extends JButton {// �Զ���һ���̳�JButton����
-		private Color color, color_initial, color_enter;// ������������Ƴ�ʱ�����ڰ�ť��ɫ�仯��һЩ����
+	class MyRoundButton extends JButton {
+		private Color color, color_initial, color_enter;
 
 		public MyRoundButton(String s, Color c_initial, Color c_enter) {
 			super(s);
 			color = c_initial;
 			color_initial = c_initial;
 			color_enter = c_enter;
-			setPreferredSize(new Dimension(150, 50));// ���尴ť��С
-			setFont(new Font("Dialog", Font.BOLD, 18));// ���尴ť�ϵ��ı����壬��С
-			setForeground(Color.white);// ���尴ť�ϵ��ı���ɫ
-			setFocusPainted(true);// ȥ�� �����ťʱ���ı��ܱߵ�����
-			setContentAreaFilled(false);// ��ť��������Ϊ͸����ֻ������������ʾ�������Լ��������ɫ
-			addMouseListener(new MouseAdapter() {// ͨ����������������������Ƴ�ʱ����ť��ɫ�ı仯
+			setPreferredSize(new Dimension(150, 50));
+			setFont(new Font("Dialog", Font.BOLD, 18));
+			setForeground(Color.white);
+			setFocusPainted(true);
+			setContentAreaFilled(false);
+			addMouseListener(new MouseAdapter() {
 				public void mouseEntered(MouseEvent e) {
 					color = color_enter;
 				}
@@ -91,4 +92,41 @@ class Demo {
 
 		}
 	}
+
+
+/**
+ * @author zhangsukun
+ *   边框设置
+ */
+
+class TextBorderUtlis extends LineBorder
+{
+
+	private static final long serialVersionUID = 1L;
+
+	public TextBorderUtlis(Color color, int thickness, boolean roundedCorners)
+	{
+		super(color, thickness, roundedCorners);
+	}
+
+	public void paintBorder(Component c, Graphics g, int x, int y, int width, int height)
+	{
+
+		RenderingHints rh = new RenderingHints(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+		Color oldColor = g.getColor();
+		Graphics2D g2 = (Graphics2D) g;
+		int i;
+		g2.setRenderingHints(rh);
+		g2.setColor(lineColor);
+		for (i = 0; i < thickness; i++)
+		{
+			if (!roundedCorners){
+				g2.drawRect(x + i, y + i, width - i - i - 1, height - i - i - 1);
+			}else{
+				g2.drawRoundRect(x + i, y + i, width - i - i - 1, height - i - i - 1, 5, 5);}
+		}
+		g2.setColor(oldColor);
+	}
+
+}
 
