@@ -137,7 +137,7 @@ public class Const{
 
 	public static final int MESSAGE_BOX_OPEN = 5001;   //宝箱被成功开启
 
-	public static final int MESSAGE_IDENTIFY_RESULT = 6001;
+	public static final int MESSAGE_IDENTIFY_RESULT = 6001;   //通知两个
 	public static final int MESSAGE_CHOOSE_CAPTAIN_RESULT = 6002;
 
 	//thread 

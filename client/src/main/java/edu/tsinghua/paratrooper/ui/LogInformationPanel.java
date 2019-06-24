@@ -19,9 +19,7 @@ public class LogInformationPanel extends JPanel {
 
     public LogInformationPanel(){
         information = new ArrayList<>();
-        addInfo("正在连接...");
-        addInfo("连接成功");
-        addInfo("请开始探索");
+        addInfo("登录成功，请开始探索");
         lanch();
     }
 
@@ -35,7 +33,7 @@ public class LogInformationPanel extends JPanel {
             if(information.get(i).indexOf("成功") != -1)
                 cur.setForeground(new Color(137, 181, 38));
             else if(information.get(i).indexOf("失败") != -1)
-                cur.setForeground(Color.RED);
+                cur.setForeground(new Color(165,42,42));
             cur.setFont(font);
             int height = Const.LOG_PER_HEIGHT;
 
@@ -48,7 +46,6 @@ public class LogInformationPanel extends JPanel {
             }
             this.add(cur);
             cur.setVisible(true);
-
             cur.setSize(Const.LOG_PER_WIRDTH, height);
         }
     }

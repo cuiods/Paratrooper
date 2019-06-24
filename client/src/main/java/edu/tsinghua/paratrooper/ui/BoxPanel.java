@@ -81,21 +81,25 @@ public class BoxPanel extends JPanel{
 		this.box = box;
 		this.x = x;
 		this.y = y;
+		if(box.getApply() > cur_box_apply && box.getStatus()!= 1){   //别新的队友点击开箱了
+			logInformationPanel.addInfo("<html>宝箱信息更新："+box.getApply()+"/" + box.getTotal() + "(已参与/所需)</html>");
+			cur_box_apply = box.getApply();
+		}
+
+		String info = "";
 		if(box.getStatus() == 1) {
 			ImageIcon box_icon = new ImageIcon(this.getClass().getResource(Const.BOX_OPEN_IMAGE));
 			box_icon.setImage(box_icon.getImage().getScaledInstance(Const.BOX_IMAGE_SIZE,Const.BOX_IMAGE_SIZE,Image.SCALE_DEFAULT));
 			jl_box.setIcon(box_icon);
+			info = "<html>该宝箱已被开启</html>";
+			logInformationPanel.addInfo("<html>该宝箱已被开启</html>");
 		}else{
 			ImageIcon box_icon = new ImageIcon(this.getClass().getResource(Const.BOX_CLOSE_IMAGE));
 			box_icon.setImage(box_icon.getImage().getScaledInstance(Const.BOX_IMAGE_SIZE,Const.BOX_IMAGE_SIZE,Image.SCALE_DEFAULT));
 			jl_box.setIcon(box_icon);
+			info = "<html>"+box.getApply()+"/" + box.getTotal() + "<br>(已参与/所需)</html>";
 		}
 		this.setBounds(box.getPoint_x() - Const.BOX_PANEL_WIDTH/2, box.getPoint_y() - Const.BOX_PANEL_HEIGHT/2, Const.BOX_PANEL_WIDTH, Const.BOX_PANEL_HEIGHT);
-		String info = "<html>"+box.getApply()+"<br>" + box.getTotal() + "(已有/所需)</html>";
-		if(box.getApply() > cur_box_apply){
-			logInformationPanel.addInfo(box.getApply()+"/" + box.getTotal() + "(已参与队友/所需)");
-			cur_box_apply = box.getApply();
-		}
 
 		box_info.setText(info);
 		IsshowBox(x,y);

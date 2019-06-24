@@ -183,12 +183,12 @@ public class MessagePanel extends JPanel{
 
                         String req = TransTools.objectToJson(req_map);
                         System.out.println("发起回执验证消息："+req);
-                        String str  = "经过验证，士兵"+ sodier_id +"为合法用户，现对其发起回执验证，请等待结果。";
+                        String str  = "<html>经过验证，士兵"+ sodier_id +"为合法用户，现对其发起回执验证，请等待结果。</html>";
                         logInformationPanel.addInfo(str);
                         HttpHelper.asyncPost(Const.MESG_SEND,token,req,null);
 
                     }else{
-                        String str  = "经过验证，士兵"+ sodier_id +"为非法用户。";
+                        String str  = "<html>经过验证，士兵"+ sodier_id +"为非法用户。</html>";
                         logInformationPanel.addInfo(str);
                     }
                     break;
@@ -201,7 +201,7 @@ public class MessagePanel extends JPanel{
                     System.out.println("发起回执验证消息："+req);
                     HttpHelper.asyncPost(Const.VOTE,token,req,null);
 
-                    String str = "您选择了：" + can_left_name;
+                    String str = "<html>您选择了：" + can_left_name + "为小队的新队长</html>";
                     logInformationPanel.addInfo(str);
                     break;
             }
@@ -227,7 +227,7 @@ public class MessagePanel extends JPanel{
                 System.out.println("发起回执验证消息："+req);
                 HttpHelper.asyncPost(Const.VOTE,token,req,null);
 
-                String str = "您选择了：" + can_right_name;
+                String str = "<html>您选择了：" + can_left_name + "为小队的新队长</html>";
                 logInformationPanel.addInfo(str);
             }
             isReply = true;

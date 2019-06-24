@@ -381,6 +381,7 @@ public class ForestFrame extends JFrame{
 
 		String req = TransTools.objectToJson(req_map);
 		System.out.println("发起竞选队长消息："+req);
+		logInformationPanel.addInfo("<html>您现在自动与士兵"+ other_captain.getId() + "竞选队长</html>");
 		HttpHelper.asyncPost(Const.MESG_SEND,map.get("token"),req,this);
 	}
 
@@ -397,8 +398,6 @@ public class ForestFrame extends JFrame{
 		String P = Millionaire_Tool.getP();
 
 		Map<String,String> message_map = new HashMap();
-		//message_map.put("num1",nums[0]);
-		//message_map.put("num2",nums[1]);
 
 		String nums_str = "";
 		for(int i = 0 ; i< nums.length;i++){
@@ -418,6 +417,7 @@ public class ForestFrame extends JFrame{
 
 		String req = TransTools.objectToJson(req_map);
 		System.out.println("回复竞选队长消息："+req);
+        logInformationPanel.addInfo("<html>您现在自动与士兵"+ from_id + "竞选队长</html>");
 		HttpHelper.asyncPost(Const.MESG_SEND,map.get("token"),req,this);
 	}
 
@@ -433,10 +433,18 @@ public class ForestFrame extends JFrame{
 
 		Map<String,Object> req_map = new HashMap<>();
 		req_map.put("compareId",from_id);
-        if(from_id * me.getId() == 3)
-			req_map.put("result",0);
-        else
-			req_map.put("result",flag ? 1:-1);
+        if(from_id * me.getId() == 3) {
+            req_map.put("result", 0);
+            logInformationPanel.addInfo("<html>您与"+ from_id+ "的军衔相同，现在将发起电子投票</html>");
+        }
+        else {
+            req_map.put("result", flag ? 1 : -1);
+            String str;
+            if(flag) str ="<html>队长竞选结束，您现在是新队长</html?";
+            else  str = "<html>队长竞选结束，"+from_id + "现在是新队长</html>";
+            logInformationPanel.addInfo(str);
+        }
+
 
 		String req = TransTools.objectToJson(req_map);
 		System.out.println("告诉服务器竞选队长的最终消息消息："+req);
@@ -584,6 +592,7 @@ public class ForestFrame extends JFrame{
 				break;
 			}
 		}
+		System.out.println("pub_key:" +pub_key);
 		String result = "";
 		if(RSA_Tool.sgnCheck(strlist,pub_key)) {   //回执验证成功
 			//告诉server
@@ -599,7 +608,7 @@ public class ForestFrame extends JFrame{
 			Message message = new Message (Const.MESSAGE_OPERATION_FIVE,map);
 			addMessageArrive(message);
 
-			result ="回执验证成功，士兵"+from_id +"已经是您的队友。";
+			result ="<html>回执验证成功，士兵"+from_id +"已经是您的队友。</html>";
 
 		}else{          //回执验证失败
 			result ="回执验证失败";
