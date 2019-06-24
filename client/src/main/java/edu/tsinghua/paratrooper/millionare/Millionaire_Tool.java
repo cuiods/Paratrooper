@@ -19,6 +19,9 @@ public class Millionaire_Tool {
 	 * @return
 	 */
 	public static String getFirstInfo(int i, String Pkb, String N) {
+		Pkb = Pkb.toUpperCase();
+		N = N.toUpperCase();
+		System.out.println(i + ", " + Pkb + ", " + N);
 		X = tools.getPrime(50);
 		String code = tools.encrypt(X.toHexadecimal(), new myNumber(Pkb), new myNumber(N));
 		code = new myNumber(code).sub(new myNumber(i)).toHexadecimal();
@@ -35,6 +38,9 @@ public class Millionaire_Tool {
 	 * @return
 	 */
 	public static String[] getSecondInfo(String code, int j, String Skb, String N) {
+		Skb = Skb.toUpperCase();
+		N = N.toUpperCase();
+		System.out.println(code + ", " + j + ", " + Skb + ", " + N);
 		myNumber[] nums = new myNumber[high - low + 1];
 		for(int i = 0; i + low <= high; i++) {
 			String codeAddI = new myNumber(code).add(new myNumber(i + low)).toHexadecimal();
@@ -71,16 +77,21 @@ public class Millionaire_Tool {
 	 * @return true表示自己（调用本方法的人）军衔大，false相反
 	 */
 	public static boolean  getThirdInfo(String[] nums_str, int i, String P) {
+		for(String str : nums_str){
+			System.out.print(str + ", ");
+		}
+		System.out.println(i + ", " + P);
+		System.out.println(X);
 		String num = new myNumber(X).mod(new myNumber(P)).toHexadecimal();
 		return num.compareTo(nums_str[i - low]) != 0;
 	}
 	
 	public static void main(String[] args) {
-		//Millionaire a = new Millionaire(1, 10);
-		int rankA = 5;//a的军衔是5
-		
-		//Millionaire b = new Millionaire(1, 10);
-		int rankB = 3;//b的军衔是3
+		Millionaire_Tool a = new Millionaire_Tool();
+		int rankA = 2;//a的军衔是5
+
+		Millionaire_Tool b = new Millionaire_Tool();
+		int rankB = 5;//b的军衔是3
 		String Pkb = "10001";
 		String Skb = "A6DD54D8EC5457CB3C3D63EF1C8388C245A58FD8A1B7CA54CEEF31CBD723775CC2A8FE93BB746F00F6FA91D95D451E9AD200607779103A3882FD42EE5423091";
 		String N = "CADE36D54FDFF44BE3A9306032B1A82BC260476A9F65CF3895EF88AE6D0D8BF1B4E3849F6445FA8FB37FA40D0CA8BD51A851A4E34716FAB3D93B4EA6FBA14D7";
@@ -88,12 +99,12 @@ public class Millionaire_Tool {
 		//Map<String,String> map_a = RSA_Tool.generateKeys();
 
 		//第一次通信
-		//String code = a.getFirstInfo(rankA, Pkb, N);   //a要向b通信，用b的公钥加密给b，
+		String code = a.getFirstInfo(rankA, Pkb, N);   //a要向b通信，用b的公钥加密给b，
 		//第二次通信
-		//String[] nums = b.getSecondInfo(code, rankB, Skb, N);  //b接收该code，用自己的私钥解密，得到nums[] ,将nums[] ,P 传给a
-		//String P = b.getP();
+		String[] nums = b.getSecondInfo(code, rankB, Skb, N);  //b接收该code，用自己的私钥解密，得到nums[] ,将nums[] ,P 传给a
+		String P = b.getP();
 		//第三次通信
-		//boolean flag = a.getThirdInfo(nums, rankA, P);    //a用nums，p，自己的rank 得到高or低？
-		//System.out.println(rankA + " vs " + rankB + " : " + flag);
+		boolean flag = a.getThirdInfo(nums, rankA, P);    //a用nums，p，自己的rank 得到高or低？
+		System.out.println(rankA + " vs " + rankB + " : " + flag);
 	}
 }
