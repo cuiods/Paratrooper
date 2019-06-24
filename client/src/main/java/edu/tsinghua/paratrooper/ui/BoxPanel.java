@@ -86,6 +86,7 @@ public class BoxPanel extends JPanel{
 		}
 		String info = "";
 		if(box.getApply() > cur_box_apply && box.getStatus()== 1) {//宝箱被开启
+			cur_box_apply = box.getApply();
 			info = "<html>该宝箱已被开启</html>";
 			logInformationPanel.addInfo("<html>该宝箱已被开启</html>");
 		}
