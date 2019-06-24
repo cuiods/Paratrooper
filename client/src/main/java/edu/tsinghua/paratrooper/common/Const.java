@@ -146,7 +146,7 @@ public class Const{
 
 	//generate rsa
 	public static final int BIT = 512;
-	public static final String CIPER = "975zsk";
+	public static final String CIPER = "975";
 	public static final String CIPER_REPLY ="975zsk_reply";
 	
 	

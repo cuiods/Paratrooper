@@ -53,13 +53,12 @@ public class RSASignature {
     /**
      * Decryption
      * @param message message
-     * @param e e in DECIMAL representation
      * @param n n in DECIMAL representation
      * @return origin message
      */
-    public String decryption(String message, String e, String n) {
+    public String decryption(String message, String n) {
         MyInteger M = new MyInteger(message);
-        MyInteger E = new MyInteger(e);
+        MyInteger E = new MyInteger("65537");
         MyInteger N = new MyInteger(n);
 
         return SpeedUp.speedUpMod(M,E,N).toString();

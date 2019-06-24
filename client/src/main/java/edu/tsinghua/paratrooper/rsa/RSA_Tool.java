@@ -55,8 +55,7 @@ public class RSA_Tool {
      * @return
      */
     private static String decodeRSA(String text, String pub_key) {   //解密
-        return signature.decryption(text, StringConvert.convert(pub_key, 16, 10),
-                StringConvert.convert(map.get("N"), 16, 10));
+        return signature.decryption(text, StringConvert.convert(pub_key, 16, 10));
     }
 
     /**
@@ -68,6 +67,12 @@ public class RSA_Tool {
         // String enHS = encodeRSA(md5.encode(text),pri_key);
         // String[] val = {enHS, text};
         String[] val = {encodeRSA(text,pri_key), text};
+        System.out.print("01:");
+        System.out.println(val[0]);
+
+
+        System.out.print("02:");
+        System.out.println(val[1]);
         return val;
     }
 
@@ -85,6 +90,18 @@ public class RSA_Tool {
 
         String deHS = decodeRSA(sgn[0],pub_key);
         String hs   = sgn[1];
+
+
+        System.out.print("01:");
+        System.out.println(sgn[0]);
+
+
+        System.out.print("02:");
+        System.out.println(sgn[1]);
+
+
+        System.out.print("de:");
+        System.out.println(deHS);
 
 
         if (deHS.equals(hs)) {
