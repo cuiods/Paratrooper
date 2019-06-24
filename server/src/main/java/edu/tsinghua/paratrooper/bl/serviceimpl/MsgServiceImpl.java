@@ -194,11 +194,11 @@ public class MsgServiceImpl implements MsgService {
         //merge group
         int originGroup = Math.max(currentEntity.getGroupNum(), comparedEntity.getGroupNum());
         int updateGroup = Math.min(currentEntity.getGroupNum(), comparedEntity.getGroupNum());
-        soldierRepository.updateGroupNum(originGroup, updateGroup);
-        modify.setGroupNum(updateGroup);
-        captain.setGroupNum(updateGroup);
         soldierRepository.save(modify);
-        soldierRepository.save(captain);
+        Lists.newArrayList(soldierRepository.findByGroupNum(originGroup)).forEach(tSoldierEntity -> {
+            tSoldierEntity.setGroupNum(updateGroup);
+            soldierRepository.save(tSoldierEntity);
+        });
 
         notifyCaptain(updateGroup, captain);
     }
