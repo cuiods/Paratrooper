@@ -154,8 +154,8 @@ public class ForestFrame extends JFrame{
 		canseePanel.addMouseListener(new GainFoucsListener());
 		
 		//消息列表
-		messagePanel.setBounds(Const.FOREST_WIDTH+10, 640, Const.MESSAGE_PANEL_WIDTH, Const.MESSAGE_PANEL_HRIGHT);
-		logInformationPanel.setBounds(Const.FOREST_WIDTH+10, 420, Const.MESSAGE_PANEL_WIDTH, Const.MESSAGE_PANEL_HRIGHT);
+		messagePanel.setBounds(0, 0, Const.MESSAGE_PANEL_WIDTH, Const.MESSAGE_PANEL_HRIGHT);
+		logInformationPanel.setBounds(Const.FOREST_WIDTH, 400, Const.LOG_PANEL_WIDTH, Const.LOG_PANEL_HEIGHT);
 		this.add(messagePanel);
 		this.add(logInformationPanel);
 		messagePanel.setVisible(false);
@@ -408,7 +408,7 @@ public class ForestFrame extends JFrame{
 		nums_str = nums_str.substring(0,nums_str.length()-1);
 		message_map.put("nums_list",nums_str);
 		message_map.put("P",P);
-		message_map.put("from_id",String.valueOf(me.getLevel()));
+		message_map.put("from_id",String.valueOf(me.getId()));
 		String message_map_str = TransTools.objectToJson(message_map);
 
 		Map<String,Object> req_map = new HashMap<>();

@@ -15,7 +15,7 @@ public class LogInformationPanel extends JPanel {
     private List<JLabel> infoLogs;
     private List<String> information;
     private Message message;
-    private Font font = new Font("宋体", Font.BOLD, 12);
+    private Font font = new Font("Dialog", Font.BOLD, 15);
 
     public LogInformationPanel(){
         information = new ArrayList<>();
@@ -29,18 +29,27 @@ public class LogInformationPanel extends JPanel {
         information.add(0, str);
         this.removeAll();
         int pos = 0;
-        for(int i = Math.min(information.size() - 1, 5); i > -1; i--, pos++){
+        int ext = 0;
+        for(int i = Math.min(information.size() - 1, 15); i > -1; i--, pos++){
             JLabel cur = new JLabel(information.get(i));
             if(information.get(i).indexOf("成功") != -1)
-                cur.setForeground(Color.GREEN);
+                cur.setForeground(new Color(137, 181, 38));
             else if(information.get(i).indexOf("失败") != -1)
                 cur.setForeground(Color.RED);
             cur.setFont(font);
-            //cur.setSize(Const.LOG_PER_WIRDTH, 0);
+            int height = Const.LOG_PER_HEIGHT;
+
+            cur.setLocation(Const.LOG_PANEL_GEZI, Const.LOG_PANEL_GEZI + (pos+ext) * Const.LOG_PER_HEIGHT + 20);
+
+            System.out.println(information.get(i) + "   length:"+information.get(i).length() + " "+pos + " "+ ext);
+            if(information.get(i).length()>14){
+                height+= Const.LOG_PER_HEIGHT;
+                ext= ext+1;
+            }
             this.add(cur);
             cur.setVisible(true);
-            cur.setBounds(Const.LOG_PANEL_GEZI, Const.LOG_PANEL_GEZI + pos * Const.LOG_PER_HEIGHT + 20,
-                    Const.LOG_PER_WIRDTH, Const.LOG_PER_HEIGHT);
+
+            cur.setSize(Const.LOG_PER_WIRDTH, height);
         }
     }
 
@@ -88,5 +97,73 @@ public class LogInformationPanel extends JPanel {
                 addInfo(str);
                 break;
         }
+    }
+
+    /**中文字符 */
+    private int chCharacter = 0;
+
+    /**英文字符 */
+    private int enCharacter = 0;
+
+    /**空格 */
+    private int spaceCharacter = 0;
+
+    /**数字 */
+    private int numberCharacter = 0;
+
+    /**其他字符 */
+    private int otherCharacter = 0;
+
+    /***
+     * 统计字符串中中文，英文，数字，空格等字符个数
+     * @param str 需要统计的字符串
+     */
+    public int count(String str) {
+        if (null == str || str.equals("")) {
+            System.out.println("字符串为空");
+            return 0;
+        }
+
+        for (int i = 0; i < str.length(); i++) {
+            char tmp = str.charAt(i);
+            if ((tmp >= 'A' && tmp <= 'Z') || (tmp >= 'a' && tmp <= 'z')) {
+                enCharacter ++;
+            } else if ((tmp >= '0') && (tmp <= '9')) {
+                numberCharacter ++;
+            } else if (tmp ==' ') {
+                spaceCharacter ++;
+            } else if (isChinese(tmp)) {
+                chCharacter ++;
+            } else {
+                otherCharacter ++;
+            }
+        }
+        System.out.println("中文字符有:" + chCharacter);
+        System.out.println("英文字符有:" + enCharacter);
+        System.out.println("数字有:" + numberCharacter);
+        System.out.println("空格有:" + spaceCharacter);
+        System.out.println("其他字符有:" + otherCharacter);
+
+        return chCharacter + enCharacter + numberCharacter;
+    }
+
+    /***
+     * 判断字符是否为中文
+     * @param ch 需要判断的字符
+     * @return 中文返回true，非中文返回false
+     */
+    private boolean isChinese(char ch) {
+        //获取此字符的UniCodeBlock
+        Character.UnicodeBlock ub = Character.UnicodeBlock.of(ch);
+        //  GENERAL_PUNCTUATION 判断中文的“号
+        //  CJK_SYMBOLS_AND_PUNCTUATION 判断中文的。号
+        //  HALFWIDTH_AND_FULLWIDTH_FORMS 判断中文的，号
+        if (ub == Character.UnicodeBlock.CJK_UNIFIED_IDEOGRAPHS || ub == Character.UnicodeBlock.CJK_COMPATIBILITY_IDEOGRAPHS
+                || ub == Character.UnicodeBlock.CJK_UNIFIED_IDEOGRAPHS_EXTENSION_A || ub == Character.UnicodeBlock.CJK_UNIFIED_IDEOGRAPHS_EXTENSION_B
+                || ub == Character.UnicodeBlock.CJK_SYMBOLS_AND_PUNCTUATION || ub == Character.UnicodeBlock.HALFWIDTH_AND_FULLWIDTH_FORMS
+                || ub == Character.UnicodeBlock.GENERAL_PUNCTUATION) {
+            return true;
+        }
+        return false;
     }
 }
