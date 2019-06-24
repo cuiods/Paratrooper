@@ -47,7 +47,7 @@ public class Const{
 	// client.ui.CanSeePanel
 	public static final int RDDIUS = 250;
 	public static final int PANEL_SIZE = 500;
-	public static final String ME_IMAGE = "/images/soldier.jpg";
+	public static final String SCAN_IMAGE = "/images/radar1.gif";
 	
 	// client.ui.ForestPanel
 	public static final int FOREST_WIDTH = 1200;

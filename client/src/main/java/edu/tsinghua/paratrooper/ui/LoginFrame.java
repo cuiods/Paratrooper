@@ -44,7 +44,7 @@ public class LoginFrame  {
 		loginFrame.getContentPane().setLayout(new GridLayout(1, 0, 0, 0));
 		loginFrame.setSize(1200,900);
 		loginFrame.setLocationRelativeTo(null);
-		
+		loginFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		JPanel main_panel = new JPanel();
 		loginFrame.add(main_panel);
 		loginFrame.setLayout(null);

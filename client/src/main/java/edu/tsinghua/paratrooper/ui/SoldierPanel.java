@@ -54,6 +54,7 @@ public class SoldierPanel extends JPanel{
 		name = new JLabel(this.soldier.getName());
 		name.setBounds(0, 0, Const.SOLDIER_WIDTH, Const.SOLDIER_NAME_HEIGHT_SIZE);
 		name.setFont(new java.awt.Font("Dialog", 1, 15));
+		name.setForeground(Color.WHITE);
 		name.setHorizontalAlignment(SwingConstants.CENTER);
 		panel_info.add(name);
 		

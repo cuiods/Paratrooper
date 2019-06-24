@@ -330,7 +330,7 @@ public class ForestFrame extends JFrame{
 			if(judgePoint(point_x,point_y)) {
 		         resetPoint(point_x,point_y,type);
 		         //发送我的坐标信息给服务端
-				  updateMyPointToServer();
+				  //updateMyPointToServer();
 			}
 			
 		}
@@ -389,7 +389,7 @@ public class ForestFrame extends JFrame{
 	 */
 	public void responseCaptain(String level_code,int from_id){
 
-		String[] nums = Millionaire_Tool.getSecondInfo(level_code,me.getId(),map.get("D"),map.get("E")); //me.getId() 应该是一个军衔
+		String[] nums = Millionaire_Tool.getSecondInfo(level_code,me.getLevel(),map.get("D"),map.get("E")); //me.getId() 应该是一个军衔
 		for(String str : nums)
 			System.out.println("responseCaptain : " + str);
 		String P = Millionaire_Tool.getP();
@@ -406,7 +406,7 @@ public class ForestFrame extends JFrame{
 		nums_str = nums_str.substring(0,nums_str.length()-1);
 		message_map.put("nums_list",nums_str);
 		message_map.put("P",P);
-		message_map.put("from_id",String.valueOf(me.getId()));
+		message_map.put("from_id",String.valueOf(me.getLevel()));
 		String message_map_str = TransTools.objectToJson(message_map);
 
 		Map<String,Object> req_map = new HashMap<>();
@@ -427,14 +427,14 @@ public class ForestFrame extends JFrame{
 	public void finalResultCaptain(String[] nums,String P,int from_id){
 		for(String str : nums)
 			System.out.println("finalResultCaptain : " + str);
-		boolean flag = Millionaire_Tool.getThirdInfo(nums, me.getId(), P);  //me.getId() 应该是一个军衔
+		boolean flag = Millionaire_Tool.getThirdInfo(nums, me.getLevel(), P);  //me.getId() 应该是一个军衔
 
 		Map<String,Object> req_map = new HashMap<>();
 		req_map.put("compareId",from_id);
         if(from_id * me.getId() == 3)
 			req_map.put("result",0);
         else
-			req_map.put("result",flag ? 1:0);
+			req_map.put("result",flag ? 1:-1);
 
 		String req = TransTools.objectToJson(req_map);
 		System.out.println("告诉服务器竞选队长的最终消息消息："+req);
