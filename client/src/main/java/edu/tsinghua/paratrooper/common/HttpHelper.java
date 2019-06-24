@@ -377,6 +377,7 @@ public class HttpHelper {
 			map.put("name", data.get("name").getAsString());
 			Message message = new Message(code,map);
 			frame.addMessageArrive(message);
+			//frame.getLogInformationPanel().addInfo("<html>经过电子投票"+object.get("id").getAsString()+"被选为新的队长。</html>");
 			return ;
 		}
 	}

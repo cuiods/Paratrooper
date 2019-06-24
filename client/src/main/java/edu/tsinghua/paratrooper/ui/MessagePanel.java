@@ -91,6 +91,8 @@ public class MessagePanel extends JPanel{
         this.message = message;
         int code = message.getCode();
         String str ="";
+        ok.setVisible(true);
+        cancel.setVisible(true);
         ok.setText("确认");
         cancel.setText("取消");
         System.out.println("48785y7328t6745");
@@ -123,6 +125,13 @@ public class MessagePanel extends JPanel{
                 body.setText(str);
                 ok.setText(can_left_name);
                 cancel.setText(can_right_name);
+                break;
+            case Const.MESSAGE_CHOOSE_CAPTAIN_RESULT :
+                 String name = message.getData().get("name").toString();
+                 str = "<html>经过电子投票"+name+"被选为新的队长。</html>";
+                body.setText(str);
+                ok.setVisible(false);
+                cancel.setVisible(false);
                 break;
             default:
                 return false;
@@ -227,7 +236,7 @@ public class MessagePanel extends JPanel{
                 System.out.println("发起回执验证消息："+req);
                 HttpHelper.asyncPost(Const.VOTE,token,req,null);
 
-                String str = "<html>您选择了：" + can_left_name + "为小队的新队长</html>";
+                String str = "<html>您选择了：" + can_right_name + "为小队的新队长</html>";
                 logInformationPanel.addInfo(str);
             }
             isReply = true;
