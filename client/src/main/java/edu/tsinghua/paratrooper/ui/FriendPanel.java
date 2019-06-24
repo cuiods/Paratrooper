@@ -3,7 +3,6 @@ package edu.tsinghua.paratrooper.ui;
 import edu.tsinghua.paratrooper.bean.Box;
 import edu.tsinghua.paratrooper.bean.Soldier;
 import edu.tsinghua.paratrooper.common.Const;
-import sun.jvm.hotspot.debugger.win32.coff.COFFLineNumber;
 
 import javax.swing.*;
 import java.awt.*;

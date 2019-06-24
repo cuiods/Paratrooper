@@ -1,11 +1,9 @@
 package edu.tsinghua.paratrooper.web.controller;
 
 import edu.tsinghua.paratrooper.bl.service.SoldierService;
-import edu.tsinghua.paratrooper.bl.vo.AuthVo;
 import edu.tsinghua.paratrooper.bl.vo.PublicKeyVo;
 import edu.tsinghua.paratrooper.bl.vo.ResultVo;
 import edu.tsinghua.paratrooper.bl.vo.StatusVo;
-import edu.tsinghua.paratrooper.util.constant.ErrorCode;
 import edu.tsinghua.paratrooper.web.json.LocationJson;
 import edu.tsinghua.paratrooper.web.json.RegisterJson;
 import io.swagger.annotations.ApiOperation;
@@ -38,12 +36,6 @@ public class SoldierController {
     @ApiOperation(value = "汇报状态并获取消息", response = StatusVo.class, notes = "返回最新消息和队友信息")
     public ResultVo<StatusVo> updateStatus(@RequestBody LocationJson locationJson) {
         return soldierService.updateStatus(locationJson.getX(), locationJson.getY());
-    }
-
-    @GetMapping(value = "/updateStatus", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    @ApiOperation(value = "测试接口", response = String.class, notes = "测试接口，请勿调用")
-    public ResultVo<String> updateTest() {
-        return new ResultVo<>(ErrorCode.SUCCESS, "ok", "message");
     }
 
 }

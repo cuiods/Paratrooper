@@ -68,6 +68,8 @@ public class MsgServiceImpl implements MsgService {
         int currentUserId = AppContext.getCurrentUserId();
         if (currentUserId == 0)
             return new ResultVo<>(ErrorCode.NO_AUTHORITY, "请先登录",null);
+        if (currentUserId == confirmedId)
+            return new ResultVo<>(ErrorCode.AUTH_SELF, "无需确认自己的身份", null);
         TSoldierEntity currentEntity = soldierRepository.findOne(currentUserId);
         TSoldierEntity confirmedEntity = soldierRepository.findOne(confirmedId);
         if (currentEntity == null || confirmedEntity == null) {
@@ -89,8 +91,6 @@ public class MsgServiceImpl implements MsgService {
         int currentUserId = AppContext.getCurrentUserId();
         if (currentUserId == 0)
             return new ResultVo<>(ErrorCode.NO_AUTHORITY, "请先登录",null);
-        if (currentUserId == compareId)
-            return new ResultVo<>(ErrorCode.AUTH_SELF, "无需确认自己的身份", null);
         TSoldierEntity currentEntity = soldierRepository.findOne(currentUserId);
         TSoldierEntity comparedEntity = soldierRepository.findOne(compareId);
         if (currentEntity == null || comparedEntity == null) {
