@@ -14,7 +14,7 @@ public class LogInformationPanel extends JPanel {
     private List<JLabel> infoLogs;
     private List<String> information;
     private Message message;
-    private Font font = new Font("宋体", Font.BOLD, 15);
+    private Font font = new Font("宋体", Font.BOLD, 12);
 
     public LogInformationPanel(){
         information = new ArrayList<>();

@@ -153,8 +153,8 @@ public class ForestFrame extends JFrame{
 		canseePanel.addMouseListener(new GainFoucsListener());
 		
 		//消息列表
-		messagePanel.setBounds(Const.FOREST_WIDTH, 600 +10, Const.MESSAGE_PANEL_WIDTH, Const.MESSAGE_PANEL_HRIGHT);
-		logInformationPanel.setBounds(Const.FOREST_WIDTH, 600 +10, Const.MESSAGE_PANEL_WIDTH, Const.MESSAGE_PANEL_HRIGHT);
+		messagePanel.setBounds(Const.FOREST_WIDTH+10, 640, Const.MESSAGE_PANEL_WIDTH, Const.MESSAGE_PANEL_HRIGHT);
+		logInformationPanel.setBounds(Const.FOREST_WIDTH+10, 420, Const.MESSAGE_PANEL_WIDTH, Const.MESSAGE_PANEL_HRIGHT);
 		this.add(messagePanel);
 		this.add(logInformationPanel);
 		messagePanel.setVisible(false);
@@ -164,13 +164,14 @@ public class ForestFrame extends JFrame{
 		JPanel contentpanel = new JPanel();
 		contentpanel.setBorder(BorderFactory.createRaisedSoftBevelBorder());
 		this.add(contentpanel);
-		contentpanel.setBounds(Const.FOREST_WIDTH,0,240,600);
+		contentpanel.setBounds(Const.FOREST_WIDTH,0,240,400);
 		contentpanel.setLayout(null);
 		
 		JScrollPane  jsp = new JScrollPane();
 		jsp.setViewportView(friendListPanel);
-		jsp.setBounds(0, 0, 210, 600);
+		jsp.setBounds(0, 0, 240, 400);
 		jsp.setBorder(BorderFactory.createRaisedSoftBevelBorder());
+		jsp.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
 		contentpanel.add(jsp);
 
 		//this.add(forestPanel);
