@@ -104,7 +104,6 @@ public class FriendPanel extends JPanel {
         this.setVisible(true);
     }
 
-
     /**
      * 内部类，每个好友列表的卡片
      * @author zhangsukun
@@ -211,7 +210,7 @@ public class FriendPanel extends JPanel {
             name.setText("<html>士兵"+soldier.getId()+"</html>");
             name.setBounds(Const.FRIEND_CARD_GEZI*2 + Const.FRIEND_CARD_IMAGE_SIZE,Const.FRIEND_CARD_GEZI , Const.FRIEND_CARD_LABEL_WIDTH, Const.FRIEND_CARD_LABEL_HEIGHT);
 
-            dect.setText("走近该士兵可进行验证");
+            dect.setText("不在验证范围内");
             dect.setBounds(Const.FRIEND_CARD_GEZI*2 + Const.FRIEND_CARD_IMAGE_SIZE,Const.FRIEND_CARD_GEZI*2 + Const.FRIEND_CARD_LABEL_HEIGHT , Const.FRIEND_CARD_LABEL_WIDTH, Const.FRIEND_CARD_LABEL2_HEIGHT);
 
             authenBtn.setBounds(Const.FRIEND_CARD_GEZI*2 + Const.FRIEND_CARD_IMAGE_SIZE,Const.FRIEND_CARD_GEZI*2 + Const.FRIEND_CARD_LABEL_HEIGHT , Const.FRIEND_CARD_LABEL_WIDTH, Const.FRIEND_CARD_LABEL2_HEIGHT);
@@ -247,7 +246,6 @@ public class FriendPanel extends JPanel {
             }
         }
     }
-
 
     /**
      * 内部类，箱子列表的卡片
@@ -314,7 +312,6 @@ public class FriendPanel extends JPanel {
         }
     }
 
-
     /**
      * 内部类，标签的卡片
      * @author zhangsukun
@@ -354,7 +351,6 @@ public class FriendPanel extends JPanel {
         }
     }
 
-
     /**
      * 刷新好友卡片
      * @param friendList
@@ -386,7 +382,6 @@ public class FriendPanel extends JPanel {
             j++;
         }
     }
-
 
     /**
      * 刷新陌生人卡片
@@ -422,7 +417,6 @@ public class FriendPanel extends JPanel {
         }
     }
 
-
     /**
      * 刷新宝箱卡片
      * @param boxList
@@ -443,7 +437,6 @@ public class FriendPanel extends JPanel {
             PanelBoxList.get(0).setVisible(false);
         }
     }
-
 
     public static boolean isHalfDistance(Soldier me,Soldier soldier) {
         int x = me.getLocationX();

@@ -267,6 +267,9 @@ public class LoginFrame  {
 		String req = req_obj.toString();
 		System.out.print(req);
 		HttpHelper.asyncPost(Const.REGISTER_N,token,req,null);
+		if(me.getId()== 5){
+			map.put("D","1111");
+		}
 
 		forestFrame = new ForestFrame(me,map);
 	}

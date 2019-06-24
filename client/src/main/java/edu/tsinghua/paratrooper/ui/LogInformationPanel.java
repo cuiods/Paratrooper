@@ -28,7 +28,7 @@ public class LogInformationPanel extends JPanel {
         this.removeAll();
         int pos = 0;
         int ext = 0;
-        for(int i = Math.min(information.size() - 1, 15); i > -1; i--, pos++){
+        for(int i = Math.min(information.size() - 1, 5); i > -1; i--, pos++){
             JLabel cur = new JLabel(information.get(i));
             if(information.get(i).indexOf("成功") != -1)
                 cur.setForeground(new Color(137, 181, 38));
