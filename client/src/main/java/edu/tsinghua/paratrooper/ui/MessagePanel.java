@@ -91,8 +91,6 @@ public class MessagePanel extends JPanel{
         this.message = message;
         int code = message.getCode();
         String str ="";
-        ok.setVisible(true);
-        cancel.setVisible(true);
         ok.setText("确认");
         cancel.setText("取消");
         System.out.println("48785y7328t6745");
@@ -128,10 +126,8 @@ public class MessagePanel extends JPanel{
                 break;
             case Const.MESSAGE_CHOOSE_CAPTAIN_RESULT :
                  String name = message.getData().get("name").toString();
-                 str = "<html>经过竞选比较"+name+"被选为新的队长。</html>";
+                 str = "<html>经过竞选比较，"+name+"被选为新的队长。</html>";
                 body.setText(str);
-                ok.setVisible(false);
-                cancel.setVisible(false);
                 break;
             default:
                 return false;

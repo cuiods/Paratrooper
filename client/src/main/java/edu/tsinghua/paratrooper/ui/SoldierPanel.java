@@ -150,6 +150,10 @@ public class SoldierPanel extends JPanel{
 		public void mouseClicked(MouseEvent e) {      //鼠标双击进行验证
 			// TODO Auto-generated method stub
 			if(e.getClickCount()==2){
+				if(me.getGroupNum()== soldier.getGroupNum()){
+					logInformationPanel.addInfo("士兵：" + soldier.getId() + "已经是您的队友");
+					return ;
+				}
                 Map<String,String> message_map = new HashMap<>();
 				String str_list[] = RSA_Tool.enSgn(Const.CIPER,private_key);  //用我的私钥
 				message_map.put("ciper",str_list[0]);
