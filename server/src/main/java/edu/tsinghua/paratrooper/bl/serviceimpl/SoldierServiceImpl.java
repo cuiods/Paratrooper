@@ -78,7 +78,7 @@ public class SoldierServiceImpl implements SoldierService {
     public ResultVo<String> registerPublicKey(String key) {
         int currentUserId = AppContext.getCurrentUserId();
         if (currentUserId == 0)
-            return new ResultVo<>(ErrorCode.NO_AUTHORITY, "Please Login First","");
+            return new ResultVo<>(ErrorCode.NO_AUTHORITY, "请先登录","");
         TSoldierEntity entity = soldierRepository.findOne(currentUserId);
         entity.setPublicKey(key);
         soldierRepository.save(entity);
@@ -108,7 +108,7 @@ public class SoldierServiceImpl implements SoldierService {
     public ResultVo<StatusVo> updateStatus(int x, int y) {
         int currentUserId = AppContext.getCurrentUserId();
         if (currentUserId == 0)
-            return new ResultVo<>(ErrorCode.NO_AUTHORITY, "Please Login First",null);
+            return new ResultVo<>(ErrorCode.NO_AUTHORITY, "请先登录",null);
         TSoldierEntity entity = soldierRepository.findOne(currentUserId);
         entity.setAlive(1);
         entity.setLocationX(x);

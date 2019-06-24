@@ -48,7 +48,7 @@ public class MsgServiceImpl implements MsgService {
     public ResultVo<MsgVo> sendMsg(int reveiveId, int code, String message) {
         int currentUserId = AppContext.getCurrentUserId();
         if (currentUserId == 0)
-            return new ResultVo<>(ErrorCode.NO_AUTHORITY, "Please Login First",null);
+            return new ResultVo<>(ErrorCode.NO_AUTHORITY, "请先登录",null);
         TMsgEntity entity = new TMsgEntity();
         entity.setCode(code);
         entity.setData(message);
@@ -67,11 +67,11 @@ public class MsgServiceImpl implements MsgService {
     public ResultVo<String> confirmAuthentication(int confirmedId) {
         int currentUserId = AppContext.getCurrentUserId();
         if (currentUserId == 0)
-            return new ResultVo<>(ErrorCode.NO_AUTHORITY, "Please Login First",null);
+            return new ResultVo<>(ErrorCode.NO_AUTHORITY, "请先登录",null);
         TSoldierEntity currentEntity = soldierRepository.findOne(currentUserId);
         TSoldierEntity confirmedEntity = soldierRepository.findOne(confirmedId);
         if (currentEntity == null || confirmedEntity == null) {
-            return new ResultVo<>(ErrorCode.USER_CANNOT_FIND, "User cannot find", "id:"+confirmedId);
+            return new ResultVo<>(ErrorCode.USER_CANNOT_FIND, "找不到该用户", "id:"+confirmedId);
         }
         TSoldierEntity currentCap = soldierRepository.findByGroupNumAndCaptain(currentEntity.getGroupNum(),1);
         TSoldierEntity confirmedCap = soldierRepository.findByGroupNumAndCaptain(confirmedEntity.getGroupNum(), 1);
@@ -88,16 +88,16 @@ public class MsgServiceImpl implements MsgService {
         //Verify param
         int currentUserId = AppContext.getCurrentUserId();
         if (currentUserId == 0)
-            return new ResultVo<>(ErrorCode.NO_AUTHORITY, "Please Login First",null);
+            return new ResultVo<>(ErrorCode.NO_AUTHORITY, "请先登录",null);
         if (currentUserId == compareId)
-            return new ResultVo<>(ErrorCode.AUTH_SELF, "You confirmed yourself", null);
+            return new ResultVo<>(ErrorCode.AUTH_SELF, "无需确认自己的身份", null);
         TSoldierEntity currentEntity = soldierRepository.findOne(currentUserId);
         TSoldierEntity comparedEntity = soldierRepository.findOne(compareId);
         if (currentEntity == null || comparedEntity == null) {
-            return new ResultVo<>(ErrorCode.USER_CANNOT_FIND, "User cannot find", "id:"+compareId);
+            return new ResultVo<>(ErrorCode.USER_CANNOT_FIND, "找不到该士兵", "id:"+compareId);
         }
         if (currentEntity.getCaptain()==0 || comparedEntity.getCaptain()==0) {
-            return new ResultVo<>(ErrorCode.NO_AUTHORITY, "Invalid param", "");
+            return new ResultVo<>(ErrorCode.NO_AUTHORITY, "无效的参数", "");
         }
 
         if (result == 0) {
@@ -124,10 +124,10 @@ public class MsgServiceImpl implements MsgService {
         TSoldierEntity supportEntity = soldierRepository.findOne(supportId);
         TSoldierEntity rejectEntity = soldierRepository.findOne(rejectId);
         if (supportEntity == null || rejectEntity == null) {
-            return new ResultVo<>(ErrorCode.WRONG_PARAMETER, "Invalid param", "");
+            return new ResultVo<>(ErrorCode.WRONG_PARAMETER, "无效的参数", "");
         }
         if (supportEntity.getGroupNum() == rejectEntity.getGroupNum()) {
-            return new ResultVo<>(ErrorCode.VOTE_ALREADY_END, "Vote ended", null);
+            return new ResultVo<>(ErrorCode.VOTE_ALREADY_END, "投票已截止，已选出队长", null);
         }
         supportEntity.setVote(supportEntity.getVote()+1);
         int total = soldierRepository.findByGroupNum(supportEntity.getGroupNum()).size()
@@ -151,13 +151,13 @@ public class MsgServiceImpl implements MsgService {
         //Verify param
         int currentUserId = AppContext.getCurrentUserId();
         if (currentUserId == 0)
-            return new ResultVo<>(ErrorCode.NO_AUTHORITY, "Please Login First",null);
+            return new ResultVo<>(ErrorCode.NO_AUTHORITY, "请先登录",null);
         TBoxEntity entity = boxRepository.findOne(boxId);
         if (entity == null)
-            return new ResultVo<>(ErrorCode.BOX_CANNOT_FIND, "Cannot find this box", null);
+            return new ResultVo<>(ErrorCode.BOX_CANNOT_FIND, "找不到该箱子", null);
         TBoxApplyEntity applyEntity = applyRepository.findByUserIdAndBoxId(currentUserId, boxId);
         if (applyEntity != null)
-            return new ResultVo<>(ErrorCode.BOX_REPEAT_APPLY, "You have applied this box.", null);
+            return new ResultVo<>(ErrorCode.BOX_REPEAT_APPLY, "您已经申请过该箱子.", null);
         //open box
         applyRepository.save(new TBoxApplyEntity(0, boxId, currentUserId, key));
         entity.setApply(entity.getApply()+1);

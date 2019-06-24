@@ -59,10 +59,10 @@ public class AuthServiceImpl implements AuthService {
     public ResultVo<AuthVo> login(String name, String password) {
         TUserEntity userEntity = userRepository.findByName(name);
         if (null == userEntity) {
-            return new ResultVo<>(ErrorCode.USER_CANNOT_FIND, "Cannot find user.", null);
+            return new ResultVo<>(ErrorCode.USER_CANNOT_FIND, "找不到该用户.", null);
         }
         if (!userEntity.getPassword().equals(password)) {
-            return new ResultVo<>(ErrorCode.USER_WRONG_PASSWORD, "Wrong password.", null);
+            return new ResultVo<>(ErrorCode.USER_WRONG_PASSWORD, "密码错误.", null);
         }
 
         UsernamePasswordAuthenticationToken upToken = new UsernamePasswordAuthenticationToken(name, password);
