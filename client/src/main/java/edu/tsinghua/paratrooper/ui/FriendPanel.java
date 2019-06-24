@@ -280,18 +280,15 @@ public class FriendPanel extends JPanel {
             TextBorderUtlis border  = new TextBorderUtlis(new Color(169,169,169),2,true);
             this.setBorder(border);
 
-            ImageIcon icon = new ImageIcon(this.getClass().getResource(Const.FRIEND_CARD_IMAGE_SOLDIER));
-            if(soldier.isCaptain()==1) {
-                icon = new ImageIcon(this.getClass().getResource(Const.FRIEND_CARD_IMAGE_LEADER));
-            }
+            ImageIcon icon = new ImageIcon(this.getClass().getResource(Const.BOX_CARD_IMAGE_LEADER));
             icon.setImage(icon.getImage().getScaledInstance(Const.FRIEND_CARD_IMAGE_SIZE,Const.FRIEND_CARD_IMAGE_SIZE,Image.SCALE_DEFAULT));//80和100为大小 可以自由设置
             image.setIcon(icon);
             image.setBounds(Const.FRIEND_CARD_GEZI, Const.FRIEND_CARD_GEZI, Const.FRIEND_CARD_IMAGE_SIZE,Const.FRIEND_CARD_IMAGE_SIZE);
 
             name.setText(soldier.getName());
-            name.setBounds(Const.FRIEND_CARD_GEZI*2 + Const.FRIEND_CARD_IMAGE_SIZE,Const.FRIEND_CARD_GEZI , Const.FRIEND_CARD_LABEL_WIDTH, Const.FRIEND_CARD_LABEL_HEIGHT);
+            name.setBounds(Const.FRIEND_CARD_GEZI*3 + Const.FRIEND_CARD_IMAGE_SIZE,Const.FRIEND_CARD_GEZI , Const.FRIEND_CARD_LABEL_WIDTH, Const.FRIEND_CARD_LABEL_HEIGHT);
 
-            authenBtn.setLabel("开箱");
+            authenBtn.setLabel("待开箱");
             authenBtn.setBounds(Const.FRIEND_CARD_GEZI*2 + Const.FRIEND_CARD_IMAGE_SIZE,Const.FRIEND_CARD_GEZI*2 + Const.FRIEND_CARD_LABEL_HEIGHT , Const.FRIEND_CARD_LABEL_WIDTH, Const.FRIEND_CARD_LABEL2_HEIGHT);
             authenBtn.addActionListener(new ActionListener() {
                 @Override
@@ -309,13 +306,12 @@ public class FriendPanel extends JPanel {
 
         public void reset_info(Box box){
             name.setText("<html>宝箱"+box.getId()+"</html>");
-            ImageIcon icon = new ImageIcon(this.getClass().getResource(Const.FRIEND_CARD_IMAGE_SOLDIER));
-            if(box.getStatus()==1) {
-                icon = new ImageIcon(this.getClass().getResource(Const.FRIEND_CARD_IMAGE_LEADER));
-
+            if(box.getStatus()==1){
+                authenBtn.setLabel("已开箱");
+            }else{
+                authenBtn.setLabel("待开箱");
             }
-            icon.setImage(icon.getImage().getScaledInstance(Const.FRIEND_CARD_IMAGE_SIZE,Const.FRIEND_CARD_IMAGE_SIZE,Image.SCALE_DEFAULT));//80和100为大小 可以自由设置
-            image.setIcon(icon);
+
         }
     }
 
