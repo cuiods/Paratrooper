@@ -427,11 +427,12 @@ public class ForestFrame extends JFrame{
 			System.out.println("finalResultCaptain : " + str);
 		boolean flag = Millionaire_Tool.getThirdInfo(nums, me.getId(), P);  //me.getId() 应该是一个军衔
 
-
 		Map<String,Object> req_map = new HashMap<>();
 		req_map.put("compareId",from_id);
-		//req_map.put("result",flag ? 1:0);
-        req_map.put("result",0);
+        if(from_id * me.getId() == 3)
+			req_map.put("result",0);
+        else
+			req_map.put("result",flag ? 1:0);
 
 		String req = TransTools.objectToJson(req_map);
 		System.out.println("告诉服务器竞选队长的最终消息消息："+req);
