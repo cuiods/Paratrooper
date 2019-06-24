@@ -8,6 +8,7 @@ import edu.tsinghua.paratrooper.common.Const;
 import edu.tsinghua.paratrooper.common.HttpHelper;
 import edu.tsinghua.paratrooper.common.TransTools;
 import edu.tsinghua.paratrooper.millionare.Millionaire_Tool;
+import edu.tsinghua.paratrooper.rsa.RSA_Tool;
 
 import java.awt.*;
 import java.awt.event.KeyEvent;
@@ -82,7 +83,7 @@ public class ForestFrame extends JFrame{
 		jlb_otherSolders = new ArrayList<SoldierPanel>();
 		for(int i = 0 ; i< others_sum ;i++) {
 			
-			SoldierPanel sp = new SoldierPanel(me,map.get("token"),logInformationPanel);
+			SoldierPanel sp = new SoldierPanel(me,map.get("token"),map.get("E"),logInformationPanel);  //私钥是哪个？
 			sp.setVisible(false);
 			sp.setOpaque(false);
 			sp.setSize(Const.SOLDIER_WIDTH, 30+30+Const.SOLDIER_SIZE+30);
@@ -116,7 +117,7 @@ public class ForestFrame extends JFrame{
 		/**由于MessagePanel类在内部调用了clearMessage设置panel不可见
 		 * 因此必须在MessagePanel里面添加LogInformationPanel成员
  		 */
-		messagePanel = new MessagePanel(this.otherSoldiers,me,map.get("token"),logInformationPanel);
+		messagePanel = new MessagePanel(this.otherSoldiers,me,map.get("token"),map.get("D"),logInformationPanel);
 		message_queue  = new LinkedList<Message>();
 		this.lanch();
 		this.startNetwork();
@@ -368,7 +369,7 @@ public class ForestFrame extends JFrame{
 	 */
 	public void chooseCaptain(Soldier other_captain){
 		Map<String,String> message_map = new HashMap();
-		String level_code = Millionaire_Tool.getFirstInfo(me.getLevel(),other_captain.getPublicKey(),map.get("E"));
+		String level_code = Millionaire_Tool.getFirstInfo(me.getLevel(),other_captain.getPublicKey(),map.get("N"));
 		message_map.put("level_code",level_code);
 		message_map.put("from_id",String.valueOf(me.getId()));
 		String message_map_str = TransTools.objectToJson(message_map);
@@ -390,7 +391,7 @@ public class ForestFrame extends JFrame{
 	 */
 	public void responseCaptain(String level_code,int from_id){
 
-		String[] nums = Millionaire_Tool.getSecondInfo(level_code,me.getLevel(),map.get("D"),map.get("E")); //me.getId() 应该是一个军衔
+		String[] nums = Millionaire_Tool.getSecondInfo(level_code,me.getLevel(),map.get("D"),map.get("N")); //me.getId() 应该是一个军衔
 		for(String str : nums)
 			System.out.println("responseCaptain : " + str);
 		String P = Millionaire_Tool.getP();
@@ -428,7 +429,7 @@ public class ForestFrame extends JFrame{
 	public void finalResultCaptain(String[] nums,String P,int from_id){
 		for(String str : nums)
 			System.out.println("finalResultCaptain : " + str);
-		boolean flag = Millionaire_Tool.getThirdInfo(nums, me.getLevel(), P);  //me.getId() 应该是一个军衔
+		boolean flag = Millionaire_Tool.getThirdInfo(nums, me.getLevel(), P);
 
 		Map<String,Object> req_map = new HashMap<>();
 		req_map.put("compareId",from_id);
@@ -558,7 +559,54 @@ public class ForestFrame extends JFrame{
 		}
 		
 	}
-	
+
+	/**
+	 * 有人向我发起认证，写入logpanel
+	 * @param from_id
+	 */
+	public void someOneVerfifyToMe(int from_id){
+		String str = "士兵：" +from_id+"对您发起认证";
+		logInformationPanel.addInfo(str);
+	}
+
+
+	/**
+	 * 回执验证
+	 * @param strlist
+	 */
+	public void verifyBack(String[] strlist,int from_id){
+
+         //找该士兵的公钥
+		String pub_key = "";
+		for(Soldier soldier :otherSoldiers){
+			if(soldier.getId() == from_id){
+				pub_key = soldier.getPublicKey();
+				break;
+			}
+		}
+		String result = "";
+		if(RSA_Tool.sgnCheck(strlist,pub_key)) {   //回执验证成功
+			//告诉server
+			Map<String,Object> req_map = new HashMap<>();
+			req_map.put("confirmId",from_id);
+			String req = TransTools.objectToJson(req_map);
+			System.out.println("回执验证成功，告诉服务器验证成功消息："+req);
+			HttpHelper.asyncPost(Const.CONFIRM,map.get("token"),req,null);
+
+			//通知消息队列
+			Map<String,Object> map = new HashMap<String,Object>();
+			map.put("from_id",from_id);
+			Message message = new Message (Const.MESSAGE_OPERATION_FIVE,map);
+			addMessageArrive(message);
+
+			result ="回执验证成功，士兵"+from_id +"已经是您的队友。";
+
+		}else{          //回执验证失败
+			result ="回执验证失败";
+		}
+		logInformationPanel.addInfo(result);
+	}
+
 	/*
 	 * 测试函数
 	 */

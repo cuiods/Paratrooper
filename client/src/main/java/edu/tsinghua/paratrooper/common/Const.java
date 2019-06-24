@@ -129,7 +129,7 @@ public class Const{
 
 	//thread 
 	public static final int SLEEP_SECONDS = 1000;
-	public static final int MESSAGE_SHOW_SECONDS = 5000;
+	public static final int MESSAGE_SHOW_SECONDS = 5000000;
 
 	//generate rsa
 	public static final int BIT = 512;

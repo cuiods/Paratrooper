@@ -29,10 +29,12 @@ public class MessagePanel extends JPanel{
 	private int can_right_id;
 	private String can_left_name;
 	private String can_right_name;
+	private String pri_key;
 	
-	public MessagePanel(List<Soldier> soliderList,Soldier me,String token, LogInformationPanel logInformationPanel) {
+	public MessagePanel(List<Soldier> soliderList,Soldier me,String token,String pri_key ,LogInformationPanel logInformationPanel) {
 		this.token = token;
 		this.me = me;
+		this.pri_key = pri_key;
 		this.soliderList = soliderList;
 		body = new JLabel("您暂无消息");
 		ok = new JButton("确认");
@@ -80,7 +82,7 @@ public class MessagePanel extends JPanel{
 		cancel.setText("取消");
 		switch(code) {
 		    case Const.MESSAGE_OPERATION_TWO :  //有人向我发起认证
-			    str = "<html> 士兵:"+ message.getData().get("from_id")+"向您发起认证,是否继续" + "</html>";
+			    str = "<html> 士兵:"+ message.getData().get("from_id")+"向您发起认证,是否回应" + "</html>";
 			    body.setText(str);
 			    break;
 			case Const.MESSAGE_OPERATION_FIVE : //认证成功
@@ -141,18 +143,21 @@ public class MessagePanel extends JPanel{
 					String[] strlist= new String[2];
 					strlist[0] = (String)message.getData().get("ciper");
 					strlist[1] = (String)message.getData().get("text");
-					if(RSA_Tool.sgnCheck(strlist)){
-						System.out.println("验证成功，现在回执消息");
-						String pub_key = "";
-						//找该士兵的公钥
-						for(Soldier soldier :soliderList){
-							if(soldier.getId() == (int)message.getData().get("from_id")){
-								pub_key = soldier.getPublicKey();
-								break;
-							}
+					int sodier_id = Integer.parseInt((String)message.getData().get("from_id"));
+					//找该士兵的公钥
+					String pub_key = "";
+					for(Soldier soldier :soliderList){
+						if(soldier.getId() == (int)message.getData().get("from_id")){
+							pub_key = soldier.getPublicKey();
+							break;
 						}
+					}
+
+					if(RSA_Tool.sgnCheck(strlist,pub_key)){
+						System.out.println("验证成功，现在回执消息");
+
 						Map<String,String> message_map = new HashMap();
-						String str_list[] = RSA_Tool.enSgn(Const.CIPER,pub_key);
+						String str_list[] = RSA_Tool.enSgn(Const.CIPER,pri_key);   //回执的是我的私钥
 						message_map.put("ciper",str_list[0]);
 						message_map.put("text",str_list[1]);
 						message_map.put("from_id",String.valueOf(me.getId()));
@@ -165,13 +170,17 @@ public class MessagePanel extends JPanel{
 
 						String req = TransTools.objectToJson(req_map);
 						System.out.println("发起回执验证消息："+req);
+						String str  = "经过验证，士兵"+ message.getData().get("from_id") +"为合法用户，现对其发起回执验证，请等待结果。";
+						logInformationPanel.addInfo(str);
 						HttpHelper.asyncPost(Const.MESG_SEND,token,req,null);
 
 					}else{
-						System.out.println("验证失败");
+						String str  = "经过验证，士兵"+ message.getData().get("from_id") +"为非法用户。";
+						logInformationPanel.addInfo(str);
 					}
 					break;
-				case Const.MESSAGE_CHOOSE_CAPTAIN:
+
+				case Const.MESSAGE_CHOOSE_CAPTAIN:   //选队长
 					Map<String,Object> req_map = new HashMap<>();
 					req_map.put("rejectId",can_right_id);
 					req_map.put("supportId",can_left_id);
