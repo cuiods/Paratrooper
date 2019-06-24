@@ -27,7 +27,8 @@ public class LogInformationPanel extends JPanel {
     public void addInfo(String str){
         information.add(0, str);
         this.removeAll();
-        for(int i = 0; i < information.size() && i < 10; i++){
+        int pos = 0;
+        for(int i = Math.min(information.size() - 1, 5); i > -1; i--, pos++){
             JLabel cur = new JLabel(information.get(i));
             if(information.get(i).indexOf("成功") != -1)
                 cur.setForeground(Color.GREEN);
@@ -37,7 +38,7 @@ public class LogInformationPanel extends JPanel {
             cur.setSize(Const.MESSAGE_PANEL_BODY_WIDTH, 0);
             this.add(cur);
             cur.setVisible(true);
-            cur.setBounds(Const.MESSAGE_PANEL_GEZI, Const.MESSAGE_PANEL_GEZI + i * 16 + 20,
+            cur.setBounds(Const.MESSAGE_PANEL_GEZI, Const.MESSAGE_PANEL_GEZI + pos * 16 + 20,
                     Const.MESSAGE_PANEL_BODY_WIDTH, 16);
         }
     }
