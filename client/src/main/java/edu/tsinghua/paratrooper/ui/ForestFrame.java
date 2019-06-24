@@ -63,6 +63,8 @@ public class ForestFrame extends JFrame{
 		this.me = me;
 		this.map = map;
 
+		setIconImage(Toolkit.getDefaultToolkit().getImage(this.getClass().getResource(Const.FRIEND_CARD_IMAGE_LEADER)));
+
 		canseePanel = new CanSeePanel(me.getLocationX(),me.getLocationY());
 		logInformationPanel = new LogInformationPanel();
 		forestPanel = new JPanel() {

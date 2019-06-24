@@ -51,12 +51,11 @@ public class SoldierServiceImpl implements SoldierService {
     @Override
     @Transactional
     public void initializeSoldierStatus() {
-        Random random = new Random(new Date().getTime());
         //Initialize msgs and boxes
         msgRepository.deleteAll();
         boxRepository.deleteAll();
         applyRepository.deleteAll();
-        boxRepository.save(new TBoxEntity(0, random.nextInt(maxLength), random.nextInt(maxWidth),
+        boxRepository.save(new TBoxEntity(0, maxLength/2, maxWidth/2,
                 0, lagrange.t, 0, null));
         //initialize soldiers
         List<TSoldierEntity> soldierEntities = Lists.newArrayList(soldierRepository.findAll());

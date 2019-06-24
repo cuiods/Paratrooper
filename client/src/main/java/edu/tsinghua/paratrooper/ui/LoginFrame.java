@@ -40,6 +40,7 @@ public class LoginFrame  {
 		this.map = map;
 		
 		loginFrame = new JFrame();
+		loginFrame.setIconImage(Toolkit.getDefaultToolkit().getImage(this.getClass().getResource(Const.FRIEND_CARD_IMAGE_LEADER)));
 		loginFrame.getContentPane().setLayout(new GridLayout(1, 0, 0, 0));
 		loginFrame.setSize(1200,900);
 		loginFrame.setLocationRelativeTo(null);

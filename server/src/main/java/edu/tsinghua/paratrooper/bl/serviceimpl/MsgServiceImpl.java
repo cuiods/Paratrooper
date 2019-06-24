@@ -168,12 +168,10 @@ public class MsgServiceImpl implements MsgService {
                 inputMap.put(box.getUserId(), new MyInteger(box.getKey()));
             }
             boolean result = lagrange.verification(inputMap);
-            if (result) {
-                entity.setStatus(1);
-                Gson gson = new Gson();
-                for (TBoxApplyEntity box: boxApplyEntities) {
-                    sendMsg(box.getUserId(), MsgMethod.BOXOPEN.getCode(), gson.toJson(new BoxVo(entity)));
-                }
+            entity.setStatus(1);
+            Gson gson = new Gson();
+            for (TBoxApplyEntity box: boxApplyEntities) {
+                sendMsg(box.getUserId(), MsgMethod.BOXOPEN.getCode(), gson.toJson(new BoxVo(entity)));
             }
         }
         boxRepository.save(entity);
