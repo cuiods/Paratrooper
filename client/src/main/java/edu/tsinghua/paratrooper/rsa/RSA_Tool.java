@@ -64,7 +64,8 @@ public class RSA_Tool {
      * @return
      */
     public static String[] enSgn(String text,String pri_key) {   //签名认证
-        String[] val = {encodeRSA(text,pri_key), text};
+        String mdText = StringConvert.convert(md5.encode(text), 16, 10);
+        String[] val = {encodeRSA(mdText,pri_key), text};
 
         return val;
     }
@@ -78,8 +79,9 @@ public class RSA_Tool {
         if (sgn.length != 2) {
             return  false;
         }
+
         String deHS = decodeRSA(sgn[0],pub_key);
-        String hs   = sgn[1];
+        String hs   = StringConvert.convert(md5.encode(sgn[1]), 16, 10);
 
         if (deHS.equals(hs)) {
             return true;
