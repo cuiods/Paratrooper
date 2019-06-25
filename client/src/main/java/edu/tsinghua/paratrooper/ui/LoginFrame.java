@@ -226,6 +226,7 @@ public class LoginFrame  {
 						break;
 					default:
 						System.out.print("登录失败");
+						tf_info.setText("登录失败");
 				}
 			}
 		});

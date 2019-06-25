@@ -31,8 +31,9 @@ public class MessagePanel extends JPanel{
     private String can_left_name;
     private String can_right_name;
     private String pri_key;
+    private ForestFrame forestFrame;
 
-    public MessagePanel(List<Soldier> soliderList,Soldier me,String token,String pri_key ,LogInformationPanel logInformationPanel) {
+    public MessagePanel(List<Soldier> soliderList,Soldier me,String token,String pri_key ,LogInformationPanel logInformationPanel,ForestFrame forestFrame) {
         this.token = token;
         this.me = me;
         this.pri_key = pri_key;
@@ -42,6 +43,7 @@ public class MessagePanel extends JPanel{
         cancel = new JButton("取消");
         isReply = false;
         this.logInformationPanel = logInformationPanel;
+        this.forestFrame = forestFrame;
         lanch();
     }
 
@@ -195,6 +197,8 @@ public class MessagePanel extends JPanel{
                     }else{
                         String str  = "<html>经过验证，士兵"+ sodier_id +"为非法用户。</html>";
                         logInformationPanel.addInfo(str);
+                        //将该士兵标红
+                        forestFrame.setInvalidSolider(sodier_id);
                     }
                     break;
 

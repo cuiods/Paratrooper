@@ -89,6 +89,7 @@ public class Const{
 	//client.ui.soldierPanel
 	public static final String SOLDIER_GROUP_IMAGE = "/images/soldier/soldier2.png";
 	public static final String SOLDIER_NOT_GROUP_IMAGE = "/images/soldier/soldier4.png";
+	public static final String SOLDIER_INVALID_IMAGE = "/images/soldier/soldier3.png";
 	public static final String CAPTAIN_IMAGE = "/images/captain/captain6.png";
 	public final static int SOLDIER_WIDTH = 150;
 	public final static int SOLDIER_NAME_HEIGHT_SIZE = 20;

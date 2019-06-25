@@ -25,6 +25,7 @@ public class SoldierPanel extends JPanel{
 	private LogInformationPanel logInformationPanel;
 	private JLabel panel_image;
 	private Soldier me;
+	private boolean isValid = true;
 
 	public SoldierPanel(Soldier me,String token,String private_key, LogInformationPanel logInformationPanel) {
 		soldier = new Soldier();
@@ -102,29 +103,43 @@ public class SoldierPanel extends JPanel{
 	 * @param soldier
 	 */
 	public void setSoldierInfo(Soldier soldier){
+
 		this.soldier = soldier;
-		name.setText(soldier.getName());
+		if(isValid) {
+		    name.setText(soldier.getName());
+			if (soldier.getGroupNum() == me.getGroupNum()) {  //是队友
 
-		if(soldier.getGroupNum() == me.getGroupNum()){  //是队友
+				if (soldier.isCaptain() == 1) {
 
-			if(soldier.isCaptain()== 1) {
-
-				ImageIcon icon = new ImageIcon(this.getClass().getResource(Const.CAPTAIN_IMAGE));
+					ImageIcon icon = new ImageIcon(this.getClass().getResource(Const.CAPTAIN_IMAGE));
+					icon.setImage(icon.getImage().getScaledInstance(Const.ME_SIZE, Const.ME_SIZE, Image.SCALE_DEFAULT));
+					panel_image.setIcon(icon);
+					name.setText(soldier.getName() + "(队长)");
+				} else {
+					ImageIcon icon = new ImageIcon(this.getClass().getResource(Const.SOLDIER_GROUP_IMAGE));
+					icon.setImage(icon.getImage().getScaledInstance(Const.ME_SIZE, Const.ME_SIZE, Image.SCALE_DEFAULT));
+					panel_image.setIcon(icon);
+					name.setText(soldier.getName() + "(队友)");
+				}
+			} else {
+				ImageIcon icon = new ImageIcon(this.getClass().getResource(Const.SOLDIER_NOT_GROUP_IMAGE));
 				icon.setImage(icon.getImage().getScaledInstance(Const.ME_SIZE, Const.ME_SIZE, Image.SCALE_DEFAULT));
 				panel_image.setIcon(icon);
-				name.setText(soldier.getName()+"(队长)");
-			}else {
-				ImageIcon icon = new ImageIcon(this.getClass().getResource(Const.SOLDIER_GROUP_IMAGE));
-				icon.setImage(icon.getImage().getScaledInstance(Const.ME_SIZE, Const.ME_SIZE, Image.SCALE_DEFAULT));
-				panel_image.setIcon(icon);
-				name.setText(soldier.getName()+"(队友)");
 			}
-		}else{
-			ImageIcon icon = new ImageIcon(this.getClass().getResource(Const.SOLDIER_NOT_GROUP_IMAGE));
-			icon.setImage(icon.getImage().getScaledInstance(Const.ME_SIZE, Const.ME_SIZE, Image.SCALE_DEFAULT));
-			panel_image.setIcon(icon);
 		}
 
+	}
+
+	/**
+	 *
+	 */
+	public  void setInvaildSoldier(){
+		this.isValid = false;
+		ImageIcon icon = new ImageIcon(this.getClass().getResource(Const.SOLDIER_INVALID_IMAGE));
+		icon.setImage(icon.getImage().getScaledInstance(Const.ME_SIZE, Const.ME_SIZE, Image.SCALE_DEFAULT));
+		panel_image.setIcon(icon);
+
+		name.setText(soldier.getName() + "(非法士兵)");
 	}
 	/**
 	 * 鼠标移动到士兵的图片时，会显示一系列可执行的操作，如士兵的pri_key
@@ -150,7 +165,7 @@ public class SoldierPanel extends JPanel{
 		@Override
 		public void mouseClicked(MouseEvent e) {      //鼠标双击进行验证
 			// TODO Auto-generated method stub
-			if(e.getClickCount()==2){
+			if(e.getClickCount()==2 && isValid){
 				if(me.getGroupNum()== soldier.getGroupNum()){
 					logInformationPanel.addInfo("士兵：" + soldier.getId() + "已经是您的队友");
 					return ;

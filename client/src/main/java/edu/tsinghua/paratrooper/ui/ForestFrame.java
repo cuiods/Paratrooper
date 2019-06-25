@@ -117,7 +117,7 @@ public class ForestFrame extends JFrame{
 		/**由于MessagePanel类在内部调用了clearMessage设置panel不可见
 		 * 因此必须在MessagePanel里面添加LogInformationPanel成员
  		 */
-		messagePanel = new MessagePanel(this.otherSoldiers,me,map.get("token"),map.get("D"),logInformationPanel);
+		messagePanel = new MessagePanel(this.otherSoldiers,me,map.get("token"),map.get("D"),logInformationPanel,this);
 		message_queue  = new LinkedList<Message>();
 		this.lanch();
 		this.startNetwork();
@@ -611,11 +611,27 @@ public class ForestFrame extends JFrame{
 			result ="<html>回执验证成功，士兵"+from_id +"已经是您的队友。</html>";
 
 		}else{          //回执验证失败
-			result ="回执验证失败";
+			result ="<html>回执验证失败,士兵"+from_id+"非法</html>";
+			setInvalidSolider(from_id);
 		}
 		logInformationPanel.addInfo(result);
+
 	}
 
+
+	/**
+	 * 将验证失败的士兵标红
+	 */
+	public void setInvalidSolider(int id){
+
+		for(int i = 0 ; i< otherSoldiers.size();i++) {
+			Soldier soldier = otherSoldiers.get(i);
+
+			if(soldier.getId() == id){
+				jlb_otherSolders.get(i).setInvaildSoldier();
+			}
+		}
+	}
 	/*
 	 * 测试函数
 	 */
