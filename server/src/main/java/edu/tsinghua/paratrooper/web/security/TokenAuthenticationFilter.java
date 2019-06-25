@@ -48,6 +48,8 @@ public class TokenAuthenticationFilter extends OncePerRequestFilter {
                                     FilterChain filterChain) throws ServletException, IOException {
 
         String authHeader = request.getHeader(tokenHeader);
+        String url = request.getRequestURI().substring(request.getContextPath().length());
+
         if (authHeader != null && authHeader.startsWith(tokenHead)) {
             final String authToken = authHeader.substring(tokenHead.length());
             Claims claims = jwtUtil.getClaimsFromToken(authToken);
@@ -56,7 +58,9 @@ public class TokenAuthenticationFilter extends OncePerRequestFilter {
                 int id = claims.get("id", Integer.class);
                 long time = Long.valueOf(claims.get("time", String.class));
                 UserDetails userDetails = authSecurityService.loadUserByUsername(name);
-                if (name != null && userDetails != null && (new Date().getTime()-time)<EXPIRE_TIME) {
+                if (url.contains("/api/v1/admin") && !name.equals("000001")) {
+                    //do nothing
+                } else if (name != null && userDetails != null && (new Date().getTime()-time)<EXPIRE_TIME) {
                     new AppContext(id);
                     UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
                             userDetails, null, userDetails.getAuthorities());
